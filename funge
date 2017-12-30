@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+
+java -cp bin/ Funge $@
+

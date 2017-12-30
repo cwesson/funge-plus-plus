@@ -1,0 +1,52 @@
+Unefunge93
+!"#$%&*+,-./0-9:<>?@\_`gp~
+
+Befunge93
+^v|
+
+Unefunge98
+'();=A-Za-fijknoqrstuxyz{}
+
+Befunge98
+[]w
+
+Trefunge98
+hlm
+
+
+   U93
+   / \
+B93   U98
+   \ /
+   B98
+    |
+   T98
+
+
+A 4D-
+B Enter Befunge
+C
+D
+E
+F
+G
+H
+I
+J
+K
+L
+M
+N
+O
+P
+Q Enter Quefunge (4D)
+R
+S
+T Enter Trefunge
+U Enter Unefunge
+V 4D+
+W
+X
+Y
+Z
+
