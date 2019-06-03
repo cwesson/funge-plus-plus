@@ -8,12 +8,12 @@ import java.io.FileInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PushbackInputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Field{
-	private HashMap<Coordinate, Character> field = new HashMap<Coordinate, Character>();
-	private int width = 0;
-	private int height = 0;
+	private HashMap<Vector, Character> field = new HashMap<Vector, Character>();
+	private ArrayList<Integer> max = new ArrayList<Integer>();
 
 	public Field(File file) throws IOException{
 		PushbackInputStream fis = new PushbackInputStream(new FileInputStream(file));
@@ -32,51 +32,43 @@ public class Field{
 				}
 				y++;
 				x = 0;
-				if(y > height && i != -1) {
-					height = y;
-				}
 			}else if(i == '\f') {
 				z++;
 				x = 0;
 				y = 0;
 			}else{
-				field.put(new Coordinate(x, y, z), (char)i);
+				this.set(new Vector(x, y, z), (char)i);
 				x++;
-				if(x > width) {
-					width = x;
-				}
 			}
 		}while(i > -1);
 		fis.close();
 	}
 
 	public int width(){
-		return width;
+		return max.get(0);
 	}
 
 	public int height(){
-		return height;
+		return max.get(1);
 	}
 	
-	public void set(int x, int y, int v){
-		field.put(new Coordinate(x, y), (char)v);
-	}
-	
-	public int at(int x, int y){
-		try {
-			return field.get(new Coordinate(x, y));
-		} catch(Exception e) {
-			return ' ';
+	public void set(Vector p, int v){
+		for(int i = 0; i < p.size(); i++) {
+			if(i >= max.size()){
+				for(int j = max.size(); j <= i; j++){
+					max.add(j, 0);
+				}
+			}
+			if(max.get(i) < p.getDimension(i)+1) {
+				max.set(i, p.getDimension(i)+1);
+			}
 		}
+		field.put(p, (char)v);
 	}
 	
-	public void set(int x, int y, int z, int v){
-		field.put(new Coordinate(x, y, z), (char)v);
-	}
-	
-	public int at(int x, int y, int z){
+	public int at(Vector p){
 		try {
-			return field.get(new Coordinate(x, y, z));
+			return field.get(p);
 		} catch(Exception e) {
 			return ' ';
 		}

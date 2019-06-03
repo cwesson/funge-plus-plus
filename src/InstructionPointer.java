@@ -22,11 +22,11 @@ class InstructionPointer{
 	}
 
 	public char get(){
-		return (char)field.at(pos.getX(), pos.getY());
+		return (char)field.at(pos);
 	}
 
 	public void set(char val){
-		field.set(pos.getX(), pos.getY(), val);
+		field.set(pos, val);
 	}
 	
 	public void next(){
@@ -101,6 +101,11 @@ class InstructionPointer{
 			ret = ret && (delta.getDimension(i) == 0);
 		}
 		return ret;
+	}
+	
+	@Override
+	public String toString() {
+		return pos.toString();
 	}
 }
 

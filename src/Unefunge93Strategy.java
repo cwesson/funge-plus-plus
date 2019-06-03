@@ -125,14 +125,14 @@ class Unefunge93Strategy extends FungeStrategy{
 				case 'g':{
 					int gy = stack.top().pop();
 					int gx = stack.top().pop();
-					stack.top().push((int)field.at(gx,gy));
+					stack.top().push((int)field.at(new Vector(gx,gy)));
 					break;
 				}
 				case 'p':{
 					int y = stack.top().pop();
 					int x = stack.top().pop();
 					int v = stack.top().pop();
-					field.set(x,y,v);
+					field.set(new Vector(x,y),v);
 					break;
 				}
 				//Input

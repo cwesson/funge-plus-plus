@@ -28,5 +28,10 @@ class StackStack extends java.util.Stack<Stack>{
 		}
 		return ret;
 	}
+	
+	public Stack push(Stack s) {
+		super.push(s);
+		return super.elementAt(0);
+	}
 }
 

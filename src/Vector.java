@@ -107,5 +107,42 @@ class Vector{
 		}
 		return this;
 	}
+	
+	@Override
+	public int hashCode() {
+		int hash = 1;
+		for(int i : values) {
+			hash *= i+1;
+		}
+		return hash;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		try {
+			Vector other = (Vector)obj;
+			int max = Math.max(this.size(), other.size());
+			for(int i = 0; i < max; i++) {
+				if(this.getDimension(i) != other.getDimension(i)) {
+					return false;
+				}
+			}
+			return true;
+		}catch(Exception e) {
+			return false;
+		}
+	}
+	
+	@Override
+	public String toString() {
+		String str = "(";
+		for(int i = 0; i < values.size(); i++) {
+			str += values.get(i);
+			if(i != values.size()-1) {
+				str += ", ";
+			}
+		}
+		return str + ")";
+	}
 }
 

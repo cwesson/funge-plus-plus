@@ -58,7 +58,7 @@ public class FungeRunner implements Runnable{
 	private void execute(char cmd){
 		boolean ret = strategy.execute(cmd);
 		if(!ret){
-			System.err.println("Unimplemented instruction "+(int)cmd+" \'"+cmd+"\' at ("+ip.getX()+","+ip.getY()+").");
+			System.err.println("Unimplemented instruction "+(int)cmd+" \'"+cmd+"\' at "+ip+".");
 		}
 	}
 }
