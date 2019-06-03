@@ -20,20 +20,11 @@ class Vector{
 			values.set(i, 0);
 		}
 	}
-	
-	public Vector(int x){
-		this();
-		this.setX(x);
-	}
-	
-	public Vector(int x, int y){
-		this(x);
-		this.setY(y);
-	}
-	
-	public Vector(int x, int y, int z){
-		this(x, y);
-		this.setZ(z);
+
+	public Vector(int ... v) {
+		for(int d = 0; d < v.length; d++){
+			this.setDimension(d, v[d]);
+		}
 	}
 
 	public int getDimension(int dim){

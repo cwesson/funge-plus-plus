@@ -8,15 +8,18 @@ import java.io.FileInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PushbackInputStream;
+import java.util.HashMap;
 
 public class Field{
-	private int[][] code;
-	
-	public Field(File file, int width, int height) throws IOException{
+	private HashMap<Coordinate, Character> field = new HashMap<Coordinate, Character>();
+	private int width = 0;
+	private int height = 0;
+
+	public Field(File file) throws IOException{
 		PushbackInputStream fis = new PushbackInputStream(new FileInputStream(file));
-		code = new int[width][height];
 		int x = 0;
 		int y = 0;
+		int z = 0;
 		int i = 0;
 		do{
 			i = fis.read();
@@ -27,32 +30,56 @@ public class Field{
 						fis.unread(j);
 					}
 				}
-				for(; x < width; x++){
-					code[x][y] = ' ';
-				}
 				y++;
 				x = 0;
+				if(y > height && i != -1) {
+					height = y;
+				}
+			}else if(i == '\f') {
+				z++;
+				x = 0;
+				y = 0;
 			}else{
-				code[x][y] = (char)i;
+				field.put(new Coordinate(x, y, z), (char)i);
 				x++;
+				if(x > width) {
+					width = x;
+				}
 			}
 		}while(i > -1);
+		fis.close();
 	}
 
 	public int width(){
-		return code.length;
+		return width;
 	}
 
 	public int height(){
-		return code[0].length;
+		return height;
 	}
 	
 	public void set(int x, int y, int v){
-		code[x][y] = v;
+		field.put(new Coordinate(x, y), (char)v);
 	}
 	
 	public int at(int x, int y){
-		return code[x][y];
+		try {
+			return field.get(new Coordinate(x, y));
+		} catch(Exception e) {
+			return ' ';
+		}
+	}
+	
+	public void set(int x, int y, int z, int v){
+		field.put(new Coordinate(x, y, z), (char)v);
+	}
+	
+	public int at(int x, int y, int z){
+		try {
+			return field.get(new Coordinate(x, y, z));
+		} catch(Exception e) {
+			return ' ';
+		}
 	}
 }
 

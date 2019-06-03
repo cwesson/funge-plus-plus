@@ -10,33 +10,27 @@ import java.io.PushbackInputStream;
 
 public class Funge{
 	public static void main(String args[]){
+		String std = "be98";
+		String filepath = "";
+		for(String arg : args) {
+			if(arg.startsWith("-std=")) {
+				String parts[] = arg.split("=");
+				std = parts[1];
+			}else {
+				filepath = arg;
+			}
+		}
+		
+		if(filepath == "") {
+			System.err.println("No input file specified.");
+			return;
+		}
+		
 		try{
-			File file = new File(args[0]);
+			File file = new File(filepath);
 			PushbackInputStream fis = new PushbackInputStream(new FileInputStream(file));
-			//Determine playfield size
-			int width = 0;
-			int height = 0;
-			int count = 0;
-			int i = 0;
-			do{
-				i = fis.read();
-				if(i == '\n' || i == '\r' || i == -1){
-					if(i == '\r'){
-						int j = fis.read();
-						if(j != '\n'){
-							fis.unread(j);
-						}
-					}
-					height++;
-					if(count > width) width = count;
-					count = 0;
-				}else{
-					count++;
-				}
-			}while(i > -1);
-			fis.close();
 			//Read code
-			Field field = new Field(file, width, height);
+			Field field = new Field(file);
 			FungeRunner runner = new FungeRunner(field);
 			new Thread(runner).start();
 		}catch(Exception e){

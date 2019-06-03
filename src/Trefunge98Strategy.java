@@ -25,6 +25,24 @@ class Trefunge98Strategy extends Befunge98Strategy{
 					ip.setDir(0, 0, 1);
 				}
 				break;
+			case '?':{
+				int r = rnd.nextInt(6);
+				switch(r){
+					case 0:
+						ip.setDir(0, 1, 0); break;
+					case 1:
+						ip.setDir(-1, 0, 0); break;
+					case 2:
+						ip.setDir(1, 0, 0); break;
+					case 3:
+						ip.setDir(0, -1, 0); break;
+					case 4:
+						ip.setDir(0, 0, 1); break;
+					case 5:
+						ip.setDir(0, 0, -1); break;
+				}
+				break;
+			}
 			
 			default:
 				return super.execute(cmd);
