@@ -9,18 +9,22 @@ CLASSES := $(subst src/,bin/,$(subst .java,.class,$(SRCS)))
 JAVA := javac
 JAVAARGS := -d bin -cp bin -sourcepath src
 
-all: $(CLASSES)
+all: test
+
+java: $(CLASSES)
 
 bin/%.class: src/%.java
 	@mkdir -p bin/
 	@echo JAVA $(subst src/,,$<)
 	@$(JAVA) $(JAVAARGS) $<
 
+test: java
+	@./test/smoketest.sh
+
 clean:
 	@echo CLEAN bin/
-	@rm -rf bin/*.class
+	@rm -f $(CLASSES)
 
 realclean:
 	@echo REALCLEAN
 	@rm -rf bin/
-

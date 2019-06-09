@@ -35,7 +35,7 @@ public class Funge{
 			new Thread(runner).start();
 		}catch(Exception e){
 			e.printStackTrace();
+			System.exit(1);
 		}
 	}
 }
-

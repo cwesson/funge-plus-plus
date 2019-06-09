@@ -52,6 +52,14 @@ public class Field{
 		return max.get(1);
 	}
 	
+	public int size(int d){
+		if(d < max.size()){
+			return this.max.get(d);
+		}else{
+			return 0;
+		}
+	}
+	
 	public void set(Vector p, int v){
 		for(int i = 0; i < p.size(); i++) {
 			if(i >= max.size()){
@@ -73,5 +81,16 @@ public class Field{
 			return ' ';
 		}
 	}
+	
+	@Override
+	public String toString(){
+		String str = "";
+		for(int y = 0; y < this.size(1); y++){
+			for(int x = 0; x < this.size(0); x++){
+				str += (char)this.at(new Vector(x, y));
+			}
+			str += "\n";
+		}
+		return str;
+	}
 }
-

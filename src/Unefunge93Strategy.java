@@ -23,9 +23,9 @@ class Unefunge93Strategy extends FungeStrategy{
 			switch(cmd){
 				case '!':
 					if(stack.top().pop() == 0){
-						stack.top().push(0);
-					}else{
 						stack.top().push(1);
+					}else{
+						stack.top().push(0);
 					}
 					break;
 				case '#':
@@ -156,4 +156,3 @@ class Unefunge93Strategy extends FungeStrategy{
 		return true;
 	}
 }
-
