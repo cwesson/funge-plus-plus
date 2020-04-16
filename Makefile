@@ -3,27 +3,38 @@
 # @author Conlan Wesson
 ##
 
-SRCS := $(wildcard src/*.java)
-CLASSES := $(subst src/,bin/,$(subst .java,.class,$(SRCS)))
+SRCS := $(wildcard src/*.cpp)
+OBJS := $(subst src/,bin/,$(subst .cpp,.o,$(SRCS)))
 
-JAVA := javac
-JAVAARGS := -d bin -cp bin -sourcepath src
+EXEC := bin/funge
+
+CPP := g++
+CPPARGS := -I src/include -g -Wall -Wextra -Werror
+
+LD := g++
+LDARGS := -lpthread
 
 all: test
 
-java: $(CLASSES)
+build: funge
 
-bin/%.class: src/%.java
+funge: $(EXEC)
+
+$(EXEC): $(OBJS)
+	@echo "LD  " $(subst bin/,,$@)
+	@$(LD) $(LDARGS) -o $@ $(OBJS)
+
+bin/%.o: src/%.cpp
 	@mkdir -p bin/
-	@echo JAVA $(subst src/,,$<)
-	@$(JAVA) $(JAVAARGS) $<
+	@echo "CPP " $(subst src/,,$<)
+	@$(CPP) $(CPPARGS) -o $@ -c $<
 
-test: java
+test: build
 	@./test/smoketest.sh
 
 clean:
 	@echo CLEAN bin/
-	@rm -f $(CLASSES)
+	@rm -f $(OBJS)
 
 realclean:
 	@echo REALCLEAN
