@@ -15,7 +15,7 @@ class Unefunge98Strategy : public Unefunge93Strategy {
 		Unefunge98Strategy(Field& f, InstructionPointer& i, StackStack& s);
 		virtual ~Unefunge98Strategy() = default;
 		
-		virtual bool execute(inst_t cmd);
+		virtual bool execute(inst_t cmd) override;
 	
 	private:
 		void pushSysInfo(int num);

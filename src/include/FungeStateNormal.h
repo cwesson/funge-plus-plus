@@ -16,7 +16,7 @@ class FungeStateNormal : public FungeState {
 		FungeStateNormal(FungeRunner& r, StackStack& s, FungeStrategy* strat);
 		virtual ~FungeStateNormal() = default;
 		
-		virtual bool execute(inst_t i);
+		virtual bool execute(inst_t i) override;
 	
 	protected:
 		FungeStrategy* strategy;

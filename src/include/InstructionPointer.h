@@ -14,7 +14,7 @@ namespace Funge {
 
 class InstructionPointer {
 	public:
-		InstructionPointer(Field& f);
+		explicit InstructionPointer(Field& f);
 		InstructionPointer(const InstructionPointer& orig);
 		
 		inst_t get() const;

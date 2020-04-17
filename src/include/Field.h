@@ -15,7 +15,7 @@ namespace Funge {
 
 class Field {
 	public:
-		Field(std::istream& file);
+		explicit Field(std::istream& file);
 		
 		void set(const Vector& p, inst_t v);
 		inst_t get(const Vector& p) const;

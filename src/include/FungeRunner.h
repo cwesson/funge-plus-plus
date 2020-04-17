@@ -18,7 +18,7 @@ class FungeState;
 
 class FungeRunner {
 	public:
-		FungeRunner(Field& f);
+		explicit FungeRunner(Field& f);
 		FungeRunner(Field& f, const StackStack& s, const InstructionPointer& i);
 		
 		void join() const;

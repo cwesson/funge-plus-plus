@@ -32,6 +32,8 @@ bin/%.o: src/%.cpp
 test: build
 	@./test/smoketest.sh
 
+.NOTPARALLEL: clean realclean
+
 clean:
 	@echo CLEAN bin/
 	@rm -f $(OBJS)

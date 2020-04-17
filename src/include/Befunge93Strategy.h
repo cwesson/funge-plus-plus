@@ -15,7 +15,7 @@ class Befunge93Strategy : public Unefunge93Strategy {
 		Befunge93Strategy(Field& f, InstructionPointer& i, StackStack& s);
 		virtual ~Befunge93Strategy() = default;
 		
-		virtual bool execute(inst_t cmd);
+		virtual bool execute(inst_t cmd) override;
 };
 
 }

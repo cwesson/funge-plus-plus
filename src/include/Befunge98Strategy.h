@@ -15,7 +15,7 @@ class Befunge98Strategy : public Unefunge98Strategy {
 		Befunge98Strategy(Field& f, InstructionPointer& i, StackStack& s);
 		virtual ~Befunge98Strategy() = default;
 		
-		virtual bool execute(inst_t cmd);
+		virtual bool execute(inst_t cmd) override;
 };
 
 }

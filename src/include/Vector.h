@@ -15,7 +15,7 @@ namespace Funge {
 class Vector {
 	public:
 		Vector();
-		Vector(std::initializer_list<dim_t> v);
+		explicit Vector(std::initializer_list<dim_t> v);
 		Vector(const Vector& orig);
 		Vector& operator=(const Vector& orig);
 		

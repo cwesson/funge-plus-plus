@@ -15,7 +15,7 @@ class Unefunge93Strategy : public FungeStrategy {
 		Unefunge93Strategy(Field& f, InstructionPointer& i, StackStack& s);
 		virtual ~Unefunge93Strategy() = default;
 		
-		virtual bool execute(inst_t cmd);
+		virtual bool execute(inst_t cmd) override;
 };
 
 }
