@@ -6,7 +6,7 @@
 
 #include "FungeRunner.h"
 #include "FungeManager.h"
-#include "Befunge98Strategy.h"
+#include "Trefunge98Strategy.h"
 
 namespace Funge {
 
@@ -15,7 +15,7 @@ FungeRunner::FungeRunner(Field& f) :
 	stack(),
 	ip(f),
 	thread(nullptr),
-	normalState(*this, stack, new Befunge98Strategy(f, ip, stack)),
+	normalState(*this, stack, new Trefunge98Strategy(f, ip, stack)),
 	stringState(*this, stack),
 	state(&normalState)
 {
@@ -27,7 +27,7 @@ FungeRunner::FungeRunner(Field& f, const StackStack& s, const InstructionPointer
 	stack(s),
 	ip(i),
 	thread(nullptr),
-	normalState(*this, stack, new Befunge98Strategy(f, ip, stack)),
+	normalState(*this, stack, new Trefunge98Strategy(f, ip, stack)),
 	stringState(*this, stack),
 	state(&normalState)
 {
@@ -46,6 +46,7 @@ void FungeRunner::operator()(){
 		while(!done && !ip.isStopped()){
 			inst_t i = ip.get();
 			done = state->execute(i);
+			//std::cout << "\"" << i << "\"" << std::endl;
 			if(!done && i != ' '){
 				std::cerr << "Unimplemented instruction " << static_cast<int>(i) << " \'" << static_cast<char>(i) << "\' at " << ip << "." << std::endl;
 				ip.reverse();

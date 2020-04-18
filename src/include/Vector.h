@@ -41,6 +41,7 @@ class Vector {
 	
 	private:
 		std::vector<dim_t> values;
+		void normalize();
 };
 
 }

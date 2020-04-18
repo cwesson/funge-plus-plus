@@ -9,6 +9,7 @@
 namespace Funge{
 
 Field::Field(std::istream& file){
+	int last = 0;
 	dim_t x = 0;
 	dim_t y = 0;
 	dim_t z = 0;
@@ -20,19 +21,24 @@ Field::Field(std::istream& file){
 					file.get();
 				}
 			}
-			++y;
-			x = 0;
+			if(last != '\f'){
+				++y;
+				x = 0;
+			}
 		}else if(i == '\f'){
 			x = 0;
 			y = 0;
 			++z;
+			last = '\f';
 		}else{
 			if(i != ' '){
-				set(Vector{x, y}, i);
+				set(Vector{x, y, z}, i);
 			}
 			++x;
+			last = i;
 		}
 	}
+	//std::cout << *this << std::endl;
 }
 
 size_t Field::dimensions() const{

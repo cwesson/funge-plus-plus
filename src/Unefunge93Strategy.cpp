@@ -126,13 +126,15 @@ bool Unefunge93Strategy::execute(inst_t cmd){
 			case '>':
 				ip.setDelta(Vector{1}); break;
 			case '?':{
-				int r = random()%2;
-				switch(r){
-					case 0:
-						ip.setDelta(Vector{-1}); break;
-					case 1:
-						ip.setDelta(Vector{1}); break;
+				int s = field.dimensions()*2;
+				int r = random()%s;
+				Vector v;
+				if(r & 1){
+					v.set(r>>1, -1);
+				}else{
+					v.set(r>>1, 1);
 				}
+				ip.setDelta(v);
 				break;
 			}
 			case '_':

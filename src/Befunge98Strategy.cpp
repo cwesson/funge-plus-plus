@@ -29,19 +29,6 @@ bool Befunge98Strategy::execute(inst_t cmd){
 				ip.setDelta(Vector{0, -1});
 			}
 			break;
-		case '?':{
-			int r = random()%4;
-			switch(r){
-				case 0:
-					ip.setDelta(Vector{0, 1}); break;
-				case 1:
-					ip.setDelta(Vector{-1, 0}); break;
-				case 2:
-					ip.setDelta(Vector{1, 0}); break;
-				case 3:
-					ip.setDelta(Vector{0, -1}); break;
-			}
-		} break;
 		
 		case '[':
 			ip.left();

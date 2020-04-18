@@ -14,13 +14,14 @@ Vector::Vector(){
 }
 
 Vector::Vector(const Vector& orig) : values(orig.values){
-
+	normalize();
 }
 
 Vector::Vector(std::initializer_list<dim_t> v){
 	for(dim_t d : v){
 		values.push_back(d);
 	}
+	normalize();
 }
 
 Vector& Vector::operator=(const Vector& orig){
@@ -28,7 +29,14 @@ Vector& Vector::operator=(const Vector& orig){
 	for(dim_t d : orig.values){
 		values.push_back(d);
 	}
+	normalize();
 	return *this;
+}
+
+void Vector::normalize(){
+	while(values.size() > 1 && values.back() == 0){
+		values.pop_back();
+	}
 }
 
 size_t Vector::size() const{
@@ -48,6 +56,7 @@ void Vector::set(size_t d, dim_t v){
 		values.push_back(0);
 	}
 	values[d] = v;
+	normalize();
 }
 
 void Vector::reverse(){
