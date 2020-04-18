@@ -13,10 +13,13 @@ namespace Funge {
 
 class FungeStateNormal : public FungeState {
 	public:
-		FungeStateNormal(FungeRunner& r, StackStack& s, FungeStrategy* strat);
-		virtual ~FungeStateNormal() = default;
+		FungeStateNormal(FungeRunner& r, Field& f, StackStack& s, InstructionPointer& i);
+		virtual ~FungeStateNormal();
 		
 		virtual bool execute(inst_t i) override;
+		
+		FungeStateNormal(const FungeStateNormal&) = delete;
+		FungeStateNormal& operator=(const FungeStateNormal&) = delete;
 	
 	protected:
 		FungeStrategy* strategy;

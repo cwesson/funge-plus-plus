@@ -5,6 +5,7 @@
  */
 
 #include "InstructionPointer.h"
+#include "FungeConfig.h"
 
 namespace Funge {
 
@@ -35,7 +36,7 @@ void InstructionPointer::set(inst_t i){
 }
 
 bool InstructionPointer::inField(){
-	for(size_t n = 0; n < field.dimensions(); ++n){
+	for(size_t n = 0; n < funge_config.dimensions; ++n){
 		if(pos.get(n) < field.min(n) || pos.get(n) > field.max(n)){
 			return false;
 		}

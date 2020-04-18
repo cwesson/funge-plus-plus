@@ -6,7 +6,6 @@
 
 #include "FungeRunner.h"
 #include "FungeManager.h"
-#include "Trefunge98Strategy.h"
 
 namespace Funge {
 
@@ -15,7 +14,7 @@ FungeRunner::FungeRunner(Field& f) :
 	stack(),
 	ip(f),
 	thread(nullptr),
-	normalState(*this, stack, new Trefunge98Strategy(f, ip, stack)),
+	normalState(*this, f, stack, ip),
 	stringState(*this, stack),
 	state(&normalState)
 {
@@ -27,7 +26,7 @@ FungeRunner::FungeRunner(Field& f, const StackStack& s, const InstructionPointer
 	stack(s),
 	ip(i),
 	thread(nullptr),
-	normalState(*this, stack, new Trefunge98Strategy(f, ip, stack)),
+	normalState(*this, f, stack, ip),
 	stringState(*this, stack),
 	state(&normalState)
 {

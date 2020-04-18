@@ -5,7 +5,8 @@ Befunge93
 ^v|
 
 Unefunge98
-'();=A-Za-fijknoqrstuxyz{}
+';a-fjknqrstxyz
+unimplemented ()=A-Ziou{}
 
 Befunge98
 []w
@@ -30,12 +31,12 @@ D
 E
 F
 G
-H
-I 4D-if
+H 5D-
+I 4D if
 J
 K
-L
-M
+L 5D+
+M 5D if
 N
 O
 P
@@ -49,4 +50,3 @@ W
 X
 Y
 Z
-

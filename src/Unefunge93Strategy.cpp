@@ -5,6 +5,7 @@
  */
 
 #include "Unefunge93Strategy.h"
+#include "FungeConfig.h"
 #include <iostream>
 
 namespace Funge {
@@ -126,8 +127,8 @@ bool Unefunge93Strategy::execute(inst_t cmd){
 			case '>':
 				ip.setDelta(Vector{1}); break;
 			case '?':{
-				int s = field.dimensions()*2;
-				int r = random()%s;
+				size_t d = funge_config.dimensions*2;
+				int r = random()%d;
 				Vector v;
 				if(r & 1){
 					v.set(r>>1, -1);
@@ -147,15 +148,22 @@ bool Unefunge93Strategy::execute(inst_t cmd){
 				
 			//Self-Modifying
 			case 'g':{
-				stack_t gy = stack.top().pop();
-				stack_t gx = stack.top().pop();
-				stack.top().push(static_cast<stack_t>(field.get(Vector{gx,gy})));
+				size_t d = funge_config.dimensions;
+				Vector v;
+				for(size_t i = d; i > 0; --i){
+					stack_t s = stack.top().pop();
+					v.set(i-1, s);
+				}
+				stack.top().push(static_cast<stack_t>(field.get(v)));
 			} break;
 			case 'p':{
-				stack_t y = stack.top().pop();
-				stack_t x = stack.top().pop();
-				stack_t v = stack.top().pop();
-				field.set(Vector{x,y}, v);
+				size_t d = funge_config.dimensions;
+				Vector v;
+				for(size_t i = d; i > 0; --i){
+					stack_t s = stack.top().pop();
+					v.set(i-1, s);
+				}
+				field.set(v, stack.top().pop());
 			} break;
 			
 			default:

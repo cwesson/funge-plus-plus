@@ -7,7 +7,7 @@
 #pragma once
 
 #include <stack>
-#include "funge_common.h"
+#include "funge_types.h"
 
 namespace Funge {
 

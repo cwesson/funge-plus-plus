@@ -8,7 +8,7 @@
 
 #include "Vector.h"
 #include "Field.h"
-#include "funge_common.h"
+#include "funge_types.h"
 
 namespace Funge {
 

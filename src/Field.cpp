@@ -5,10 +5,11 @@
  */
 
 #include "Field.h"
+#include "FungeConfig.h"
 
 namespace Funge{
 
-Field::Field(std::istream& file){
+Field::Field(std::istream& file, size_t dim){
 	int last = 0;
 	dim_t x = 0;
 	dim_t y = 0;
@@ -39,10 +40,11 @@ Field::Field(std::istream& file){
 		}
 	}
 	//std::cout << *this << std::endl;
-}
-
-size_t Field::dimensions() const{
-	return maxs.size();
+	if(dim == 0){
+		funge_config.dimensions = maxs.size();
+	}else{
+		funge_config.dimensions = dim;
+	}
 }
 
 dim_t Field::min(size_t d) const{

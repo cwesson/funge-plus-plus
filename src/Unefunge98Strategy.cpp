@@ -6,6 +6,7 @@
 
 #include "Unefunge98Strategy.h"
 #include "FungeRunner.h"
+#include "FungeConfig.h"
 #include <iostream>
 #include <thread>
 #include <ctime>
@@ -66,12 +67,18 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 			} break;
 			
 			case 't':{
-				FungeRunner* runner = new FungeRunner(field, stack, ip);
-				(void)runner;
+				if(funge_config.concurrent){
+					FungeRunner* runner = new FungeRunner(field, stack, ip);
+					(void)runner;
+				}else{
+					std::cerr << "Unimplemented instruction " << static_cast<int>(cmd) << " \'" << static_cast<char>(cmd) << "\' at " << ip << "." << std::endl;
+					std::cerr << "Run without -fno-concurrent to enable concurrency." << std::endl;
+					ip.reverse();
+				}
 			} break;
 			
 			case 'x':{
-				int s = field.dimensions();
+				int s = funge_config.dimensions;
 				Vector v;
 				for(int i = s-1; i >= 0; i--){
 					v.set(i, stack.top().pop());

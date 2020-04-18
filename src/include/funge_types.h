@@ -1,3 +1,8 @@
+/**
+ * @file funge_types.h
+ * Common types.
+ * @author Conlan Wesson
+ */
 
 #pragma once
 
