@@ -11,7 +11,8 @@ namespace Funge {
 FungeStrategy::FungeStrategy(Field& f, InstructionPointer& i, StackStack& s) :
 	field(f),
 	ip(i),
-	stack(s)
+	stack(s),
+	random()
 {
 	
 }

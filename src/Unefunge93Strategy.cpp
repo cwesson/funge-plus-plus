@@ -126,7 +126,7 @@ bool Unefunge93Strategy::execute(inst_t cmd){
 			case '>':
 				ip.setDelta(Vector{1}); break;
 			case '?':{
-				int r = rand()%2;
+				int r = random()%2;
 				switch(r){
 					case 0:
 						ip.setDelta(Vector{-1}); break;

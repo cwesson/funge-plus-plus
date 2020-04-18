@@ -9,6 +9,7 @@
 #include "Field.h"
 #include "InstructionPointer.h"
 #include "StackStack.h"
+#include <random>
 
 namespace Funge {
 
@@ -23,6 +24,7 @@ class FungeStrategy {
 		Field& field;
 		InstructionPointer& ip;
 		StackStack& stack;
+		std::random_device random;
 };
 
 }

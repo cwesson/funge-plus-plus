@@ -30,7 +30,7 @@ bool Befunge98Strategy::execute(inst_t cmd){
 			}
 			break;
 		case '?':{
-			int r = rand()%4;
+			int r = random()%4;
 			switch(r){
 				case 0:
 					ip.setDelta(Vector{0, 1}); break;
