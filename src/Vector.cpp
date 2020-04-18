@@ -92,8 +92,12 @@ Vector operator+(const Vector& lhs, const Vector& rhs) {
 
 bool Vector::operator<(const Vector& other) const{
 	size_t len = std::max(this->values.size(), other.values.size());
-	for(size_t i = 0; i < len; ++i){
-		if(this->get(i) < other.get(i)){
+	for(size_t i = len; i > 0; --i){
+		dim_t lhs = this->get(i-1);
+		dim_t rhs = other.get(i-1);
+		if(lhs > rhs){
+			return false;
+		}else if(lhs < rhs){
 			return true;
 		}
 	}

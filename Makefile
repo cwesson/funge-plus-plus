@@ -14,6 +14,8 @@ CPPARGS := -I src/include -g -Wall -Wextra -Werror
 LD := g++
 LDARGS := -lpthread
 
+.PHONY: all clean realclean
+
 all: test
 
 build: funge
@@ -31,6 +33,22 @@ bin/%.o: src/%.cpp
 
 test: build
 	@./test/smoketest.sh
+
+CPPUTESTLIB := ut/cpputest/src/CppUTest/libCppUTest.a
+UTCPPARGS := -I src/include -I ut/cpputest/include -lpthread
+UTSRCS := ut/unittest.cpp src/Vector.cpp
+
+ut: unittest
+
+unittest: $(UTSRCS) $(CPPUTESTLIB)
+	$(CPP) $(UTCPPARGS) -o ./bin/$@ $(UTSRCS) $(CPPUTESTLIB)
+	./bin/unittest -c -v
+
+$(CPPUTESTLIB): cpputest
+
+cpputest:
+	cd ut/cpputest; cmake .
+	make -C ut/cpputest
 
 .NOTPARALLEL: clean realclean
 

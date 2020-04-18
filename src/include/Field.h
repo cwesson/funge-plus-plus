@@ -29,7 +29,7 @@ class Field {
 		friend std::ostream& operator<<(std::ostream& os, const Field& rhs);
 	
 	private:
-		std::map<Vector, inst_t> field;
+		std::map<const Vector, inst_t> field;
 		std::vector<dim_t> maxs;
 		std::vector<dim_t> mins;
 };

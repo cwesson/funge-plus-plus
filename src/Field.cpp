@@ -62,21 +62,14 @@ void Field::set(const Vector& p, inst_t v){
 			mins[i] = p[i];
 		}
 	}
-	for(auto pair : field){
-		if(pair.first == p){
-			field[p] = v;
-			return;
-		}
-	}
-	field.insert(std::pair<Vector, inst_t>(p, v));
+	field[p] = v;
 }
 
 inst_t Field::get(const Vector& p) const{
 	inst_t ret = ' ';
-	for(auto pair : field){
-		if(pair.first == p){
-			ret = pair.second;
-		}
+	auto find = field.find(p);
+	if(find != field.end()){
+		ret = find->second;
 	}
 	return ret;
 }
