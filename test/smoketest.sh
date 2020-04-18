@@ -47,6 +47,7 @@ test_simple test/test_quit.bf "3 2 1 " 4
 test_simple test/test_clear.bf "3 2 1 0 0 0 "
 test_simple test/test_jump.bf "2 1 0 0 0 0 0 3 "
 test_simple test/test_iter.bf "6 5 4 3 2 1 "
+test_simple test/test_hex.bf "15 14 13 12 11 10 "
 test_simple test/test_turn.bf "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 "
 test_simple test/test_comp.bf "3 2 1 "
 test_simple test/test_fetch.bf "2 v 1 ^<"
