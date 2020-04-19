@@ -14,7 +14,7 @@ function assert_equal() {
 
 function test_simple() {
     echo TEST $1
-    res=`./bin/funge $1`
+    res=`timeout 10 ./bin/funge $1`
     code=$?
     if [ -z "$3" ]; then
         expect=0
@@ -27,7 +27,7 @@ function test_simple() {
 
 function test_befunge() {
     echo TEST $1
-    res=`./bin/funge -std=be98 $1`
+    res=`timeout 10 ./bin/funge -std=be98 $1`
     code=$?
     if [ -z "$3" ]; then
         expect=0
@@ -41,7 +41,7 @@ function test_befunge() {
 # Funge-93 Tests
 test_simple test/test_stop.bf ""
 test_simple test/test_outint.bf "6 5 4 3 2 1 "
-test_simple test/test_outchar.bf "Hello!"
+test_simple test/test_outchar.bf "Hello World!"
 test_simple test/test_arith.bf "2 3 5 8 13 21 "
 test_simple test/test_flow.bf "4 3 2 1 0 "
 test_simple test/test_wrap.bf "1 2 3 4 5 "
@@ -70,3 +70,4 @@ test_simple test/test_thread.bf "6 5 4 3 2 1 "
 test_simple test/test_3d.bf "1 2 3 4 5 6 7 8 "
 test_simple test/test_stackstack.bf "5 4 3 9 8 7 2 "
 test_simple test/test_under.bf "5 4 3 1 2 0 0 "
+test_simple test/test_execute.bf "Hello World!" 1

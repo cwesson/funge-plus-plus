@@ -17,18 +17,13 @@ Vector::Vector(const Vector& orig) : values(orig.values){
 	normalize();
 }
 
-Vector::Vector(std::initializer_list<dim_t> v){
-	for(dim_t d : v){
-		values.push_back(d);
-	}
+Vector::Vector(std::initializer_list<dim_t> v) : values(v){
 	normalize();
 }
 
 Vector& Vector::operator=(const Vector& orig){
 	values.clear();
-	for(dim_t d : orig.values){
-		values.push_back(d);
-	}
+	values = orig.values;
 	normalize();
 	return *this;
 }

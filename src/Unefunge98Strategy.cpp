@@ -6,6 +6,7 @@
 
 #include "Unefunge98Strategy.h"
 #include "FungeRunner.h"
+#include "FungeUtilities.h"
 #include "FungeConfig.h"
 #include <iostream>
 #include <thread>
@@ -78,11 +79,8 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 			} break;
 			
 			case 'x':{
-				size_t s = funge_config.dimensions;
 				Vector v;
-				for(size_t i = s; i > 0; --i){
-					v.set(i-1, stack.top().pop());
-				}
+				popVector(stack.top(), v);
 				ip.setDelta(v);
 			} break;
 			
@@ -97,20 +95,14 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 					stack.top().push(trans[i-1]);
 				}
 				const Vector& storage = ip.getStorage();
-				size_t s = funge_config.dimensions;
-				for(size_t i = 0; i < s; ++i){
-					stack.second().push(storage[i]);
-				}
+				pushVector(stack.second(), storage);
 				ip.setStorage(ip.getPos()+ip.getDelta());
 			} break;
 			case '}':{
 				if(stack.size() > 1){
 					stack_t n = std::abs(stack.top().pop());
-					size_t s = funge_config.dimensions;
 					Vector v;
-					for(size_t i = s; i > 0; --i){
-						v.set(i-1, stack.second().pop());
-					}
+					popVector(stack.second(), v);
 					ip.setStorage(v);
 					stack_t trans[n];
 					for(stack_t i = 0; i < n; ++i){
@@ -136,6 +128,18 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 				}
 			} break;
 			
+			case '=':{
+				if(funge_config.execute){
+					std::string sys = popString(stack.top());
+					int code = system(sys.c_str());
+					stack.top().push(code);
+				}else{
+					std::cerr << "Unimplemented instruction " << static_cast<int>(cmd) << " \'" << static_cast<char>(cmd) << "\' at " << ip << "." << std::endl;
+					std::cerr << "Run without -fno-execute to enable execution." << std::endl;
+					ip.reverse();
+				}
+			} break;
+			
 			case 'y':
 				pushSysInfo(stack.top().pop());
 				break;
@@ -149,7 +153,7 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 
 void Unefunge98Strategy::pushSysInfo(int num){
 	size_t s = funge_config.dimensions;
-	int pushes = 26;
+	int pushes = 16;
 	// ENV variables
 	stack.top().push(0);
 	stack.top().push(0);
@@ -159,7 +163,7 @@ void Unefunge98Strategy::pushSysInfo(int num){
 	// Size of stacks
 	for(size_t i = stack.size(); i > 0; --i){
 		stack.top().push(stack.at(i-1).size());
-		pushes++;
+		++pushes;
 	}
 	// Number of stacks
 	stack.top().push(stack.size());
@@ -170,37 +174,32 @@ void Unefunge98Strategy::pushSysInfo(int num){
 	// Date
 	stack.top().push((dt->tm_year-1900)*256*256 + (dt->tm_mon+1)*256 + dt->tm_mday);
 	// Greatest non-space
-	stack.top().push(field.max(0));
-	stack.top().push(field.max(1));
+	for(size_t i = 0; i < s; ++i){
+		stack.top().push(field.max(i));
+		++pushes;
+	}
 	// Least non-space
-	stack.top().push(field.min(0));
-	stack.top().push(field.min(1));
+	for(size_t i = 0; i < s; ++i){
+		stack.top().push(field.min(i));
+		++pushes;
+	}
 	// Storage Offset
-	const Vector& vs = ip.getStorage();
-	for(size_t i = 0; i < s; ++i){
-		stack.top().push(vs[i]);
-	}
+	pushes += pushVector(stack.top(), ip.getStorage());
 	// Delta vector
-	const Vector& vd = ip.getDelta();
-	for(size_t i = 0; i < s; ++i){
-		stack.top().push(vd[i]);
-	}
+	pushes += pushVector(stack.top(), ip.getDelta());
 	// Current position
-	const Vector& vp = ip.getPos();
-	for(size_t i = 0; i < s; ++i){
-		stack.top().push(vp[i]);
-	}
+	pushes += pushVector(stack.top(), ip.getPos());
 	// Team number
 	stack.top().push(0);
 	// Thread ID
 	std::hash<std::thread::id> hasher;
 	stack.top().push(hasher(std::this_thread::get_id()));
 	// Scalars per vector
-	stack.top().push(2);
+	stack.top().push(funge_config.dimensions);
 	// Path separator
 	stack.top().push('/');
 	// Operating Paradigm
-	stack.top().push(0);
+	stack.top().push(OP_SYSTEM);
 	// Version Number
 	stack.top().push(1);
 	// Handprint
@@ -208,7 +207,17 @@ void Unefunge98Strategy::pushSysInfo(int num){
 	// Bytes per cell
 	stack.top().push(sizeof(stack_t));
 	// Flags
-	stack.top().push(0x01);
+	stack_t flags = ENV_UNBUFFERED_IO;
+	if(funge_config.concurrent){
+		flags |= ENV_CONCURRENT;
+	}
+	if(funge_config.execute){
+		flags |= ENV_EXECUTE;
+	}
+	if(funge_config.filesystem){
+		flags |= ENV_FILE_IN | ENV_FILE_OUT;
+	}
+	stack.top().push(flags);
 	if(num > 0){
 		int val = 0;
 		for(int i = 1; i <= num; i++){

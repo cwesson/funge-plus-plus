@@ -26,4 +26,4 @@ the `-std` argument.
 
 ## Eratta
 1. The fingerprint instructions `(`, `)`, and `A`-`Z` have not yet been implemented.
-2. The file I/O instructions `i` and `o` as well as the system instruction `=` have not yet been implemented.
+2. The file I/O instructions `i` and `o` have not yet been implemented.

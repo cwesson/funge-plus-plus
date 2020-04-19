@@ -43,6 +43,8 @@ int main(int argc, char **argv){
 			}
 		}else if(strncmp(argv[a], "-fno-concurrent", 15) == 0){
 			Funge::funge_config.concurrent = false;
+		}else if(strncmp(argv[a], "-fno-execute", 15) == 0){
+			Funge::funge_config.execute = false;
 		}else if(strncmp(argv[a], "-fno-filesystem", 15) == 0){
 			Funge::funge_config.filesystem = false;
 		}

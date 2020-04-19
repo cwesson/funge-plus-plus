@@ -12,7 +12,8 @@ struct FungeConfig funge_config = {
 	.dimensions = 0,
 	.standard = 98,
 	.concurrent = true,
-	.filesystem = true,
+	.execute = true,
+	.filesystem = false,
 };
 
 }
