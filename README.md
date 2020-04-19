@@ -1,6 +1,6 @@
 # C-Funge
-C-Funge was originally written by Conlan Wesson in Java for a Programming Laguage Concepts course with minimal
-functionality.  It has since been converted to C++, and an effort is underway to implement all Funge-98 instructions
+C-Funge is Befunge interpreter originally written by Conlan Wesson in Java for a Programming Laguage Concepts course
+with minimal functionality.  It has since been converted to C++, and an effort is underway to implement all Funge-98 instructions
 and support N-dimensional Funge.
 
 ## Running
@@ -27,4 +27,3 @@ the `-std` argument.
 ## Eratta
 1. The fingerprint instructions `(`, `)`, and `A`-`Z` have not yet been implemented.
 2. The file I/O instructions `i` and `o` as well as the system instruction `=` have not yet been implemented.
-3. The stack-stack manipulation instructions `{`, `}`, and `u` have not yet been implemented.

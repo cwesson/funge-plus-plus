@@ -19,8 +19,8 @@ class StackStack {
 		Stack& second();
 		Stack& at(size_t x);
 		
-		Stack& pop();
-		void push(Stack& s);
+		void pop();
+		void push();
 		
 		size_t size();
 		

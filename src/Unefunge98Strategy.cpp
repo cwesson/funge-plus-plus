@@ -78,14 +78,63 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 			} break;
 			
 			case 'x':{
-				int s = funge_config.dimensions;
+				size_t s = funge_config.dimensions;
 				Vector v;
-				for(int i = s-1; i >= 0; i--){
-					v.set(i, stack.top().pop());
+				for(size_t i = s; i > 0; --i){
+					v.set(i-1, stack.top().pop());
 				}
 				ip.setDelta(v);
-				break;
-			}
+			} break;
+			
+			case '{':{
+				stack_t n = std::abs(stack.top().pop());
+				stack.push();
+				stack_t trans[n];
+				for(stack_t i = 0; i < n; ++i){
+					trans[i] = stack.second().pop();
+				}
+				for(stack_t i = n; i > 0; --i){
+					stack.top().push(trans[i-1]);
+				}
+				const Vector& storage = ip.getStorage();
+				size_t s = funge_config.dimensions;
+				for(size_t i = 0; i < s; ++i){
+					stack.second().push(storage[i]);
+				}
+				ip.setStorage(ip.getPos()+ip.getDelta());
+			} break;
+			case '}':{
+				if(stack.size() > 1){
+					stack_t n = std::abs(stack.top().pop());
+					size_t s = funge_config.dimensions;
+					Vector v;
+					for(size_t i = s; i > 0; --i){
+						v.set(i-1, stack.second().pop());
+					}
+					ip.setStorage(v);
+					stack_t trans[n];
+					for(stack_t i = 0; i < n; ++i){
+						trans[i] = stack.top().pop();
+					}
+					for(stack_t i = n; i > 0; --i){
+						stack.second().push(trans[i-1]);
+					}
+					stack.pop();
+				}else{
+					ip.reverse();
+				}
+			} break;
+			case 'u':{
+				if(stack.size() > 1){
+					stack_t n = stack.top().pop();
+					for(stack_t i = 0; i < n; ++i){
+						stack_t trans = stack.second().pop();
+						stack.top().push(trans);
+					}
+				}else{
+					ip.reverse();
+				}
+			} break;
 			
 			case 'y':
 				pushSysInfo(stack.top().pop());
@@ -99,6 +148,7 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 }
 
 void Unefunge98Strategy::pushSysInfo(int num){
+	size_t s = funge_config.dimensions;
 	int pushes = 26;
 	// ENV variables
 	stack.top().push(0);
@@ -126,14 +176,20 @@ void Unefunge98Strategy::pushSysInfo(int num){
 	stack.top().push(field.min(0));
 	stack.top().push(field.min(1));
 	// Storage Offset
-	stack.top().push(0);
-	stack.top().push(0);
+	const Vector& vs = ip.getStorage();
+	for(size_t i = 0; i < s; ++i){
+		stack.top().push(vs[i]);
+	}
 	// Delta vector
-	stack.top().push(ip.getDelta().get(0));
-	stack.top().push(ip.getDelta().get(1));
+	const Vector& vd = ip.getDelta();
+	for(size_t i = 0; i < s; ++i){
+		stack.top().push(vd[i]);
+	}
 	// Current position
-	stack.top().push(ip.getPos().get(0));
-	stack.top().push(ip.getPos().get(1));
+	const Vector& vp = ip.getPos();
+	for(size_t i = 0; i < s; ++i){
+		stack.top().push(vp[i]);
+	}
 	// Team number
 	stack.top().push(0);
 	// Thread ID

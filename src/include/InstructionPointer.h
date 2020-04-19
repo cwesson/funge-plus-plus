@@ -20,6 +20,7 @@ class InstructionPointer {
 		inst_t get() const;
 		void set(inst_t i);
 		void setDelta(const Vector& v);
+		void setStorage(const Vector& v);
 		void reverse();
 		void left();
 		void right();
@@ -31,6 +32,7 @@ class InstructionPointer {
 		
 		const Vector& getPos() const;
 		const Vector& getDelta() const;
+		const Vector& getStorage() const;
 		
 		friend std::ostream& operator<<(std::ostream& os, const InstructionPointer& rhs);
 	
@@ -38,6 +40,7 @@ class InstructionPointer {
 		bool stopped;
 		Vector pos;
 		Vector delta;
+		Vector storage;
 		Field& field;
 		
 		bool inField();

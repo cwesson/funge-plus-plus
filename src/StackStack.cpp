@@ -24,14 +24,12 @@ Stack& StackStack::at(size_t x){
 	return stack[x];
 }
 
-Stack& StackStack::pop(){
-	Stack& ret = stack.back();
+void StackStack::pop(){
 	stack.pop_back();
-	return ret;
 }
 
-void StackStack::push(Stack& s){
-	stack.push_back(s);
+void StackStack::push(){
+	stack.push_back(Stack());
 }
 
 size_t StackStack::size(){

@@ -13,6 +13,7 @@ InstructionPointer::InstructionPointer(Field& f) :
 	stopped(false),
 	pos({0}),
 	delta({1}),
+	storage({0}),
 	field(f)
 {
 	
@@ -22,6 +23,7 @@ InstructionPointer::InstructionPointer(const InstructionPointer& orig) :
 	stopped(orig.stopped),
 	pos(orig.pos),
 	delta(orig.delta),
+	storage(orig.storage),
 	field(orig.field)
 {
 	
@@ -63,6 +65,10 @@ void InstructionPointer::setDelta(const Vector& v){
 	delta = v;
 }
 
+void InstructionPointer::setStorage(const Vector& v){
+	storage = v;
+}
+
 void InstructionPointer::reverse(){
 	delta.reverse();
 }
@@ -89,6 +95,10 @@ const Vector& InstructionPointer::getPos() const{
 
 const Vector& InstructionPointer::getDelta() const{
 	return delta;
+}
+
+const Vector& InstructionPointer::getStorage() const{
+	return storage;
 }
 
 std::ostream& operator<<(std::ostream& os, const InstructionPointer& rhs){

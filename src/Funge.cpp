@@ -41,6 +41,10 @@ int main(int argc, char **argv){
 				std::cerr << "Unsupported standard: " << arg << std::endl;
 				return EINVAL;
 			}
+		}else if(strncmp(argv[a], "-fno-concurrent", 15) == 0){
+			Funge::funge_config.concurrent = false;
+		}else if(strncmp(argv[a], "-fno-filesystem", 15) == 0){
+			Funge::funge_config.filesystem = false;
 		}
 	}
 	if(a < argc){

@@ -149,21 +149,23 @@ bool Unefunge93Strategy::execute(inst_t cmd){
 			//Self-Modifying
 			case 'g':{
 				size_t d = funge_config.dimensions;
+				const Vector& storage = ip.getStorage();
 				Vector v;
 				for(size_t i = d; i > 0; --i){
 					stack_t s = stack.top().pop();
 					v.set(i-1, s);
 				}
-				stack.top().push(static_cast<stack_t>(field.get(v)));
+				stack.top().push(static_cast<stack_t>(field.get(v+storage)));
 			} break;
 			case 'p':{
 				size_t d = funge_config.dimensions;
+				const Vector& storage = ip.getStorage();
 				Vector v;
 				for(size_t i = d; i > 0; --i){
 					stack_t s = stack.top().pop();
 					v.set(i-1, s);
 				}
-				field.set(v, stack.top().pop());
+				field.set(v+storage, stack.top().pop());
 			} break;
 			
 			default:
