@@ -38,6 +38,13 @@ function test_befunge() {
     assert_equal $1 "$res" "$2"
 }
 
+function test_diff() {
+    echo TEST $@
+    diff $@
+    code=$?
+    assert_equal $1 $code 0
+}
+
 # Funge-93 Tests
 test_simple test/test_stop.bf ""
 test_simple test/test_outint.bf "6 5 4 3 2 1 "
@@ -71,3 +78,5 @@ test_simple test/test_3d.bf "1 2 3 4 5 6 7 8 "
 test_simple test/test_stackstack.bf "5 4 3 9 8 7 2 "
 test_simple test/test_under.bf "5 4 3 1 2 0 0 "
 test_simple test/test_execute.bf "Hello World!" 1
+test_simple test/test_in.bf "3 2 1 5 4 6 "
+test_diff test/input.txt test/output.txt

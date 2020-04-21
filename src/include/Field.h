@@ -20,6 +20,9 @@ class Field {
 		void set(const Vector& p, inst_t v);
 		inst_t get(const Vector& p) const;
 		
+		Vector parse(const Vector& start, std::istream& file, bool binary=false);
+		void dump(const Vector& start, const Vector& delta, std::ostream& file, bool binary=false);
+		
 		dim_t min(size_t d) const;
 		dim_t max(size_t d) const;
 		
@@ -31,6 +34,9 @@ class Field {
 		std::map<const Vector, inst_t> field;
 		std::vector<dim_t> maxs;
 		std::vector<dim_t> mins;
+		
+		void increment(dim_t d, Vector& v, Vector& max);
+		void reset(dim_t d, Vector& v, const Vector& start, Vector& max);
 };
 
 }

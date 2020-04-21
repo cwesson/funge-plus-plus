@@ -10,6 +10,7 @@
 #include "FungeConfig.h"
 #include <iostream>
 #include <thread>
+#include <fstream>
 #include <ctime>
 
 namespace Funge {
@@ -73,7 +74,7 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 					(void)runner;
 				}else{
 					std::cerr << "Unimplemented instruction " << static_cast<int>(cmd) << " \'" << static_cast<char>(cmd) << "\' at " << ip << "." << std::endl;
-					std::cerr << "Run without -fno-concurrent to enable concurrency." << std::endl;
+					std::cerr << "Run with -fconcurrent to enable concurrency." << std::endl;
 					ip.reverse();
 				}
 			} break;
@@ -135,7 +136,43 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 					stack.top().push(code);
 				}else{
 					std::cerr << "Unimplemented instruction " << static_cast<int>(cmd) << " \'" << static_cast<char>(cmd) << "\' at " << ip << "." << std::endl;
-					std::cerr << "Run without -fno-execute to enable execution." << std::endl;
+					std::cerr << "Run with -fexecute to enable execution." << std::endl;
+					ip.reverse();
+				}
+			} break;
+			
+			case 'i':{
+				if(funge_config.filesystem){
+					std::string filepath = popString(stack.top());
+					stack_t flags = stack.top().pop();
+					Vector va;
+					popVector(stack.top(), va);
+					va += ip.getStorage();
+					std::ifstream file(filepath);
+					Vector vb = field.parse(va, file, !!(flags & FILE_IN_BINARY));
+					pushVector(stack.top(), vb);
+					pushVector(stack.top(), va);
+				}else{
+					std::cerr << "Unimplemented instruction " << static_cast<int>(cmd) << " \'" << static_cast<char>(cmd) << "\' at " << ip << "." << std::endl;
+					std::cerr << "Run with -ffilesystem to enable execution." << std::endl;
+					ip.reverse();
+				}
+			} break;
+			case 'o':{
+				if(funge_config.filesystem){
+					std::string filepath = popString(stack.top());
+					stack_t flags = stack.top().pop();
+					std::ignore = flags;
+					Vector va;
+					popVector(stack.top(), va);
+					va += ip.getStorage();
+					Vector vb;
+					popVector(stack.top(), vb);
+					std::ofstream file(filepath);
+					field.dump(va, vb, file, !(flags & FILE_OUT_TEXT));
+				}else{
+					std::cerr << "Unimplemented instruction " << static_cast<int>(cmd) << " \'" << static_cast<char>(cmd) << "\' at " << ip << "." << std::endl;
+					std::cerr << "Run with -ffilesystem to enable execution." << std::endl;
 					ip.reverse();
 				}
 			} break;

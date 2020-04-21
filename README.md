@@ -14,6 +14,12 @@ X and Y to zero.  Carriage returns and line feeds following a form feed are igno
 
 `-std=(un93, une98, be93, be98, tre98)` Overrides the automatically detected dimensionality.
 
+`-fconcurrent` `-fno-concurrent` Enable or disable use of split instruction `t`.
+
+`-fexecute` `-fno-execute` Enable or disable use of execute instruction `=`.
+
+`-ffilesystem` `-fno-filesystem` Enable or disable use of filesystem instructions `i` and `o`.
+
 ### Exit Code
 `funge` sets the program exit code to the value popped by the quit instruction `q` if encountered.  If `funge` fails
 to load the funge program, the exit code is set to an error.  In any other case, the exit code is zero.
@@ -26,4 +32,3 @@ the `-std` argument.
 
 ## Eratta
 1. The fingerprint instructions `(`, `)`, and `A`-`Z` have not yet been implemented.
-2. The file I/O instructions `i` and `o` have not yet been implemented.

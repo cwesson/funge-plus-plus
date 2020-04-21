@@ -41,11 +41,17 @@ int main(int argc, char **argv){
 				std::cerr << "Unsupported standard: " << arg << std::endl;
 				return EINVAL;
 			}
-		}else if(strncmp(argv[a], "-fno-concurrent", 15) == 0){
+		}else if(strcmp(argv[a], "-fconcurrent") == 0){
+			Funge::funge_config.concurrent = true;
+		}else if(strcmp(argv[a], "-fexecute") == 0){
+			Funge::funge_config.execute = true;
+		}else if(strcmp(argv[a], "-ffilesystem") == 0){
+			Funge::funge_config.filesystem = true;
+		}else if(strcmp(argv[a], "-fno-concurrent") == 0){
 			Funge::funge_config.concurrent = false;
-		}else if(strncmp(argv[a], "-fno-execute", 15) == 0){
+		}else if(strcmp(argv[a], "-fno-execute") == 0){
 			Funge::funge_config.execute = false;
-		}else if(strncmp(argv[a], "-fno-filesystem", 15) == 0){
+		}else if(strcmp(argv[a], "-fno-filesystem") == 0){
 			Funge::funge_config.filesystem = false;
 		}
 	}

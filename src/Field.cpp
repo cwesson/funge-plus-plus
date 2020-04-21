@@ -6,16 +6,26 @@
 
 #include "Field.h"
 #include "FungeConfig.h"
+#include <limits>
 
 namespace Funge{
 
 Field::Field(std::istream& file, size_t dim){
+	parse(Vector{0}, file);
+	//std::cout << *this << std::endl;
+	if(dim == 0){
+		funge_config.dimensions = maxs.size();
+	}else{
+		funge_config.dimensions = dim;
+	}
+}
+
+Vector Field::parse(const Vector& start, std::istream& file, bool binary){
+	Vector v(start);
+	Vector max(start);
 	int last = 0;
-	dim_t x = 0;
-	dim_t y = 0;
-	dim_t z = 0;
 	for(int i = file.get(); !file.eof(); i = file.get()) {
-		if(i == '\n' || i == '\r'){
+		if(!binary && (i == '\n' || i == '\r')){
 			if(i == '\r'){
 				int j = file.peek();
 				if(j == '\n'){
@@ -23,28 +33,66 @@ Field::Field(std::istream& file, size_t dim){
 				}
 			}
 			if(last != '\f'){
-				++y;
-				x = 0;
+				increment(1, v, max);    // ++y
+				reset(0, v, start, max); // x = 0
 			}
-		}else if(i == '\f'){
-			x = 0;
-			y = 0;
-			++z;
+		}else if(!binary && (i == '\f')){
+			reset(0, v, start, max); // x = 0
+			reset(1, v, start, max); // y = 0
+			increment(2, v, max);    // ++z
 			last = '\f';
 		}else{
 			if(i != ' '){
-				set(Vector{x, y, z}, i);
+				set(v, i);
 			}
-			++x;
+			increment(0, v, max); // ++x
 			last = i;
 		}
 	}
-	//std::cout << *this << std::endl;
-	if(dim == 0){
-		funge_config.dimensions = maxs.size();
-	}else{
-		funge_config.dimensions = dim;
+	return max-start;
+}
+
+void Field::dump(const Vector& start, const Vector& delta, std::ostream& file, bool binary){
+	Vector v(start);
+	Vector end(start+delta);
+	std::vector<char> buffer;
+	while(v < end){
+		inst_t i = get(v);
+		buffer.push_back(static_cast<char>(i));
+		if(i != ' '){
+			for(char c : buffer){
+				file << c;
+			}
+			buffer.clear();
+		}
+		v.set(0, v[0]+1); // ++x
+		if(v[0] >= end[0]){
+			if(!binary){
+				file << '\n';
+				v.set(1, v[1]+1);   // ++y
+				v.set(0, start[0]); // x = 0
+			}else{
+				break;
+			}
+		}
+		if(v[1] >= end[1]){
+			break;
+		}
 	}
+}
+
+void Field::increment(dim_t d, Vector& v, Vector& max){
+	v.set(d, v[d]+1);
+	if(v[d] > max[d]){
+		max.set(d, v[d]);
+	}
+}
+
+void Field::reset(dim_t d, Vector& v, const Vector& start, Vector& max){
+	if(v[d] > max[d]){
+		max.set(d, v[d]);
+	}
+	v.set(d, start[d]);
 }
 
 dim_t Field::min(size_t d) const{

@@ -33,6 +33,8 @@ class Vector {
 		
 		Vector& operator+=(const Vector& other);
 		friend Vector operator+(const Vector& lhs, const Vector& rhs);
+		Vector& operator-=(const Vector& other);
+		friend Vector operator-(const Vector& lhs, const Vector& rhs);
 		
 		bool operator<(const Vector& other) const;
 		bool operator==(const Vector& other) const;

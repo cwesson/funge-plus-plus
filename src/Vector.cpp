@@ -94,6 +94,18 @@ Vector operator+(const Vector& lhs, const Vector& rhs) {
 	return Vector(lhs) += rhs;
 }
 
+Vector& Vector::operator-=(const Vector& other){
+	size_t len = std::max(this->values.size(), other.values.size());
+	for(size_t i = 0; i < len; ++i){
+		this->set(i, this->get(i)-other.get(i));
+	}
+	return *this;
+}
+
+Vector operator-(const Vector& lhs, const Vector& rhs) {
+	return Vector(lhs) -= rhs;
+}
+
 bool Vector::operator<(const Vector& other) const{
 	size_t len = std::max(this->values.size(), other.values.size());
 	for(size_t i = len; i > 0; --i){

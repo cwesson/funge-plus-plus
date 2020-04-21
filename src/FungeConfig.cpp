@@ -13,7 +13,7 @@ struct FungeConfig funge_config = {
 	.standard = 98,
 	.concurrent = true,
 	.execute = true,
-	.filesystem = false,
+	.filesystem = true,
 };
 
 }

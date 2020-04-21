@@ -29,4 +29,9 @@ enum OperatingParadigm {
 	OP_FUNGE,
 };
 
+enum FileFlags {
+	FILE_IN_BINARY = 0b1,
+	FILE_OUT_TEXT  = 0b1,
+};
+
 }
