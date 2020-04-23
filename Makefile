@@ -16,6 +16,12 @@ LDARGS := -lpthread
 
 .PHONY: all clean realclean
 
+GCOV ?= 0
+ifneq ($(GCOV),0)
+CPPARGS += -fprofile-arcs -ftest-coverage
+LDARGS += -fprofile-arcs -ftest-coverage
+endif
+
 all: test
 
 build: funge

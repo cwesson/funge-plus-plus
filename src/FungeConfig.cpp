@@ -14,6 +14,7 @@ struct FungeConfig funge_config = {
 	.concurrent = true,
 	.execute = true,
 	.filesystem = true,
+	.fingerprint = true,
 };
 
 }

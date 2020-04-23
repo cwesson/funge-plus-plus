@@ -8,7 +8,6 @@
 #include "FungeRunner.h"
 #include "FungeUtilities.h"
 #include "FungeConfig.h"
-#include <iostream>
 #include <thread>
 #include <fstream>
 #include <ctime>
@@ -17,7 +16,8 @@ namespace Funge {
 
 
 Unefunge98Strategy::Unefunge98Strategy(Field& f, InstructionPointer& i, StackStack& s) :
-	Unefunge93Strategy(f, i, s)
+	Unefunge93Strategy(f, i, s),
+	finger(f, i, s)
 {
 	
 }
@@ -26,7 +26,7 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 	if(cmd >= 'a' && cmd <= 'f'){
 		stack.top().push(cmd-'a'+10);
 	}else if(cmd >= 'A' && cmd <= 'Z'){
-		execute('r');
+		return finger.execute(cmd);
 	}else{
 		switch(cmd){
 			case 'z': break; //No-op
@@ -173,6 +173,39 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 				}else{
 					std::cerr << "Unimplemented instruction " << static_cast<int>(cmd) << " \'" << static_cast<char>(cmd) << "\' at " << ip << "." << std::endl;
 					std::cerr << "Run with -ffilesystem to enable execution." << std::endl;
+					ip.reverse();
+				}
+			} break;
+			case '(':{
+				if(funge_config.fingerprint){
+					stack_t count = stack.top().pop();
+					uint64_t fingerprint = 0;
+					for(stack_t i = 0; i < count; ++i){
+						fingerprint = (fingerprint << 8) + stack.top().pop();
+					}
+					if(finger.load(fingerprint)){
+						stack.top().push(fingerprint);
+						stack.top().push(1);
+					}else{
+						ip.reverse();
+					}
+				}else{
+					std::cerr << "Unimplemented instruction " << static_cast<int>(cmd) << " \'" << static_cast<char>(cmd) << "\' at " << ip << "." << std::endl;
+					std::cerr << "Run with -ffingerprint to enable fingerprints." << std::endl;
+					ip.reverse();
+				}
+			} break;
+			case ')':{
+				if(funge_config.fingerprint){
+					stack_t count = stack.top().pop();
+					uint64_t fingerprint = 0;
+					for(stack_t i = 0; i < count; ++i){
+						fingerprint = (fingerprint << 8) + stack.top().pop();
+					}
+					finger.unload(fingerprint);
+				}else{
+					std::cerr << "Unimplemented instruction " << static_cast<int>(cmd) << " \'" << static_cast<char>(cmd) << "\' at " << ip << "." << std::endl;
+					std::cerr << "Run with -ffingerprint to enable fingerprints." << std::endl;
 					ip.reverse();
 				}
 			} break;

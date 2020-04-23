@@ -80,3 +80,4 @@ test_simple test/test_under.bf "5 4 3 1 2 0 0 "
 test_simple test/test_execute.bf "Hello World!" 1
 test_simple test/test_in.bf "3 2 1 5 4 6 "
 test_diff test/input.txt test/output.txt
+test_simple test/test_fingerprint.bf "1000 500 100 50 10 5 1 "

@@ -7,6 +7,7 @@
 #pragma once
 
 #include "Unefunge93Strategy.h"
+#include "FingerprintStrategy.h"
 
 namespace Funge {
 
@@ -19,6 +20,7 @@ class Unefunge98Strategy : public Unefunge93Strategy {
 	
 	private:
 		void pushSysInfo(int num);
+		FingerprintStrategy finger;
 };
 
 }

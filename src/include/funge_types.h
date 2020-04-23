@@ -10,9 +10,9 @@
 
 namespace Funge {
 
-typedef int32_t dim_t;
+typedef int64_t dim_t;
 typedef char inst_t;
-typedef int32_t stack_t;
+typedef int64_t stack_t;
 
 enum EnvFlags{
 	ENV_CONCURRENT    = 0b00001,

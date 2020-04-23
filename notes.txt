@@ -5,8 +5,7 @@ Befunge93
 ^v|
 
 Unefunge98
-';=a-fijknoqrstuxyz{}
-unimplemented ()A-Z
+'();=A-Za-fijknoqrstuxyz{}
 
 Befunge98
 []w

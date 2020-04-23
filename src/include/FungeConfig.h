@@ -16,6 +16,7 @@ struct FungeConfig {
 	bool concurrent;
 	bool execute;
 	bool filesystem;
+	bool fingerprint;
 };
 
 extern struct FungeConfig funge_config;
