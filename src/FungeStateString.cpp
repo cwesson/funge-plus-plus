@@ -21,7 +21,7 @@ bool FungeStateString::execute(inst_t i){
 	if(i == '\"'){
 		runner.setState(runner.getNormalState());
 	}else{
-		if(funge_config.standard == 93){
+		if(funge_config.strings == STRING_MULTISPACE){
 			stack.top().push(static_cast<int>(i));
 		}else{
 			if(i != ' ' || previous != ' '){

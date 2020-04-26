@@ -126,7 +126,7 @@ void Field::set(const Vector& p, inst_t v){
 			mins[i] = p[i];
 		}
 	}
-	if(funge_config.standard == 93){
+	if(funge_config.cells == CELL_CHAR){
 		field[p] = static_cast<char>(v);
 	}else{
 		field[p] = v;
@@ -139,7 +139,7 @@ inst_t Field::get(const Vector& p) const{
 	if(find != field.end()){
 		ret = find->second;
 	}
-	if(funge_config.standard == 93){
+	if(funge_config.cells == CELL_CHAR){
 		return static_cast<char>(ret);
 	}else{
 		return ret;

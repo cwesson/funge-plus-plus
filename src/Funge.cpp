@@ -41,6 +41,15 @@ int main(int argc, char **argv, char **envp){
 				std::cerr << "Unsupported standard: " << arg << std::endl;
 				return EINVAL;
 			}
+			if(Funge::funge_config.standard == 93){
+				Funge::funge_config.topo = Funge::TOPO_TORUS;
+				Funge::funge_config.strings = Funge::STRING_MULTISPACE;
+				Funge::funge_config.cells = Funge::CELL_CHAR;
+			}else{
+				Funge::funge_config.topo = Funge::TOPO_LAHEY;
+				Funge::funge_config.strings = Funge::STRING_SGML;
+				Funge::funge_config.cells = Funge::CELL_INT;
+			}
 		}else if(strcmp(argv[a], "-fconcurrent") == 0){
 			Funge::funge_config.concurrent = true;
 		}else if(strcmp(argv[a], "-fexecute") == 0){
@@ -53,6 +62,39 @@ int main(int argc, char **argv, char **envp){
 			Funge::funge_config.execute = false;
 		}else if(strcmp(argv[a], "-fno-filesystem") == 0){
 			Funge::funge_config.filesystem = false;
+		}else if(strncmp(argv[a], "-ftopo=", 7) == 0){
+			strtok(argv[a], "=");
+			char* arg = strtok(NULL, "=");
+			if(strcmp(arg, "torus") == 0){
+				Funge::funge_config.topo = Funge::TOPO_TORUS;
+			}else if(strcmp(arg, "lahey") == 0){
+				Funge::funge_config.topo = Funge::TOPO_LAHEY;
+			}else{
+				std::cerr << "Unsupported topology: " << arg << std::endl;
+				return EINVAL;
+			}
+		}else if(strncmp(argv[a], "-fstrings=", 10) == 0){
+			strtok(argv[a], "=");
+			char* arg = strtok(NULL, "=");
+			if(strcmp(arg, "multispace") == 0){
+				Funge::funge_config.strings = Funge::STRING_MULTISPACE;
+			}else if(strcmp(arg, "sgml") == 0){
+				Funge::funge_config.strings = Funge::STRING_SGML;
+			}else{
+				std::cerr << "Unsupported topology: " << arg << std::endl;
+				return EINVAL;
+			}
+		}else if(strncmp(argv[a], "-fcells=", 8) == 0){
+			strtok(argv[a], "=");
+			char* arg = strtok(NULL, "=");
+			if(strcmp(arg, "char") == 0){
+				Funge::funge_config.cells = Funge::CELL_CHAR;
+			}else if(strcmp(arg, "int") == 0){
+				Funge::funge_config.cells = Funge::CELL_INT;
+			}else{
+				std::cerr << "Unsupported topology: " << arg << std::endl;
+				return EINVAL;
+			}
 		}
 	}
 	if(a < argc){

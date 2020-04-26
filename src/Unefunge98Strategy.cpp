@@ -8,6 +8,7 @@
 #include "FungeRunner.h"
 #include "FungeUtilities.h"
 #include "FungeConfig.h"
+#include "FungeVersion.h"
 #include <thread>
 #include <fstream>
 #include <ctime>
@@ -256,21 +257,19 @@ void Unefunge98Strategy::pushSysInfo(int num){
 	int pushes = 0;
 	// ENV variables
 	pushes += stack.top().push(0);
+	pushes += stack.top().push(0);
 	if(funge_config.env.size() > 0){
 		for(auto arg = funge_config.env.crbegin(); arg != funge_config.env.crend(); ++arg){
 			pushes += pushString(stack.top(), *arg);
 		}
-	}else{
-		pushes += stack.top().push(0);
 	}
 	// ARGV
+	pushes += stack.top().push(0);
 	pushes += stack.top().push(0);
 	if(funge_config.args.size() > 0){
 		for(auto arg = funge_config.args.crbegin(); arg != funge_config.args.crend(); ++arg){
 			pushes += pushString(stack.top(), *arg);
 		}
-	}else{
-		pushes += stack.top().push(0);
 	}
 	// Size of stacks
 	for(size_t i = stack.size(); i > 0; --i){
@@ -281,12 +280,12 @@ void Unefunge98Strategy::pushSysInfo(int num){
 	// Time
 	std::time_t now = std::time(nullptr);
 	std::tm* dt = std::localtime(&now);
-	pushes += stack.top().push((dt->tm_hour<<16) + (dt->tm_min<<8) + dt->tm_sec);
+	pushes += stack.top().push((dt->tm_hour << 16) + (dt->tm_min << 8) + dt->tm_sec);
 	// Date
-	pushes += stack.top().push(((dt->tm_year)<<16) + ((dt->tm_mon+1)<<8) + dt->tm_mday);
+	pushes += stack.top().push((dt->tm_year << 16) + ((dt->tm_mon+1) << 8) + dt->tm_mday);
 	// Greatest non-space
 	for(size_t i = 0; i < s; ++i){
-		pushes += stack.top().push(field.max(i));
+		pushes += stack.top().push(field.max(i)-field.min(i));
 	}
 	// Least non-space
 	for(size_t i = 0; i < s; ++i){
@@ -310,9 +309,9 @@ void Unefunge98Strategy::pushSysInfo(int num){
 	// Operating Paradigm
 	pushes += stack.top().push(OP_SYSTEM);
 	// Version Number
-	pushes += stack.top().push(1);
+	pushes += stack.top().push(FUNGE_VERSION);
 	// Handprint
-	pushes += stack.top().push(0xC01AE550);
+	pushes += stack.top().push(FUNGE_HANDPRINT);
 	// Bytes per cell
 	pushes += stack.top().push(sizeof(stack_t));
 	// Flags

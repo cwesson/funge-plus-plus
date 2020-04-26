@@ -49,7 +49,7 @@ bool InstructionPointer::inField(){
 void InstructionPointer::next(){
 	if(!stopped){
 		pos += delta;
-		if(funge_config.standard == 93){
+		if(funge_config.topo == TOPO_TORUS){
 			if(pos.get(0) > 80){
 				pos.set(0, 0);
 			}else if(pos.get(0) < 0){

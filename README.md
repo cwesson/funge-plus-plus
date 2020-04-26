@@ -12,13 +12,19 @@ X and Y to zero.  Carriage returns and line feeds following a form feed are igno
 ### Arguments
 `funge [ARGS] file`
 
-`-std=(un93, une98, be93, be98, tre98)` Overrides the automatically detected dimensionality.
+`-std=[un93|une98|be93|be98|tre98]` Overrides the automatically detected dimensionality.
 
 `-fconcurrent` `-fno-concurrent` Enable or disable use of split instruction `t`.
 
 `-fexecute` `-fno-execute` Enable or disable use of execute instruction `=`.
 
 `-ffilesystem` `-fno-filesystem` Enable or disable use of filesystem instructions `i` and `o`.
+
+`-ftopo=[torus|lahey]` Set the topology.
+
+`-fstrings=[multispace|sgml]` Set the string mode.
+
+`-fcells=[char|int]` Set the cell size.
 
 ### Exit Code
 `funge` sets the program exit code to the value popped by the quit instruction `q` if encountered.  If `funge` fails
@@ -29,4 +35,4 @@ to load the funge program, the exit code is set to an error.  In any other case,
 specification.
 2. The dimensionality (up to 3D) is determined automatically based on the file contents.  This can be overriden with
 the `-std` argument.
-3. Limit support for fingerprints is available.  Currently supported fingerprints are: `NULL`, `REFC`, and `ROMA`.
+3. Limit support for fingerprints is available.  Currently supported fingerprints are: `NULL`, `ORTH`, `REFC`, and `ROMA`.

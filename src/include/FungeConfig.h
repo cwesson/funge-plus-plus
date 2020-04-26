@@ -12,11 +12,29 @@
 
 namespace Funge {
 
+enum FungeTopo {
+	TOPO_TORUS,
+	TOPO_LAHEY,
+};
+
+enum FungeString {
+	STRING_MULTISPACE,
+	STRING_SGML,
+};
+
+enum FungeCell {
+	CELL_CHAR,
+	CELL_INT,
+};
+
 struct FungeConfig {
 	std::vector<std::string> args;
 	std::vector<std::string> env;
 	size_t dimensions;
 	unsigned int standard;
+	FungeTopo topo;
+	FungeString strings;
+	FungeCell cells;
 	bool concurrent;
 	bool execute;
 	bool filesystem;
