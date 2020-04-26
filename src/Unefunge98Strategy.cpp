@@ -52,12 +52,14 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 				}
 			} break;
 			case 'k':{
-				Vector v = ip.getPos()+ip.getDelta();
-				char c = field.get(v);
+				Vector v = ip.getPos();
+				ip.next();
+				char c = field.get(ip.getPos());
 				while(c == ' ' || c == ';'){
-					c = field.get(v);
-					v += ip.getDelta();
+					c = field.get(ip.getPos());
+					ip.next();
 				}
+				ip.setPos(v);
 				int k = stack.top().pop();
 				for(int i = 0; i < k; i++){
 					execute(c);
@@ -93,13 +95,12 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 			} break;
 			
 			case 'x':{
-				Vector v;
-				popVector(stack.top(), v);
+				Vector v = popVector(stack.top());
 				ip.setDelta(v);
 			} break;
 			
 			case '{':{
-				stack_t n = stack.top().pop();
+				const stack_t n = stack.top().pop();
 				stack.push();
 				if(n > 0){
 					stack_t trans[n];
@@ -120,9 +121,8 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 			} break;
 			case '}':{
 				if(stack.size() > 1){
-					stack_t n = stack.top().pop();
-					Vector v;
-					popVector(stack.second(), v);
+					const stack_t n = stack.top().pop();
+					Vector v = popVector(stack.second());
 					ip.setStorage(v);
 					if(n > 0){
 						stack_t trans[n];
@@ -144,7 +144,7 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 			} break;
 			case 'u':{
 				if(stack.size() > 1){
-					stack_t n = stack.top().pop();
+					const stack_t n = stack.top().pop();
 					if(n > 0){
 						for(stack_t i = 0; i < n; ++i){
 							stack_t trans = stack.second().pop();
@@ -177,8 +177,7 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 				if(funge_config.filesystem){
 					std::string filepath = popString(stack.top());
 					stack_t flags = stack.top().pop();
-					Vector va;
-					popVector(stack.top(), va);
+					Vector va = popVector(stack.top());
 					va += ip.getStorage();
 					std::ifstream file(filepath);
 					Vector vb = field.parse(va, file, !!(flags & FILE_IN_BINARY));
@@ -195,11 +194,9 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 					std::string filepath = popString(stack.top());
 					stack_t flags = stack.top().pop();
 					std::ignore = flags;
-					Vector va;
-					popVector(stack.top(), va);
+					Vector va = popVector(stack.top());
 					va += ip.getStorage();
-					Vector vb;
-					popVector(stack.top(), vb);
+					Vector vb = popVector(stack.top());
 					std::ofstream file(filepath);
 					field.dump(va, vb, file, !(flags & FILE_OUT_TEXT));
 				}else{
@@ -208,9 +205,10 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 					ip.reverse();
 				}
 			} break;
+			
 			case '(':{
 				if(funge_config.fingerprint){
-					stack_t count = stack.top().pop();
+					const stack_t count = stack.top().pop();
 					uint64_t fingerprint = 0;
 					for(stack_t i = 0; i < count; ++i){
 						fingerprint = (fingerprint << 8) + stack.top().pop();
@@ -229,7 +227,7 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 			} break;
 			case ')':{
 				if(funge_config.fingerprint){
-					stack_t count = stack.top().pop();
+					const stack_t count = stack.top().pop();
 					uint64_t fingerprint = 0;
 					for(stack_t i = 0; i < count; ++i){
 						fingerprint = (fingerprint << 8) + stack.top().pop();
@@ -254,48 +252,45 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 }
 
 void Unefunge98Strategy::pushSysInfo(int num){
-	size_t s = funge_config.dimensions;
-	int pushes = 16;
+	const size_t s = funge_config.dimensions;
+	int pushes = 0;
 	// ENV variables
-	stack.top().push(0);
+	pushes += stack.top().push(0);
 	if(funge_config.env.size() > 0){
 		for(auto arg = funge_config.env.crbegin(); arg != funge_config.env.crend(); ++arg){
 			pushes += pushString(stack.top(), *arg);
 		}
 	}else{
-		stack.top().push(0);
+		pushes += stack.top().push(0);
 	}
 	// ARGV
-	stack.top().push(0);
+	pushes += stack.top().push(0);
 	if(funge_config.args.size() > 0){
 		for(auto arg = funge_config.args.crbegin(); arg != funge_config.args.crend(); ++arg){
 			pushes += pushString(stack.top(), *arg);
 		}
 	}else{
-		stack.top().push(0);
+		pushes += stack.top().push(0);
 	}
 	// Size of stacks
 	for(size_t i = stack.size(); i > 0; --i){
-		stack.top().push(stack.at(i-1).size());
-		++pushes;
+		pushes += stack.top().push(stack.at(i-1).size());
 	}
 	// Number of stacks
-	stack.top().push(stack.size());
+	pushes += stack.top().push(stack.size());
 	// Time
 	std::time_t now = std::time(nullptr);
 	std::tm* dt = std::localtime(&now);
-	stack.top().push((dt->tm_hour<<16) + (dt->tm_min<<8) + dt->tm_sec);
+	pushes += stack.top().push((dt->tm_hour<<16) + (dt->tm_min<<8) + dt->tm_sec);
 	// Date
-	stack.top().push(((dt->tm_year-1900)<<16) + ((dt->tm_mon+1)<<8) + dt->tm_mday);
+	pushes += stack.top().push(((dt->tm_year)<<16) + ((dt->tm_mon+1)<<8) + dt->tm_mday);
 	// Greatest non-space
 	for(size_t i = 0; i < s; ++i){
-		stack.top().push(field.max(i));
-		++pushes;
+		pushes += stack.top().push(field.max(i));
 	}
 	// Least non-space
 	for(size_t i = 0; i < s; ++i){
-		stack.top().push(field.min(i));
-		++pushes;
+		pushes += stack.top().push(field.min(i));
 	}
 	// Storage Offset
 	pushes += pushVector(stack.top(), ip.getStorage());
@@ -304,22 +299,22 @@ void Unefunge98Strategy::pushSysInfo(int num){
 	// Current position
 	pushes += pushVector(stack.top(), ip.getPos());
 	// Team number
-	stack.top().push(0);
+	pushes += stack.top().push(0);
 	// Thread ID
 	std::hash<std::thread::id> hasher;
-	stack.top().push(hasher(std::this_thread::get_id()));
+	pushes += stack.top().push(hasher(std::this_thread::get_id()));
 	// Scalars per vector
-	stack.top().push(funge_config.dimensions);
+	pushes += stack.top().push(funge_config.dimensions);
 	// Path separator
-	stack.top().push('/');
+	pushes += stack.top().push('/');
 	// Operating Paradigm
-	stack.top().push(OP_SYSTEM);
+	pushes += stack.top().push(OP_SYSTEM);
 	// Version Number
-	stack.top().push(1);
+	pushes += stack.top().push(1);
 	// Handprint
-	stack.top().push(0xC01AE550);
+	pushes += stack.top().push(0xC01AE550);
 	// Bytes per cell
-	stack.top().push(sizeof(stack_t));
+	pushes += stack.top().push(sizeof(stack_t));
 	// Flags
 	stack_t flags = ENV_UNBUFFERED_IO;
 	if(funge_config.concurrent){
@@ -331,10 +326,10 @@ void Unefunge98Strategy::pushSysInfo(int num){
 	if(funge_config.filesystem){
 		flags |= ENV_FILE_IN | ENV_FILE_OUT;
 	}
-	stack.top().push(flags);
+	pushes += stack.top().push(flags);
 	if(num > 0){
 		int val = 0;
-		for(int i = 1; i <= num; i++){
+		for(int i = 0; i < num; i++){
 			val = stack.top().pop();
 		}
 		for(int i = num; i < pushes; i++){

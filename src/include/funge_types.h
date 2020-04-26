@@ -11,7 +11,7 @@
 namespace Funge {
 
 typedef int64_t dim_t;
-typedef char inst_t;
+typedef int64_t inst_t;
 typedef int64_t stack_t;
 
 enum EnvFlags{

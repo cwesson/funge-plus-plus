@@ -17,7 +17,7 @@ class Stack {
 		
 		stack_t pop();
 		stack_t peek();
-		void push(stack_t v);
+		size_t push(stack_t v);
 		void clear();
 		
 		size_t size();

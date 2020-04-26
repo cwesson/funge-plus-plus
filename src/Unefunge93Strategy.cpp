@@ -157,14 +157,12 @@ bool Unefunge93Strategy::execute(inst_t cmd){
 			//Self-Modifying
 			case 'g':{
 				const Vector& storage = ip.getStorage();
-				Vector v;
-				popVector(stack.top(), v);
+				Vector v = popVector(stack.top());
 				stack.top().push(static_cast<stack_t>(field.get(v+storage)));
 			} break;
 			case 'p':{
 				const Vector& storage = ip.getStorage();
-				Vector v;
-				popVector(stack.top(), v);
+				Vector v = popVector(stack.top());
 				field.set(v+storage, stack.top().pop());
 			} break;
 			

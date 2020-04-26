@@ -74,6 +74,10 @@ void InstructionPointer::next(){
 	}
 }
 
+void InstructionPointer::setPos(const Vector& v){
+	pos = v;
+}
+
 void InstructionPointer::setDelta(const Vector& v){
 	delta = v;
 }

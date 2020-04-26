@@ -126,7 +126,11 @@ void Field::set(const Vector& p, inst_t v){
 			mins[i] = p[i];
 		}
 	}
-	field[p] = v;
+	if(funge_config.standard == 93){
+		field[p] = static_cast<char>(v);
+	}else{
+		field[p] = v;
+	}
 }
 
 inst_t Field::get(const Vector& p) const{
@@ -135,7 +139,11 @@ inst_t Field::get(const Vector& p) const{
 	if(find != field.end()){
 		ret = find->second;
 	}
-	return ret;
+	if(funge_config.standard == 93){
+		return static_cast<char>(ret);
+	}else{
+		return ret;
+	}
 }
 
 inst_t Field::operator[](const Vector& v) const{

@@ -16,6 +16,8 @@ class FungeStateString : public FungeState {
 		virtual ~FungeStateString() = default;
 		
 		virtual bool execute(inst_t i) override;
+	private:
+		inst_t previous;
 };
 
 }

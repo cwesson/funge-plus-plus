@@ -40,9 +40,9 @@ bin/%.o: src/%.cpp
 test: build
 	@./test/smoketest.sh
 
-CPPUTESTLIB := ut/cpputest/src/CppUTest/libCppUTest.a
-UTCPPARGS := -I src/include -I ut/cpputest/include -lpthread
-UTSRCS := ut/unittest.cpp src/Vector.cpp
+CPPUTESTLIB := test/cpputest/src/CppUTest/libCppUTest.a
+UTCPPARGS := -I src/include -I test/cpputest/include -lpthread
+UTSRCS := test/ut/unittest.cpp src/Vector.cpp
 
 ut: unittest
 
@@ -53,8 +53,8 @@ unittest: $(UTSRCS) $(CPPUTESTLIB)
 $(CPPUTESTLIB): cpputest
 
 cpputest:
-	cd ut/cpputest; cmake .
-	make -C ut/cpputest
+	cd test/cpputest; cmake .
+	make -C test/cpputest
 
 .NOTPARALLEL: clean realclean
 

@@ -29,8 +29,9 @@ stack_t Stack::peek(){
 	return ret;
 }
 
-void Stack::push(stack_t v){
+size_t Stack::push(stack_t v){
 	stack.push(v);
+	return 1;
 }
 
 void Stack::clear(){
