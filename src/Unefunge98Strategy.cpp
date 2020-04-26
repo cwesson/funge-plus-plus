@@ -41,16 +41,29 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 			} break;
 			case 'j':{
 				int j = stack.top().pop();
-				for(int i = 0; i < j; i++){
+				if(j < 0){
+					ip.reverse();
+				}
+				for(int i = 0; i < std::abs(j); i++){
 					ip.next();
+				}
+				if(j < 0){
+					ip.reverse();
 				}
 			} break;
 			case 'k':{
-				ip.next();
-				char c = ip.get();
+				Vector v = ip.getPos()+ip.getDelta();
+				char c = field.get(v);
+				while(c == ' ' || c == ';'){
+					c = field.get(v);
+					v += ip.getDelta();
+				}
 				int k = stack.top().pop();
 				for(int i = 0; i < k; i++){
 					execute(c);
+				}
+				if(k == 0){
+					ip.next();
 				}
 			} break;
 			case 'n':
@@ -86,14 +99,20 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 			} break;
 			
 			case '{':{
-				stack_t n = std::abs(stack.top().pop());
+				stack_t n = stack.top().pop();
 				stack.push();
-				stack_t trans[n];
-				for(stack_t i = 0; i < n; ++i){
-					trans[i] = stack.second().pop();
-				}
-				for(stack_t i = n; i > 0; --i){
-					stack.top().push(trans[i-1]);
+				if(n > 0){
+					stack_t trans[n];
+					for(stack_t i = 0; i < n; ++i){
+						trans[i] = stack.second().pop();
+					}
+					for(stack_t i = n; i > 0; --i){
+						stack.top().push(trans[i-1]);
+					}
+				}else{
+					for(stack_t i = 0; i < std::abs(n); ++i){
+						stack.second().push(0);
+					}
 				}
 				const Vector& storage = ip.getStorage();
 				pushVector(stack.second(), storage);
@@ -101,16 +120,22 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 			} break;
 			case '}':{
 				if(stack.size() > 1){
-					stack_t n = std::abs(stack.top().pop());
+					stack_t n = stack.top().pop();
 					Vector v;
 					popVector(stack.second(), v);
 					ip.setStorage(v);
-					stack_t trans[n];
-					for(stack_t i = 0; i < n; ++i){
-						trans[i] = stack.top().pop();
-					}
-					for(stack_t i = n; i > 0; --i){
-						stack.second().push(trans[i-1]);
+					if(n > 0){
+						stack_t trans[n];
+						for(stack_t i = 0; i < n; ++i){
+							trans[i] = stack.top().pop();
+						}
+						for(stack_t i = n; i > 0; --i){
+							stack.second().push(trans[i-1]);
+						}
+					}else{
+						for(stack_t i = 0; i < std::abs(n); ++i){
+							stack.second().pop();
+						}
 					}
 					stack.pop();
 				}else{
@@ -120,9 +145,16 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 			case 'u':{
 				if(stack.size() > 1){
 					stack_t n = stack.top().pop();
-					for(stack_t i = 0; i < n; ++i){
-						stack_t trans = stack.second().pop();
-						stack.top().push(trans);
+					if(n > 0){
+						for(stack_t i = 0; i < n; ++i){
+							stack_t trans = stack.second().pop();
+							stack.top().push(trans);
+						}
+					}else{
+						for(stack_t i = 0; i < n; ++i){
+							stack_t trans = stack.top().pop();
+							stack.second().push(trans);
+						}
 					}
 				}else{
 					ip.reverse();
@@ -252,9 +284,9 @@ void Unefunge98Strategy::pushSysInfo(int num){
 	// Time
 	std::time_t now = std::time(nullptr);
 	std::tm* dt = std::localtime(&now);
-	stack.top().push(dt->tm_hour*256*256 + dt->tm_min*256 + dt->tm_sec);
+	stack.top().push((dt->tm_hour<<16) + (dt->tm_min<<8) + dt->tm_sec);
 	// Date
-	stack.top().push((dt->tm_year-1900)*256*256 + (dt->tm_mon+1)*256 + dt->tm_mday);
+	stack.top().push(((dt->tm_year-1900)<<16) + ((dt->tm_mon+1)<<8) + dt->tm_mday);
 	// Greatest non-space
 	for(size_t i = 0; i < s; ++i){
 		stack.top().push(field.max(i));

@@ -81,3 +81,5 @@ test_simple test/test_execute.bf "Hello World!" 1
 test_simple test/test_in.bf "3 2 1 5 4 6 "
 test_diff test/input.txt test/output.txt
 test_simple test/test_fingerprint.bf "1000 500 100 50 10 5 1 "
+# Mycology Tests
+test_simple ut/Mycology/sanity.bf "0 1 2 3 4 5 6 7 8 9 "

@@ -34,7 +34,7 @@ void FungeManager::waitAll(){
 			mutex.lock();
 		}
 		threads.pop();
-		//delete thread;
+		delete thread;
 	}
 	mutex.unlock();
 }
