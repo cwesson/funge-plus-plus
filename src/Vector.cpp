@@ -78,10 +78,6 @@ dim_t Vector::operator[](size_t x) const{
 	return this->get(x);
 }
 
-dim_t& Vector::operator[](size_t x){
-	return values[x];
-}
-
 Vector& Vector::operator+=(const Vector& other){
 	size_t len = std::max(this->values.size(), other.values.size());
 	for(size_t i = 0; i < len; ++i){

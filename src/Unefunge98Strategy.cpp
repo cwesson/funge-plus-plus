@@ -226,10 +226,22 @@ void Unefunge98Strategy::pushSysInfo(int num){
 	int pushes = 16;
 	// ENV variables
 	stack.top().push(0);
-	stack.top().push(0);
+	if(funge_config.env.size() > 0){
+		for(auto arg = funge_config.env.crbegin(); arg != funge_config.env.crend(); ++arg){
+			pushes += pushString(stack.top(), *arg);
+		}
+	}else{
+		stack.top().push(0);
+	}
 	// ARGV
 	stack.top().push(0);
-	stack.top().push(0);
+	if(funge_config.args.size() > 0){
+		for(auto arg = funge_config.args.crbegin(); arg != funge_config.args.crend(); ++arg){
+			pushes += pushString(stack.top(), *arg);
+		}
+	}else{
+		stack.top().push(0);
+	}
 	// Size of stacks
 	for(size_t i = stack.size(); i > 0; --i){
 		stack.top().push(stack.at(i-1).size());

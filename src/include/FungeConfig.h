@@ -7,10 +7,14 @@
 #pragma once
 
 #include <cstddef>
+#include <vector>
+#include <string>
 
 namespace Funge {
 
 struct FungeConfig {
+	std::vector<std::string> args;
+	std::vector<std::string> env;
 	size_t dimensions;
 	unsigned int standard;
 	bool concurrent;

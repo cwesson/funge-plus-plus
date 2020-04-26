@@ -13,7 +13,7 @@
 #include "Vector.h"
 #include <cstring>
 
-int main(int argc, char **argv){
+int main(int argc, char **argv, char **envp){
 	const char* filepath = NULL;
 	int a = 1;
 	for( ; a < argc; ++a){
@@ -56,11 +56,19 @@ int main(int argc, char **argv){
 		}
 	}
 	if(a < argc){
-		filepath = argv[a];
+		filepath = argv[a++];
+		Funge::funge_config.args.push_back(filepath);
 	}
 	if(!filepath){
 		std::cerr << "No input file specified.";
 		return EINVAL;
+	}
+	for( ; a < argc; ++a){
+		Funge::funge_config.args.push_back(std::string(argv[a]));
+	}
+	for(char **env = envp; *env != nullptr; ++env)
+	{
+		Funge::funge_config.env.push_back(std::string(*env));
 	}
 	
 	std::ifstream file(filepath);

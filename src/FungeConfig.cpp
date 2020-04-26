@@ -9,6 +9,8 @@
 namespace Funge {
 
 struct FungeConfig funge_config = {
+	.args = {},
+	.env = {},
 	.dimensions = 0,
 	.standard = 98,
 	.concurrent = true,

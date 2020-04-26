@@ -96,11 +96,19 @@ void Field::reset(dim_t d, Vector& v, const Vector& start, Vector& max){
 }
 
 dim_t Field::min(size_t d) const{
-	return mins[d];
+	dim_t ret = 0;
+	if(d < mins.size()){
+		ret = mins[d];
+	}
+	return ret;
 }
 
 dim_t Field::max(size_t d) const{
-	return maxs[d];
+	dim_t ret = 0;
+	if(d < maxs.size()){
+		ret = maxs[d];
+	}
+	return ret;
 }
 
 void Field::set(const Vector& p, inst_t v){
