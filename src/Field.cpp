@@ -36,7 +36,7 @@ Vector Field::parse(const Vector& start, std::istream& file, bool binary){
 				increment(1, v, max);    // ++y
 				reset(0, v, start, max); // x = 0
 			}
-		}else if(!binary && (i == '\f')){
+		}else if(!binary && (i == '\f') && (funge_config.dimensions == 0 || funge_config.dimensions >= 3)){
 			reset(0, v, start, max); // x = 0
 			reset(1, v, start, max); // y = 0
 			increment(2, v, max);    // ++z

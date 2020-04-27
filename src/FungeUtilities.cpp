@@ -32,7 +32,7 @@ size_t pushString(Stack& stack, const std::string& str){
 	for(size_t c = s; c > 0; --c){
 		stack.push(str[c-1]);
 	}
-	return s;
+	return s+1;
 }
 
 std::string popString(Stack& stack){

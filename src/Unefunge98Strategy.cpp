@@ -152,7 +152,7 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 							stack.top().push(trans);
 						}
 					}else{
-						for(stack_t i = 0; i < n; ++i){
+						for(stack_t i = 0; i < -n; ++i){
 							stack_t trans = stack.top().pop();
 							stack.second().push(trans);
 						}
