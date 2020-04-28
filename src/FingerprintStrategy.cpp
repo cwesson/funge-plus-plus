@@ -12,7 +12,8 @@ namespace Funge {
 FingerprintStrategy::FingerprintStrategy(Field& f, InstructionPointer& i, StackStack& s) :
 	FungeStrategy(f, i, s),
 	available(),
-	loaded()
+	loaded(),
+	refc_map()
 {
 	available[0x4e554c4c] = std::bind(&FingerprintStrategy::execute_null, this, std::placeholders::_1);
 	available[0x4f525448] = std::bind(&FingerprintStrategy::execute_orth, this, std::placeholders::_1);
@@ -129,14 +130,24 @@ bool FingerprintStrategy::execute_orth(inst_t cmd){
 
 bool FingerprintStrategy::execute_refc(inst_t cmd){
 	switch(cmd){
-		case 'C':{
-			Vector *v = new Vector(popVector(stack.top()));
-			stack.top().push(reinterpret_cast<stack_t>(v));
+		case 'R':{
+			Vector v = popVector(stack.top());
+			stack_t r = random();
+			auto find = refc_map.find(r);
+			while(find != refc_map.end()){
+				r = random();
+				find = refc_map.find(r);
+			}
+			refc_map[r] = v;
+			stack.top().push(r);
 		} break;
 		case 'D':{
-			Vector *v = reinterpret_cast<Vector*>(stack.top().pop());
-			pushVector(stack.top(), *v);
-			delete v;
+			stack_t r = stack.top().pop();
+			auto find = refc_map.find(r);
+			if(find != refc_map.end()){
+				Vector v = refc_map[r];
+				pushVector(stack.top(), v);
+			}
 		} break;
 		default:
 			return false;

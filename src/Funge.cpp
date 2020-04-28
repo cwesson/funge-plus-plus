@@ -114,6 +114,9 @@ int main(int argc, char **argv, char **envp){
 	}
 	
 	std::ifstream file(filepath);
+	if(file.fail()){
+		return EIO;
+	}
 	Funge::Field field(file, Funge::funge_config.dimensions);
 	Funge::FungeRunner runner(field);
 	

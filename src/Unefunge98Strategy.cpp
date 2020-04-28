@@ -181,9 +181,13 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 					Vector va = popVector(stack.top());
 					va += ip.getStorage();
 					std::ifstream file(filepath);
-					Vector vb = field.parse(va, file, !!(flags & FILE_IN_BINARY));
-					pushVector(stack.top(), vb);
-					pushVector(stack.top(), va);
+					if(!file.fail()){
+						Vector vb = field.parse(va, file, !!(flags & FILE_IN_BINARY));
+						pushVector(stack.top(), vb);
+						pushVector(stack.top(), va);
+					}else{
+						ip.reverse();
+					}
 				}else{
 					std::cerr << "Unimplemented instruction " << static_cast<int>(cmd) << " \'" << static_cast<char>(cmd) << "\' at " << ip << "." << std::endl;
 					std::cerr << "Run with -ffilesystem to enable execution." << std::endl;
@@ -233,7 +237,9 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 					for(stack_t i = 0; i < count; ++i){
 						fingerprint = (fingerprint << 8) + stack.top().pop();
 					}
-					finger.unload(fingerprint);
+					if(!finger.unload(fingerprint)){
+						ip.reverse();
+					}
 				}else{
 					std::cerr << "Unimplemented instruction " << static_cast<int>(cmd) << " \'" << static_cast<char>(cmd) << "\' at " << ip << "." << std::endl;
 					std::cerr << "Run with -ffingerprint to enable fingerprints." << std::endl;
@@ -254,6 +260,7 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 
 void Unefunge98Strategy::pushSysInfo(int num){
 	const size_t s = funge_config.dimensions;
+	const stack_t tsize = stack.top().size();
 	int pushes = 0;
 	// ENV variables
 	pushes += stack.top().push(0);
@@ -272,9 +279,10 @@ void Unefunge98Strategy::pushSysInfo(int num){
 		}
 	}
 	// Size of stacks
-	for(size_t i = stack.size(); i > 0; --i){
+	for(size_t i = stack.size(); i > 1; --i){
 		pushes += stack.top().push(stack.at(i-1).size());
 	}
+	pushes += stack.top().push(tsize);
 	// Number of stacks
 	pushes += stack.top().push(stack.size());
 	// Time
@@ -327,11 +335,8 @@ void Unefunge98Strategy::pushSysInfo(int num){
 	}
 	pushes += stack.top().push(flags);
 	if(num > 0){
-		int val = 0;
-		for(int i = 0; i < num; i++){
-			val = stack.top().pop();
-		}
-		for(int i = num; i < pushes; i++){
+		stack_t val = stack.top().get(num);
+		for(int i = 0; i < pushes; i++){
 			stack.top().pop();
 		}
 		stack.top().push(val);
