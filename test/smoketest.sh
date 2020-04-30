@@ -48,7 +48,8 @@ function test_diff() {
 function test_mycology() {
     echo TEST $1
     cd test/Mycology
-    ../../bin/funge -std=be98 -fno-concurrent mycology.b98
+    ../../bin/funge -std=be98 -fno-concurrent mycology.b98 | grep BAD
+    rm mycotmp*.tmp
     code=$?
     if [ -z "$2" ]; then
         expect=0

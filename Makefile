@@ -5,6 +5,7 @@
 
 SRCS := $(wildcard src/*.cpp)
 OBJS := $(subst src/,bin/,$(subst .cpp,.o,$(SRCS)))
+DEPS := $(OBJS:%.o=%.d)
 
 EXEC := bin/funge
 
@@ -14,7 +15,7 @@ CPPARGS := -I src/include -g -Wall -Wextra -Werror
 LD := g++
 LDARGS := -lpthread
 
-.PHONY: all clean realclean
+.PHONY: all clean realclean build funge test
 
 GCOV ?= 0
 ifneq ($(GCOV),0)
@@ -35,7 +36,9 @@ $(EXEC): $(OBJS)
 bin/%.o: src/%.cpp
 	@mkdir -p bin/
 	@echo "CPP " $(subst src/,,$<)
-	@$(CPP) $(CPPARGS) -o $@ -c $<
+	@$(CPP) $(CPPARGS) -MMD -o $@ -c $<
+
+-include $(DEPS)
 
 test: build
 	@./test/smoketest.sh
