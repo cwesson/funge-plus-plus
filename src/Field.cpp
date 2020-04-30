@@ -61,7 +61,7 @@ void Field::dump(const Vector& start, const Vector& delta, std::ostream& file, b
 	while(v < end){
 		inst_t i = get(v);
 		buffer.push_back(static_cast<char>(i));
-		if(i != ' '){
+		if(i != ' ' || binary){
 			for(char c : buffer){
 				file << c;
 			}
@@ -69,13 +69,12 @@ void Field::dump(const Vector& start, const Vector& delta, std::ostream& file, b
 		}
 		v.set(0, v[0]+1); // ++x
 		if(v[0] >= end[0]){
+			file << '\n';
 			if(!binary){
-				file << '\n';
-				v.set(1, v[1]+1);   // ++y
-				v.set(0, start[0]); // x = 0
-			}else{
-				break;
+				buffer.clear();
 			}
+			v.set(1, v[1]+1);   // ++y
+			v.set(0, start[0]); // x = 0
 		}
 		if(v[1] >= end[1]){
 			break;

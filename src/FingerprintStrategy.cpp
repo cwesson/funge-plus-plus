@@ -15,6 +15,7 @@ FingerprintStrategy::FingerprintStrategy(Field& f, InstructionPointer& i, StackS
 	loaded(),
 	refc_map()
 {
+	available[0x4d4f4455] = std::bind(&FingerprintStrategy::execute_modu, this, std::placeholders::_1);
 	available[0x4e554c4c] = std::bind(&FingerprintStrategy::execute_null, this, std::placeholders::_1);
 	available[0x4f525448] = std::bind(&FingerprintStrategy::execute_orth, this, std::placeholders::_1);
 	available[0x52454643] = std::bind(&FingerprintStrategy::execute_refc, this, std::placeholders::_1);
@@ -48,6 +49,41 @@ bool FingerprintStrategy::unload(uint64_t fingerprint){
 		}
 	}
 	return false;
+}
+
+bool FingerprintStrategy::execute_modu(inst_t cmd){
+	switch(cmd){
+		case 'M':{
+			stack_t a = stack.top().pop();
+			stack_t b = stack.top().pop();
+			if(a == 0){
+				stack.top().push(0);
+			}else{
+				stack.top().push(b - std::floor(b / a) * a);
+			}
+		} break;
+		case 'U':{
+			stack_t a = stack.top().pop();
+			stack_t b = stack.top().pop();
+			if(a == 0){
+				stack.top().push(0);
+			}else{
+				stack.top().push(std::abs(b)%std::abs(a));
+			}
+		} break;
+		case 'R':{
+			stack_t a = stack.top().pop();
+			stack_t b = stack.top().pop();
+			if(a == 0){
+				stack.top().push(0);
+			}else{
+				stack.top().push(b%a);
+			}
+		} break;
+		default:
+			return false;
+	}
+	return true;
 }
 
 bool FingerprintStrategy::execute_null(inst_t cmd){

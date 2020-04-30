@@ -27,6 +27,7 @@ class FingerprintStrategy : public FungeStrategy {
 		
 		std::map<stack_t, Vector> refc_map;
 		
+		bool execute_modu(inst_t cmd);
 		bool execute_null(inst_t cmd);
 		bool execute_orth(inst_t cmd);
 		bool execute_refc(inst_t cmd);

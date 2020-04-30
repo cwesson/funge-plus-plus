@@ -203,7 +203,11 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 					va += ip.getStorage();
 					Vector vb = popVector(stack.top());
 					std::ofstream file(filepath);
-					field.dump(va, vb, file, !(flags & FILE_OUT_TEXT));
+					if(!file.fail()){
+						field.dump(va, vb, file, !(flags & FILE_OUT_TEXT));
+					}else{
+						ip.reverse();
+					}
 				}else{
 					std::cerr << "Unimplemented instruction " << static_cast<int>(cmd) << " \'" << static_cast<char>(cmd) << "\' at " << ip << "." << std::endl;
 					std::cerr << "Run with -ffilesystem to enable execution." << std::endl;
