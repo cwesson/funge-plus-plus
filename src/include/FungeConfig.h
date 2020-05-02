@@ -27,6 +27,11 @@ enum FungeCell {
 	CELL_INT,
 };
 
+enum FungeThread {
+	THREAD_NATIVE,
+	THREAD_FUNGE,
+};
+
 struct FungeConfig {
 	std::vector<std::string> args;
 	std::vector<std::string> env;
@@ -35,6 +40,7 @@ struct FungeConfig {
 	FungeTopo topo;
 	FungeString strings;
 	FungeCell cells;
+	FungeThread threads;
 	bool concurrent;
 	bool execute;
 	bool filesystem;

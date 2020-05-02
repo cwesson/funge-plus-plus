@@ -95,6 +95,17 @@ int main(int argc, char **argv, char **envp){
 				std::cerr << "Unsupported topology: " << arg << std::endl;
 				return EINVAL;
 			}
+		}else if(strncmp(argv[a], "-fthreads=", 10) == 0){
+			strtok(argv[a], "=");
+			char* arg = strtok(NULL, "=");
+			if(strcmp(arg, "native") == 0){
+				Funge::funge_config.threads = Funge::THREAD_NATIVE;
+			}else if(strcmp(arg, "funge") == 0){
+				Funge::funge_config.threads = Funge::THREAD_FUNGE;
+			}else{
+				std::cerr << "Unsupported topology: " << arg << std::endl;
+				return EINVAL;
+			}
 		}
 	}
 	if(a < argc){

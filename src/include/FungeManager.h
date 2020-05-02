@@ -20,10 +20,11 @@ class FungeManager {
 	
 	private:
 		FungeManager();
-		void addRunner(FungeRunner& runner);
+		void addRunner(FungeRunner* runner);
 		
 		static FungeManager* instance;
 		std::queue<std::thread*> threads;
+		std::queue<FungeRunner*> runners;
 		std::mutex mutex;
 		
 	friend class FungeRunner;

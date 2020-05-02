@@ -9,11 +9,13 @@
 
 namespace Funge {
 
+size_t FungeRunner::count = 0;
+
 FungeRunner::FungeRunner(Field& f) :
+	id(count++),
 	field(f),
 	stack(),
 	ip(f),
-	thread(nullptr),
 	normalState(*this, f, stack, ip),
 	stringState(*this, stack),
 	state(&normalState)
@@ -22,10 +24,10 @@ FungeRunner::FungeRunner(Field& f) :
 }
 
 FungeRunner::FungeRunner(Field& f, const StackStack& s, const InstructionPointer& i) :
+	id(count++),
 	field(f),
 	stack(s),
 	ip(i),
-	thread(nullptr),
 	normalState(*this, f, stack, ip),
 	stringState(*this, stack),
 	state(&normalState)
@@ -36,23 +38,35 @@ FungeRunner::FungeRunner(Field& f, const StackStack& s, const InstructionPointer
 }
 
 void FungeRunner::run(){
-	FungeManager::getInstance()->addRunner(*this);
+	FungeManager::getInstance()->addRunner(this);
+}
+
+size_t FungeRunner::getID() const{
+	return id;
+}
+
+bool FungeRunner::isRunning() const{
+	return !ip.isStopped();
 }
 
 void FungeRunner::operator()(){
 	while(!ip.isStopped()){
-		bool done = false;
-		while(!done && !ip.isStopped()){
-			inst_t i = ip.get();
-			done = state->execute(i);
-			//std::cout << ip.getPos() << "\"" << i << "\"" << std::endl;
-			if(!done && i != ' '){
-				std::cerr << "Unimplemented instruction " << static_cast<int>(i) << " \'" << static_cast<char>(i) << "\' at " << ip << "." << std::endl;
-				ip.reverse();
-			}
-			ip.next();
-		}
+		tick();
 		std::this_thread::yield();
+	}
+}
+
+void FungeRunner::tick(){
+	bool done = false;
+	while(!done && !ip.isStopped()){
+		inst_t i = ip.get();
+		//std::cout << ip.getPos() << "\"" << static_cast<char>(i) << "\"" << std::endl;
+		done = state->execute(i);
+		if(!done && i != ' '){
+			std::cerr << "Unimplemented instruction " << static_cast<int>(i) << " \'" << static_cast<char>(i) << "\' at " << ip << "." << std::endl;
+			ip.reverse();
+		}
+		ip.next();
 	}
 }
 

@@ -102,7 +102,7 @@ void InstructionPointer::stop(){
 	stopped = true;
 }
 
-bool InstructionPointer::isStopped(){
+bool InstructionPointer::isStopped() const{
 	return stopped;
 }
 

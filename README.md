@@ -26,13 +26,15 @@ X and Y to zero.  Carriage returns and line feeds following a form feed are igno
 
 `-fcells=[char|int]` Set the cell size.
 
+`-fthreads=[native|funge]` Set the threading mode.
+
 ### Exit Code
 `funge` sets the program exit code to the value popped by the quit instruction `q` if encountered.  If `funge` fails
 to load the funge program, the exit code is set to an error.  In any other case, the exit code is zero.
 
 ## Caveats
-1. The split instruction `t` uses native threads rather than the tick mechanism described in the Funge-98
-specification.
+1. The split instruction `t` can use native threads rather than the tick mechanism described in the Funge-98
+specification.  This mode can be enabled with `-fthreads=native`.
 2. The dimensionality (up to 3D) is determined automatically based on the file contents.  This can be overriden with
 the `-std` argument.
 

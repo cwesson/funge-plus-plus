@@ -27,7 +27,7 @@ class InstructionPointer {
 		void right();
 		
 		void stop();
-		bool isStopped();
+		bool isStopped() const;
 		
 		void next();
 		

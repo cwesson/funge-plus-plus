@@ -5,12 +5,17 @@
  */
 
 #include "FungeManager.h"
+#include "FungeConfig.h"
 
 namespace Funge {
 
 FungeManager* FungeManager::instance = new FungeManager();
 
-FungeManager::FungeManager() : threads(), mutex() {
+FungeManager::FungeManager() :
+	threads(),
+	runners(),
+	mutex()
+{
 
 }
 
@@ -18,25 +23,44 @@ FungeManager* FungeManager::getInstance() {
 	return instance;
 }
 
-void FungeManager::addRunner(FungeRunner& runner){
+void FungeManager::addRunner(FungeRunner* runner){
 	std::lock_guard<std::mutex> guard(mutex);
-	std::thread* thread = new std::thread(std::ref(runner));
-	threads.push(thread);
+	if(funge_config.threads == THREAD_NATIVE){
+		std::thread* thread = new std::thread(std::ref(*runner));
+		threads.push(thread);
+	}
+	runners.push(runner);
 }
 
 void FungeManager::waitAll(){
-	mutex.lock();
-	while(threads.size() > 0){
-		std::thread* thread = threads.front();
-		if(thread->joinable()){
-			mutex.unlock();
-			thread->join();
-			mutex.lock();
+	if(funge_config.threads == THREAD_NATIVE){
+		mutex.lock();
+		while(threads.size() > 0){
+			std::thread* thread = threads.front();
+			if(thread->joinable()){
+				mutex.unlock();
+				thread->join();
+				mutex.lock();
+			}
+			threads.pop();
+			delete thread;
 		}
-		threads.pop();
-		delete thread;
+		mutex.unlock();
+	}else{
+		while(runners.size() > 0){
+			mutex.lock();
+			FungeRunner* thread = runners.front();
+			runners.pop();
+			mutex.unlock();
+			//std::cout << "tick " << thread->getID() << std::endl;
+			thread->tick();
+			if(thread->isRunning()){
+				mutex.lock();
+				runners.push(thread);
+				mutex.unlock();
+			}
+		}
 	}
-	mutex.unlock();
 }
 
 }

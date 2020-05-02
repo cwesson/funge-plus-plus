@@ -16,6 +16,7 @@ struct FungeConfig funge_config = {
 	.topo = TOPO_LAHEY,
 	.strings = STRING_SGML,
 	.cells = CELL_INT,
+	.threads = THREAD_FUNGE,
 	.concurrent = true,
 	.execute = true,
 	.filesystem = true,
