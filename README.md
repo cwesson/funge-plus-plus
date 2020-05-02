@@ -35,4 +35,20 @@ to load the funge program, the exit code is set to an error.  In any other case,
 specification.
 2. The dimensionality (up to 3D) is determined automatically based on the file contents.  This can be overriden with
 the `-std` argument.
-3. Limit support for fingerprints is available.  Currently supported fingerprints are: `NULL`, `ORTH`, `REFC`, and `ROMA`.
+
+## Fingerprints
+`BOOL` Boolean operators.
+
+`BITW` Bitwise operators.
+
+`HRTI` High Resolution Timer Interface.
+
+`MODU` Modulo Arithmetic Extension.
+
+`NULL` Null Fingerprint.
+
+`ORTH` Orthogonal Easement Library.
+
+`REFC` Referenced Cells Extension.
+
+`ROMA` Roman Numerals.

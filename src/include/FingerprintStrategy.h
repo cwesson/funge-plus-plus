@@ -7,14 +7,16 @@
 #pragma once
 
 #include "FungeStrategy.h"
-#include <functional>
+#include "Fingerprint.h"
+#include <map>
+#include <stack>
 
 namespace Funge {
 
 class FingerprintStrategy : public FungeStrategy {
 	public:
 		FingerprintStrategy(Field& f, InstructionPointer& i, StackStack& s);
-		virtual ~FingerprintStrategy() = default;
+		virtual ~FingerprintStrategy();
 		
 		virtual bool execute(inst_t cmd) override;
 		
@@ -22,16 +24,8 @@ class FingerprintStrategy : public FungeStrategy {
 		bool unload(uint64_t fingerprint);
 	
 	protected:
-		std::map<uint64_t, std::function<bool(inst_t)>> available;
-		std::vector<uint64_t> loaded;
-		
-		std::map<stack_t, Vector> refc_map;
-		
-		bool execute_modu(inst_t cmd);
-		bool execute_null(inst_t cmd);
-		bool execute_orth(inst_t cmd);
-		bool execute_refc(inst_t cmd);
-		bool execute_roma(inst_t cmd);
+		std::map<uint64_t, Fingerprint*> available;
+		std::map<inst_t, std::stack<Fingerprint*>> loaded;
 };
 
 }

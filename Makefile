@@ -3,14 +3,16 @@
 # @author Conlan Wesson
 ##
 
-SRCS := $(wildcard src/*.cpp)
+SRCS := $(shell find src/ -name \*.cpp)
 OBJS := $(subst src/,bin/,$(subst .cpp,.o,$(SRCS)))
 DEPS := $(OBJS:%.o=%.d)
 
 EXEC := bin/funge
 
+INCLUDES := -I src/include -I src/fingerprint/include
+
 CPP := g++
-CPPARGS := -I src/include -g -Wall -Wextra -Werror
+CPPARGS := $(INCLUDES) -g -Wall -Wextra -Werror
 
 LD := g++
 LDARGS := -lpthread
@@ -34,7 +36,7 @@ $(EXEC): $(OBJS)
 	@$(LD) $(LDARGS) -o $@ $(OBJS)
 
 bin/%.o: src/%.cpp
-	@mkdir -p bin/
+	@mkdir -p $(dir $@)
 	@echo "CPP " $(subst src/,,$<)
 	@$(CPP) $(CPPARGS) -MMD -o $@ -c $<
 
@@ -42,6 +44,9 @@ bin/%.o: src/%.cpp
 
 test: build
 	@./test/smoketest.sh
+
+lint:
+	@cppcheck --enable=all $(INCLUDES) $(SRCS)
 
 CPPUTESTLIB := test/cpputest/src/CppUTest/libCppUTest.a
 UTCPPARGS := -I src/include -I test/cpputest/include -lpthread
