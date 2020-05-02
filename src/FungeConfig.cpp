@@ -9,11 +9,17 @@
 namespace Funge {
 
 struct FungeConfig funge_config = {
+	.args = {},
+	.env = {},
 	.dimensions = 0,
 	.standard = 98,
+	.topo = TOPO_LAHEY,
+	.strings = STRING_SGML,
+	.cells = CELL_INT,
 	.concurrent = true,
 	.execute = true,
 	.filesystem = true,
+	.fingerprint = true,
 };
 
 }

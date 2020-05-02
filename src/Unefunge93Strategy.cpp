@@ -6,7 +6,7 @@
 
 #include "Unefunge93Strategy.h"
 #include "FungeConfig.h"
-#include <iostream>
+#include "FungeUtilities.h"
 
 namespace Funge {
 
@@ -38,7 +38,11 @@ bool Unefunge93Strategy::execute(inst_t cmd){
 			case '%':{
 				stack_t a = stack.top().pop();
 				stack_t b = stack.top().pop();
-				stack.top().push(b%a);
+				if(a == 0){
+					stack.top().push(0);
+				}else{
+					stack.top().push(b%a);
+				}
 			} break;
 			case '*':{
 				stack_t a = stack.top().pop();
@@ -58,7 +62,11 @@ bool Unefunge93Strategy::execute(inst_t cmd){
 			case '/':{
 				stack_t a = stack.top().pop();
 				stack_t b = stack.top().pop();
-				stack.top().push(b/a);
+				if(a == 0){
+					stack.top().push(0);
+				}else{
+					stack.top().push(b/a);
+				}
 			} break;
 			case '`':{
 				stack_t a = stack.top().pop();
@@ -148,23 +156,13 @@ bool Unefunge93Strategy::execute(inst_t cmd){
 				
 			//Self-Modifying
 			case 'g':{
-				size_t d = funge_config.dimensions;
 				const Vector& storage = ip.getStorage();
-				Vector v;
-				for(size_t i = d; i > 0; --i){
-					stack_t s = stack.top().pop();
-					v.set(i-1, s);
-				}
+				Vector v = popVector(stack.top());
 				stack.top().push(static_cast<stack_t>(field.get(v+storage)));
 			} break;
 			case 'p':{
-				size_t d = funge_config.dimensions;
 				const Vector& storage = ip.getStorage();
-				Vector v;
-				for(size_t i = d; i > 0; --i){
-					stack_t s = stack.top().pop();
-					v.set(i-1, s);
-				}
+				Vector v = popVector(stack.top());
 				field.set(v+storage, stack.top().pop());
 			} break;
 			

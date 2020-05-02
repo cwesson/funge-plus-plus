@@ -29,7 +29,6 @@ class Vector {
 		void right();
 		
 		dim_t operator[](size_t x) const;
-		dim_t& operator[](size_t x);
 		
 		Vector& operator+=(const Vector& other);
 		friend Vector operator+(const Vector& lhs, const Vector& rhs);

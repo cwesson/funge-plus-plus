@@ -25,7 +25,7 @@ Vector Field::parse(const Vector& start, std::istream& file, bool binary){
 	Vector max(start);
 	int last = 0;
 	for(int i = file.get(); !file.eof(); i = file.get()) {
-		if(!binary && (i == '\n' || i == '\r')){
+		if((i == '\n' || i == '\r') && !binary){
 			if(i == '\r'){
 				int j = file.peek();
 				if(j == '\n'){
@@ -36,11 +36,13 @@ Vector Field::parse(const Vector& start, std::istream& file, bool binary){
 				increment(1, v, max);    // ++y
 				reset(0, v, start, max); // x = 0
 			}
-		}else if(!binary && (i == '\f')){
-			reset(0, v, start, max); // x = 0
-			reset(1, v, start, max); // y = 0
-			increment(2, v, max);    // ++z
-			last = '\f';
+		}else if((i == '\f') && !binary){
+			if(funge_config.dimensions == 0 || funge_config.dimensions >= 3){
+				reset(0, v, start, max); // x = 0
+				reset(1, v, start, max); // y = 0
+				increment(2, v, max);    // ++z
+				last = '\f';
+			}
 		}else{
 			if(i != ' '){
 				set(v, i);
@@ -59,7 +61,7 @@ void Field::dump(const Vector& start, const Vector& delta, std::ostream& file, b
 	while(v < end){
 		inst_t i = get(v);
 		buffer.push_back(static_cast<char>(i));
-		if(i != ' '){
+		if(i != ' ' || binary){
 			for(char c : buffer){
 				file << c;
 			}
@@ -67,13 +69,12 @@ void Field::dump(const Vector& start, const Vector& delta, std::ostream& file, b
 		}
 		v.set(0, v[0]+1); // ++x
 		if(v[0] >= end[0]){
+			file << '\n';
 			if(!binary){
-				file << '\n';
-				v.set(1, v[1]+1);   // ++y
-				v.set(0, start[0]); // x = 0
-			}else{
-				break;
+				buffer.clear();
 			}
+			v.set(1, v[1]+1);   // ++y
+			v.set(0, start[0]); // x = 0
 		}
 		if(v[1] >= end[1]){
 			break;
@@ -96,11 +97,19 @@ void Field::reset(dim_t d, Vector& v, const Vector& start, Vector& max){
 }
 
 dim_t Field::min(size_t d) const{
-	return mins[d];
+	dim_t ret = 0;
+	if(d < mins.size()){
+		ret = mins[d];
+	}
+	return ret;
 }
 
 dim_t Field::max(size_t d) const{
-	return maxs[d];
+	dim_t ret = 0;
+	if(d < maxs.size()){
+		ret = maxs[d];
+	}
+	return ret;
 }
 
 void Field::set(const Vector& p, inst_t v){
@@ -110,15 +119,48 @@ void Field::set(const Vector& p, inst_t v){
 	while(mins.size() < p.size()){
 		mins.push_back(0);
 	}
-	for(size_t i = 0; i < p.size(); ++i){
-		if(maxs[i] < p[i]){
-			maxs[i] = p[i];
+	if(v == ' '){
+		auto find = field.find(p);
+		if(find != field.end()){
+			field.erase(find);
 		}
-		if(mins[i] > p[i]){
-			mins[i] = p[i];
+		for(size_t i = 0; i < p.size(); ++i){
+			if(maxs[i] == p[i]){
+				// scan for new max
+				dim_t max = std::numeric_limits<dim_t>::min() ;
+				for(auto s = field.cbegin(); s != field.cend(); ++s){
+					if(s->first[i] > max){
+						max = s->first[i];
+					}
+				}
+				maxs[i] = max;
+			}
+			if(mins[i] == p[i]){
+				// scan for new min
+				dim_t min = std::numeric_limits<dim_t>::max();
+				for(auto s = field.cbegin(); s != field.cend(); ++s){
+					if(s->first[i] < min){
+						min = s->first[i];
+					}
+				}
+				mins[i] = min;
+			}
+		}
+	}else{
+		for(size_t i = 0; i < p.size(); ++i){
+			if(maxs[i] < p[i]){
+				maxs[i] = p[i];
+			}
+			if(mins[i] > p[i]){
+				mins[i] = p[i];
+			}
+		}
+		if(funge_config.cells == CELL_CHAR){
+			field[p] = static_cast<char>(v);
+		}else{
+			field[p] = v;
 		}
 	}
-	field[p] = v;
 }
 
 inst_t Field::get(const Vector& p) const{
@@ -127,7 +169,11 @@ inst_t Field::get(const Vector& p) const{
 	if(find != field.end()){
 		ret = find->second;
 	}
-	return ret;
+	if(funge_config.cells == CELL_CHAR){
+		return static_cast<char>(ret);
+	}else{
+		return ret;
+	}
 }
 
 inst_t Field::operator[](const Vector& v) const{

@@ -45,6 +45,20 @@ function test_diff() {
     assert_equal $1 $code 0
 }
 
+function test_mycology() {
+    echo TEST $1
+    cd test/Mycology
+    ../../bin/funge -std=be98 -fno-concurrent mycology.b98 | grep BAD
+    rm mycotmp*.tmp
+    code=$?
+    if [ -z "$2" ]; then
+        expect=0
+    else
+        expect=$code
+    fi
+    assert_equal $1 $code $expect
+}
+
 # Funge-93 Tests
 test_simple test/test_stop.bf ""
 test_simple test/test_outint.bf "6 5 4 3 2 1 "
@@ -80,3 +94,9 @@ test_simple test/test_under.bf "5 4 3 1 2 0 0 "
 test_simple test/test_execute.bf "Hello World!" 1
 test_simple test/test_in.bf "3 2 1 5 4 6 "
 test_diff test/input.txt test/output.txt
+# Fingerprint Tests
+test_simple test/test_roma.bf "1000 500 100 50 10 5 1 "
+test_simple test/test_bool.bf "1 2 "
+# Mycology Tests
+test_simple test/Mycology/sanity.bf "0 1 2 3 4 5 6 7 8 9 "
+test_mycology mycology.b98 15

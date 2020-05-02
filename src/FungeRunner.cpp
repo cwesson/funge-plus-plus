@@ -45,7 +45,7 @@ void FungeRunner::operator()(){
 		while(!done && !ip.isStopped()){
 			inst_t i = ip.get();
 			done = state->execute(i);
-			//std::cout << "\"" << i << "\"" << std::endl;
+			//std::cout << ip.getPos() << "\"" << i << "\"" << std::endl;
 			if(!done && i != ' '){
 				std::cerr << "Unimplemented instruction " << static_cast<int>(i) << " \'" << static_cast<char>(i) << "\' at " << ip << "." << std::endl;
 				ip.reverse();

@@ -24,7 +24,13 @@ class FungeStrategy {
 		Field& field;
 		InstructionPointer& ip;
 		StackStack& stack;
-		std::random_device random;
+		
+		stack_t random();
+	
+	private:
+	std::random_device rd;
+	std::mt19937 gen;
+	std::uniform_int_distribution<stack_t> dis;
 };
 
 }

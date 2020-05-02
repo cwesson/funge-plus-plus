@@ -19,6 +19,7 @@ class InstructionPointer {
 		
 		inst_t get() const;
 		void set(inst_t i);
+		void setPos(const Vector& v);
 		void setDelta(const Vector& v);
 		void setStorage(const Vector& v);
 		void reverse();

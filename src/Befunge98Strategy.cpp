@@ -5,7 +5,6 @@
  */
 
 #include "Befunge98Strategy.h"
-#include <iostream>
 
 namespace Funge {
 

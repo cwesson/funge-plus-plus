@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <stack>
+#include <vector>
 #include "funge_types.h"
 
 namespace Funge {
@@ -17,13 +17,16 @@ class Stack {
 		
 		stack_t pop();
 		stack_t peek();
-		void push(stack_t v);
+		size_t push(stack_t v);
 		void clear();
 		
 		size_t size();
+		
+		stack_t get(size_t p) const;
+		stack_t operator[](size_t p) const;
 	
 	private:
-		std::stack<stack_t> stack;
+		std::vector<stack_t> stack;
 };
 
 }

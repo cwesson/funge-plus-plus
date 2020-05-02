@@ -11,7 +11,8 @@
 
 namespace Funge {
 	size_t pushVector(Stack& stack, const Vector& vector);
-	size_t popVector(Stack& stack, Vector& vector);
+	Vector popVector(Stack& stack);
 	
+	size_t pushString(Stack& stack, const std::string& str);
 	std::string popString(Stack& stack);
 }

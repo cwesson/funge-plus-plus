@@ -3,18 +3,27 @@
 # @author Conlan Wesson
 ##
 
-SRCS := $(wildcard src/*.cpp)
+SRCS := $(shell find src/ -name \*.cpp)
 OBJS := $(subst src/,bin/,$(subst .cpp,.o,$(SRCS)))
+DEPS := $(OBJS:%.o=%.d)
 
 EXEC := bin/funge
 
+INCLUDES := -I src/include -I src/fingerprint/include
+
 CPP := g++
-CPPARGS := -I src/include -g -Wall -Wextra -Werror
+CPPARGS := $(INCLUDES) -g -Wall -Wextra -Werror
 
 LD := g++
 LDARGS := -lpthread
 
-.PHONY: all clean realclean
+.PHONY: all clean realclean build funge test
+
+GCOV ?= 0
+ifneq ($(GCOV),0)
+CPPARGS += -fprofile-arcs -ftest-coverage
+LDARGS += -fprofile-arcs -ftest-coverage
+endif
 
 all: test
 
@@ -27,16 +36,21 @@ $(EXEC): $(OBJS)
 	@$(LD) $(LDARGS) -o $@ $(OBJS)
 
 bin/%.o: src/%.cpp
-	@mkdir -p bin/
+	@mkdir -p $(dir $@)
 	@echo "CPP " $(subst src/,,$<)
-	@$(CPP) $(CPPARGS) -o $@ -c $<
+	@$(CPP) $(CPPARGS) -MMD -o $@ -c $<
+
+-include $(DEPS)
 
 test: build
 	@./test/smoketest.sh
 
-CPPUTESTLIB := ut/cpputest/src/CppUTest/libCppUTest.a
-UTCPPARGS := -I src/include -I ut/cpputest/include -lpthread
-UTSRCS := ut/unittest.cpp src/Vector.cpp
+lint:
+	@cppcheck --enable=all $(INCLUDES) $(SRCS)
+
+CPPUTESTLIB := test/cpputest/src/CppUTest/libCppUTest.a
+UTCPPARGS := -I src/include -I test/cpputest/include -lpthread
+UTSRCS := test/ut/unittest.cpp src/Vector.cpp
 
 ut: unittest
 
@@ -47,8 +61,8 @@ unittest: $(UTSRCS) $(CPPUTESTLIB)
 $(CPPUTESTLIB): cpputest
 
 cpputest:
-	cd ut/cpputest; cmake .
-	make -C ut/cpputest
+	cd test/cpputest; cmake .
+	make -C test/cpputest
 
 .NOTPARALLEL: clean realclean
 

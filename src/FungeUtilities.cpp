@@ -17,17 +17,27 @@ size_t pushVector(Stack& stack, const Vector& vector){
 	return s;
 }
 
-size_t popVector(Stack& stack, Vector& vector){
+Vector popVector(Stack& stack){
+	Vector v;
 	size_t s = funge_config.dimensions;
 	for(size_t i = s; i > 0; --i){
-		vector.set(i-1, stack.pop());
+		v.set(i-1, stack.pop());
 	}
-	return s;
+	return v;
+}
+
+size_t pushString(Stack& stack, const std::string& str){
+	size_t s = str.length();
+	stack.push(0);
+	for(size_t c = s; c > 0; --c){
+		stack.push(str[c-1]);
+	}
+	return s+1;
 }
 
 std::string popString(Stack& stack){
 	std::string ret;
-	for(stack_t c = stack.pop(); c != 0; c= stack.pop()){
+	for(stack_t c = stack.pop(); c != 0; c = stack.pop()){
 		ret.push_back(static_cast<char>(c));
 	}
 	return ret;

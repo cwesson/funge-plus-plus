@@ -49,16 +49,33 @@ bool InstructionPointer::inField(){
 void InstructionPointer::next(){
 	if(!stopped){
 		pos += delta;
-		if(!inField()){
-			delta.reverse();
-			pos += delta;
-			while(inField()){
+		if(funge_config.topo == TOPO_TORUS){
+			if(pos.get(0) > 80){
+				pos.set(0, 0);
+			}else if(pos.get(0) < 0){
+				pos.set(0, 79);
+			}
+			if(pos.get(1) > 25){
+				pos.set(1, 0);
+			}else if(pos.get(1) < 0){
+				pos.set(1, 24);
+			}
+		}else{
+			if(!inField()){
+				delta.reverse();
+				pos += delta;
+				while(inField()){
+					pos += delta;
+				}
+				delta.reverse();
 				pos += delta;
 			}
-			delta.reverse();
-			pos += delta;
 		}
 	}
+}
+
+void InstructionPointer::setPos(const Vector& v){
+	pos = v;
 }
 
 void InstructionPointer::setDelta(const Vector& v){
