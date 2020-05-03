@@ -87,7 +87,7 @@ test_simple test/test_comp.bf "3 2 1 "
 test_simple test/test_fetch.bf "2 v 1 ^<"
 test_simple test/test_store.bf "3 "
 test_befunge test/quine.bf `cat test/quine.bf`
-test_simple test/test_thread.bf "6 5 4 3 2 1 "
+test_simple test/test_thread.bf "8 7 6 5 4 3 2 1 "
 test_simple test/test_3d.bf "1 2 3 4 5 6 7 8 "
 test_simple test/test_stackstack.bf "5 4 3 9 8 7 2 "
 test_simple test/test_under.bf "5 4 3 1 2 0 0 "

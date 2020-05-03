@@ -126,6 +126,10 @@ bool Vector::operator==(const Vector& other) const{
 	return true;
 }
 
+bool Vector::operator!=(const Vector& other) const{
+	return !(*this == other);
+}
+
 std::ostream& operator<<(std::ostream& os, const Vector& rhs){
 	os << "(";
 	for(size_t i = 0; i < rhs.values.size(); ++i){
@@ -136,6 +140,35 @@ std::ostream& operator<<(std::ostream& os, const Vector& rhs){
 	}
 	os << ")";
 	return os;
+}
+
+std::istream& operator>>(std::istream& is, Vector& rhs){
+	rhs.values.clear();
+	char c;
+	is >> c;
+	if(c == '('){
+		is >> c;
+		size_t d = 0;
+		dim_t v = 0;
+		while(c != ')'){
+			if(isdigit(c)){
+				v = (v*10)+(c-'0');
+			}else if(c == ','){
+				rhs.set(d, v);
+				++d;
+				v = 0;
+			}else if(!isspace(c)){
+				is.unget();
+				break;
+			}
+			is >> c;
+		}
+		rhs.set(d, v);
+	}else{
+		is.unget();
+	}
+	rhs.normalize();
+	return is;
 }
 
 }

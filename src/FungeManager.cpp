@@ -52,7 +52,7 @@ void FungeManager::waitAll(){
 			FungeRunner* thread = runners.front();
 			runners.pop();
 			mutex.unlock();
-			//std::cout << "tick " << thread->getID() << std::endl;
+			//std::cout << "tick" << std::endl;
 			thread->tick();
 			if(thread->isRunning()){
 				mutex.lock();

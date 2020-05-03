@@ -19,6 +19,10 @@ class StackStack {
 		Stack& second();
 		Stack& at(size_t x);
 		
+		const Stack& top() const;
+		const Stack& second() const;
+		const Stack& at(size_t x) const;
+		
 		void pop();
 		void push();
 		

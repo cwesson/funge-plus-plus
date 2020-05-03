@@ -6,6 +6,7 @@
 
 #include "FungeRunner.h"
 #include "FungeManager.h"
+#include "FungeDebugger.h"
 
 namespace Funge {
 
@@ -52,7 +53,7 @@ void FungeRunner::tick(){
 	bool done = false;
 	while(!done && !ip.isStopped()){
 		inst_t i = ip.get();
-		//std::cout << ip.getPos() << "\"" << static_cast<char>(i) << "\"" << std::endl;
+		FungeDebugger::tick(field, stack, ip);
 		done = state->execute(i);
 		if(!done && i != ' '){
 			std::cerr << "Unimplemented instruction " << static_cast<int>(i) << " \'" << static_cast<char>(i) << "\' at " << ip << "." << std::endl;

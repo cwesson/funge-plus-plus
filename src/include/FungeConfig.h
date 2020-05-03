@@ -41,6 +41,7 @@ struct FungeConfig {
 	FungeString strings;
 	FungeCell cells;
 	FungeThread threads;
+	bool debug;
 	bool concurrent;
 	bool execute;
 	bool filesystem;

@@ -17,6 +17,7 @@ struct FungeConfig funge_config = {
 	.strings = STRING_SGML,
 	.cells = CELL_INT,
 	.threads = THREAD_FUNGE,
+	.debug = false,
 	.concurrent = true,
 	.execute = true,
 	.filesystem = true,

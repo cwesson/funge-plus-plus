@@ -20,6 +20,7 @@ class FungeManager {
 	
 	private:
 		FungeManager();
+		~FungeManager();
 		void addRunner(FungeRunner* runner);
 		
 		static FungeManager* instance;

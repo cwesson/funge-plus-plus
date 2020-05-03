@@ -20,8 +20,8 @@ int main(int argc, char **argv, char **envp){
 		if(argv[a][0] != '-'){
 			break;
 		}else if(strncmp(argv[a], "-std=", 5) == 0){
-			strtok(argv[a], "=");
-			char* arg = strtok(NULL, "=");
+			std::strtok(argv[a], "=");
+			char* arg = std::strtok(NULL, "=");
 			if(strcmp(arg, "une93") == 0){
 				Funge::funge_config.dimensions = 1;
 				Funge::funge_config.standard = 93;
@@ -63,7 +63,7 @@ int main(int argc, char **argv, char **envp){
 		}else if(strcmp(argv[a], "-fno-filesystem") == 0){
 			Funge::funge_config.filesystem = false;
 		}else if(strncmp(argv[a], "-ftopo=", 7) == 0){
-			strtok(argv[a], "=");
+			std::strtok(argv[a], "=");
 			char* arg = strtok(NULL, "=");
 			if(strcmp(arg, "torus") == 0){
 				Funge::funge_config.topo = Funge::TOPO_TORUS;
@@ -74,8 +74,8 @@ int main(int argc, char **argv, char **envp){
 				return EINVAL;
 			}
 		}else if(strncmp(argv[a], "-fstrings=", 10) == 0){
-			strtok(argv[a], "=");
-			char* arg = strtok(NULL, "=");
+			std::strtok(argv[a], "=");
+			char* arg = std::strtok(NULL, "=");
 			if(strcmp(arg, "multispace") == 0){
 				Funge::funge_config.strings = Funge::STRING_MULTISPACE;
 			}else if(strcmp(arg, "sgml") == 0){
@@ -85,8 +85,8 @@ int main(int argc, char **argv, char **envp){
 				return EINVAL;
 			}
 		}else if(strncmp(argv[a], "-fcells=", 8) == 0){
-			strtok(argv[a], "=");
-			char* arg = strtok(NULL, "=");
+			std::strtok(argv[a], "=");
+			char* arg = std::strtok(NULL, "=");
 			if(strcmp(arg, "char") == 0){
 				Funge::funge_config.cells = Funge::CELL_CHAR;
 			}else if(strcmp(arg, "int") == 0){
@@ -96,8 +96,8 @@ int main(int argc, char **argv, char **envp){
 				return EINVAL;
 			}
 		}else if(strncmp(argv[a], "-fthreads=", 10) == 0){
-			strtok(argv[a], "=");
-			char* arg = strtok(NULL, "=");
+			std::strtok(argv[a], "=");
+			char* arg = std::strtok(NULL, "=");
 			if(strcmp(arg, "native") == 0){
 				Funge::funge_config.threads = Funge::THREAD_NATIVE;
 			}else if(strcmp(arg, "funge") == 0){
@@ -106,6 +106,8 @@ int main(int argc, char **argv, char **envp){
 				std::cerr << "Unsupported topology: " << arg << std::endl;
 				return EINVAL;
 			}
+		}else if(strcmp(argv[a], "-g") == 0){
+			Funge::funge_config.debug = true;
 		}
 	}
 	if(a < argc){
