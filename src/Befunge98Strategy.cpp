@@ -9,26 +9,14 @@
 namespace Funge {
 
 
-Befunge98Strategy::Befunge98Strategy(Field& f, InstructionPointer& i, StackStack& s) :
-	Unefunge98Strategy(f, i, s)
+Befunge98Strategy::Befunge98Strategy(Field& f, InstructionPointer& i, StackStack& s, FungeState& t) :
+	FungeStrategy(f, i, s, t, {'[', ']', 'w'})
 {
 	
 }
 
 bool Befunge98Strategy::execute(inst_t cmd){
 	switch(cmd){
-		case '^':
-			ip.setDelta(Vector{0, -1}); break;
-		case 'v':
-			ip.setDelta(Vector{0, 1}); break;
-		case '|':
-			if(stack.top().pop() == 0){
-				ip.setDelta(Vector{0, 1});
-			}else{
-				ip.setDelta(Vector{0, -1});
-			}
-			break;
-		
 		case '[':
 			ip.left();
 			break;
@@ -47,7 +35,7 @@ bool Befunge98Strategy::execute(inst_t cmd){
 		} break;
 		
 		default:
-			return Unefunge98Strategy::execute(cmd);
+			return false;
 	}
 	return true;
 }

@@ -48,7 +48,7 @@ function test_diff() {
 function test_mycology() {
     echo TEST $1
     cd test/Mycology
-    ../../bin/funge -std=be98 mycology.b98 | grep BAD
+    timeout 15 ../../bin/funge -std=be98 mycology.b98 | grep BAD
     rm mycotmp*.tmp
     code=$?
     if [ -z "$2" ]; then

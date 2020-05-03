@@ -6,13 +6,13 @@
 
 #pragma once
 
-#include "Unefunge93Strategy.h"
+#include "FungeStrategy.h"
 
 namespace Funge {
 
-class Befunge93Strategy : public Unefunge93Strategy {
+class Befunge93Strategy : public FungeStrategy {
 	public:
-		Befunge93Strategy(Field& f, InstructionPointer& i, StackStack& s);
+		Befunge93Strategy(Field& f, InstructionPointer& i, StackStack& s, FungeState& t);
 		virtual ~Befunge93Strategy() = default;
 		
 		virtual bool execute(inst_t cmd) override;

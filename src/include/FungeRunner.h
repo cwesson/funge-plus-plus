@@ -20,7 +20,6 @@ class FungeRunner {
 		explicit FungeRunner(Field& f);
 		FungeRunner(Field& f, const StackStack& s, const InstructionPointer& i);
 		
-		size_t getID() const;
 		bool isRunning() const;
 		
 		void setState(FungeState& s);
@@ -31,8 +30,6 @@ class FungeRunner {
 		void tick();
 	
 	private:
-		static size_t count;
-		size_t id;
 		Field& field;
 		StackStack stack;
 		InstructionPointer ip;

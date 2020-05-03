@@ -15,7 +15,7 @@ namespace Funge {
 
 class FingerprintStrategy : public FungeStrategy {
 	public:
-		FingerprintStrategy(Field& f, InstructionPointer& i, StackStack& s);
+		FingerprintStrategy(Field& f, InstructionPointer& i, StackStack& s, FungeState& t);
 		virtual ~FingerprintStrategy();
 		
 		virtual bool execute(inst_t cmd) override;

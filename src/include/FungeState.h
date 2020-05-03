@@ -7,13 +7,14 @@
 #pragma once
 
 #include "StackStack.h"
+#include "InstructionPointer.h"
 
 namespace Funge {
 class FungeRunner;
 
 class FungeState {
 	public:
-		FungeState(FungeRunner& r, StackStack& s);
+		FungeState(FungeRunner& r, StackStack& s, InstructionPointer& i);
 		virtual ~FungeState() = default;
 		
 		virtual bool execute(inst_t i) = 0;
@@ -21,6 +22,7 @@ class FungeState {
 	protected:
 		FungeRunner& runner;
 		StackStack& stack;
+		InstructionPointer& ip;
 };
 
 }

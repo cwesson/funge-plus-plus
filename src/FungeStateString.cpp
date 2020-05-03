@@ -10,8 +10,8 @@
 
 namespace Funge {
 
-FungeStateString::FungeStateString(FungeRunner& r, StackStack& s) :
-	FungeState(r, s),
+FungeStateString::FungeStateString(FungeRunner& r, StackStack& s, InstructionPointer& i) :
+	FungeState(r, s, i),
 	previous('\0')
 {
 	
@@ -27,6 +27,9 @@ bool FungeStateString::execute(inst_t i){
 			if(i != ' ' || previous != ' '){
 				stack.top().push(static_cast<int>(i));
 				previous = i;
+			}
+			if(i == ' '){
+				return false;
 			}
 		}
 	}

@@ -16,9 +16,13 @@
 namespace Funge {
 
 
-Unefunge98Strategy::Unefunge98Strategy(Field& f, InstructionPointer& i, StackStack& s) :
-	Unefunge93Strategy(f, i, s),
-	finger(f, i, s)
+Unefunge98Strategy::Unefunge98Strategy(Field& f, InstructionPointer& i, StackStack& s, FungeState& t) :
+	FungeStrategy(f, i, s, t,
+			{'a', 'b', 'c', 'd', 'e', 'f', 'j', 'i', 'k', 'n', 'o', 'q', 'r', 's', 't', 'u', 'x', 'y', 'z',
+			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+			'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+			'\'', ';', '{', '}', '=', '(', ')'}),
+	finger(f, i, s, t)
 {
 	
 }
@@ -27,7 +31,9 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 	if(cmd >= 'a' && cmd <= 'f'){
 		stack.top().push(cmd-'a'+10);
 	}else if(cmd >= 'A' && cmd <= 'Z'){
-		return finger.execute(cmd);
+		if(!finger.execute(cmd)){
+			ip.reverse();
+		}
 	}else{
 		switch(cmd){
 			case 'z': break; //No-op
@@ -39,6 +45,8 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 				do{
 					ip.next();
 				}while(ip.get() != ';');
+				ip.next();
+				state.execute(ip.get());
 			} break;
 			case 'j':{
 				int j = stack.top().pop();
@@ -63,7 +71,7 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 				ip.setPos(v);
 				int k = stack.top().pop();
 				for(int i = 0; i < k; i++){
-					execute(c);
+					state.execute(c);
 				}
 				if(k == 0){
 					ip.next();
@@ -256,7 +264,7 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 				break;
 			
 			default:
-				return Unefunge93Strategy::execute(cmd);
+				return false;
 		}
 	}
 	return true;
@@ -312,8 +320,7 @@ void Unefunge98Strategy::pushSysInfo(int num){
 	// Team number
 	pushes += stack.top().push(0);
 	// Thread ID
-	std::hash<std::thread::id> hasher;
-	pushes += stack.top().push(hasher(std::this_thread::get_id()));
+	pushes += stack.top().push(ip.getID());
 	// Scalars per vector
 	pushes += stack.top().push(funge_config.dimensions);
 	// Path separator

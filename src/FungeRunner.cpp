@@ -9,27 +9,23 @@
 
 namespace Funge {
 
-size_t FungeRunner::count = 0;
-
 FungeRunner::FungeRunner(Field& f) :
-	id(count++),
 	field(f),
 	stack(),
 	ip(f),
 	normalState(*this, f, stack, ip),
-	stringState(*this, stack),
+	stringState(*this, stack, ip),
 	state(&normalState)
 {
 	run();
 }
 
 FungeRunner::FungeRunner(Field& f, const StackStack& s, const InstructionPointer& i) :
-	id(count++),
 	field(f),
 	stack(s),
 	ip(i),
 	normalState(*this, f, stack, ip),
-	stringState(*this, stack),
+	stringState(*this, stack, ip),
 	state(&normalState)
 {
 	ip.reverse();
@@ -39,10 +35,6 @@ FungeRunner::FungeRunner(Field& f, const StackStack& s, const InstructionPointer
 
 void FungeRunner::run(){
 	FungeManager::getInstance()->addRunner(this);
-}
-
-size_t FungeRunner::getID() const{
-	return id;
 }
 
 bool FungeRunner::isRunning() const{

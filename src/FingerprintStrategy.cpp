@@ -16,8 +16,10 @@
 
 namespace Funge {
 
-FingerprintStrategy::FingerprintStrategy(Field& f, InstructionPointer& i, StackStack& s) :
-	FungeStrategy(f, i, s),
+FingerprintStrategy::FingerprintStrategy(Field& f, InstructionPointer& i, StackStack& s, FungeState& t) :
+	FungeStrategy(f, i, s, t,
+			{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+			'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'}),
 	available(),
 	loaded()
 {
@@ -41,7 +43,9 @@ bool FingerprintStrategy::execute(inst_t cmd){
 	bool done = false;
 	auto found = loaded.find(cmd);
 	if(found != loaded.cend()){
-		done = found->second.top()->execute(cmd);
+		if(found->second.size() > 0){
+			done = found->second.top()->execute(cmd);
+		}
 	}
 	return done;
 }

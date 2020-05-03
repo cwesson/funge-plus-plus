@@ -16,51 +16,50 @@
 namespace Funge {
 
 FungeStateNormal::FungeStateNormal(FungeRunner& r, Field& f, StackStack& s, InstructionPointer& i) :
-	FungeState(r, s),
-	strategy(NULL)
+	FungeState(r, s, i),
+	strategies(),
+	semantics()
 {
-	switch(funge_config.dimensions){
-		case 1:
-			switch (funge_config.standard)
-			{
-				case 93:
-					strategy = new Unefunge93Strategy(f, i, s);
-					break;
-				case 98:
-					strategy = new Unefunge98Strategy(f, i, s);
-					break;
-				default:
-					break;
-			}
-			break;
-		case 2:
-			switch (funge_config.standard)
-			{
-				case 93:
-					strategy = new Befunge93Strategy(f, i, s);
-					break;
-				case 98:
-					strategy = new Befunge98Strategy(f, i, s);
-					break;
-				default:
-					break;
-			}
-			break;
-		case 3:
-			switch (funge_config.standard)
-			{
-				case 98:
-					strategy = new Trefunge98Strategy(f, i, s);
-					break;
-				default:
-					break;
-			}
-			break;
+	if(funge_config.dimensions >= 1){
+		if(funge_config.standard >= 93){
+			load(new Unefunge93Strategy(f, i, s, *this));
+		}
+		if(funge_config.standard >= 98){
+			load(new Unefunge98Strategy(f, i, s, *this));
+		}
+	}
+	if(funge_config.dimensions >= 2){
+		if(funge_config.standard >= 93){
+			load(new Befunge93Strategy(f, i, s, *this));
+		}
+		if(funge_config.standard >= 98){
+			load(new Befunge98Strategy(f, i, s, *this));
+		}
+	}
+	if(funge_config.dimensions >= 3){
+		if(funge_config.standard >= 98){
+			load(new Trefunge98Strategy(f, i, s, *this));
+		}
 	}
 }
 
 FungeStateNormal::~FungeStateNormal(){
-	delete strategy;
+	while(strategies.size() > 0){
+		delete strategies.back();
+		strategies.pop_back();
+	}
+}
+
+bool FungeStateNormal::load(FungeStrategy* strategy){
+	strategies.push_back(strategy);
+	for(auto i : strategy->instructions()){
+		auto exist = semantics.find(i);
+		if(exist == semantics.cend()){
+			semantics[i] = std::stack<FungeStrategy*>();
+		}
+		semantics[i].push(strategy);
+	}
+	return true;
 }
 
 bool FungeStateNormal::execute(inst_t i){
@@ -69,7 +68,12 @@ bool FungeStateNormal::execute(inst_t i){
 	}else if(i == '\"'){
 		runner.setState(runner.getStringState());
 	}else{
-		return strategy->execute(i);
+		bool done = false;
+		auto found = semantics.find(i);
+		if(found != semantics.cend()){
+			done = found->second.top()->execute(i);
+		}
+		return done;
 	}
 	return true;
 }
