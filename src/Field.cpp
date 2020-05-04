@@ -12,7 +12,6 @@ namespace Funge{
 
 Field::Field(std::istream& file, size_t dim){
 	parse(Vector{0}, file);
-	//std::cout << *this << std::endl;
 	if(dim == 0){
 		funge_config.dimensions = maxs.size();
 	}else{

@@ -5,7 +5,6 @@
  */
 
 #include "Stack.h"
-#include <iostream>
 
 namespace Funge {
 

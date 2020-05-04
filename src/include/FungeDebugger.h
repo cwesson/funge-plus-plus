@@ -12,6 +12,7 @@
 #include <set>
 #include <map>
 #include <mutex>
+#include <list>
 
 namespace Funge {
 
@@ -28,9 +29,14 @@ class FungeDebugger {
 			STATE_BREAK,
 		};
 		
+		enum {
+			MAX_BACKTRACE = 10
+		};
+		
 		struct Thread {
 			const InstructionPointer* ip;
 			const StackStack* stack;
+			std::list<Vector> backtrace;
 			State state;
 		};
 		

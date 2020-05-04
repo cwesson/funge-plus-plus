@@ -47,6 +47,7 @@ void FungeDebugger::debug(const Field& field, const StackStack& stack, const Ins
 		threads.insert({id, {
 			.ip = &ip,
 			.stack = &stack,
+			.backtrace = {},
 			.state = STATE_START,
 		}});
 		std::cout << "New IP " << id << std::endl;
@@ -57,6 +58,11 @@ void FungeDebugger::debug(const Field& field, const StackStack& stack, const Ins
 		std::cout << "Breakpoint " << ip.getPos() << std::endl;
 		threads[id].state = STATE_BREAK;
 	}
+	
+	if(threads[id].backtrace.size() >= MAX_BACKTRACE){
+		threads[id].backtrace.pop_back();
+	}
+	threads[id].backtrace.push_front(ip.getPos());
 	
 	switch(threads[id].state){
 		case STATE_RUN:
@@ -71,7 +77,7 @@ void FungeDebugger::debug(const Field& field, const StackStack& stack, const Ins
 	
 	size_t tid = id;
 	while(threads[id].state != STATE_RUN){
-		std::cout << "(defunge) " << std::flush;
+		std::cout << "\e[33m(defunge)\e[0m " << std::flush;
 		
 		std::string line;
 		std::getline(std::cin, line);
@@ -85,6 +91,7 @@ void FungeDebugger::debug(const Field& field, const StackStack& stack, const Ins
 		}else if(cmd == "quit" || cmd == "q"){
 			exit(1);
 		}else if(cmd == "step" || cmd == "stp" || cmd == "s"){
+			threads[tid].state = STATE_STEP;
 			break;
 		}else if(cmd == "peek" || cmd == "p"){
 			size_t c = 0;
@@ -97,10 +104,17 @@ void FungeDebugger::debug(const Field& field, const StackStack& stack, const Ins
 				std::cout << threads[tid].stack->top().get(c) << std::endl;
 			}
 		}else if(cmd == "get" || cmd == "g"){
-			std::cout << field.get(threads[tid].ip->getPos()) << std::endl;
+			Vector v;
+			iss >> v;
+			printField(field, v, Vector{3,3});
 		}else if(cmd == "list" || cmd == "l"){
-			printField(field, threads[tid].ip->getPos(), Vector{3,3});
-		}else if(cmd == "break" || cmd == "b"){
+			dim_t s = 0;
+			iss >> s;
+			if(s == 0){
+				s = 3;
+			}
+			printField(field, threads[tid].ip->getPos(), Vector{std::abs(s),std::abs(s)});
+		}else if(cmd == "break" || cmd == "bp"){
 			Vector v;
 			iss >> v;
 			breakpoints.insert(v);
@@ -112,9 +126,23 @@ void FungeDebugger::debug(const Field& field, const StackStack& stack, const Ins
 		}else if(cmd == "storage"){
 			std::cout << "Storage " << threads[tid].ip->getStorage() << std::endl;
 		}else if(cmd == "thread" || cmd == "t"){
+			const size_t old = tid;
 			iss >> tid;
-			printIP(*threads[tid].ip);
+			if(tid == old){
+				for(auto t : threads){
+					printIP(*(t.second.ip));
+				}
+			}else{
+				printIP(*threads[tid].ip);
+			}
+		}else if(cmd == "backtrace" || cmd == "bt"){
+			std::cout << "Backtrace" << std::endl;
+			size_t i = 0;
+			for(auto b : threads[tid].backtrace){
+				std::cout << "#" << i++ << "  " << b << " \"" << static_cast<char>(field.get(b)) << "\"" << std::endl;
+			}
 		}
+		
 	}
 }
 
@@ -128,11 +156,20 @@ void FungeDebugger::printField(const Field& field, const Vector& center, const V
 	Vector pos = start;
 	while(pos != end){
 		inst_t i = field.get(pos);
+		bool color = false;
+		for(auto t : threads){
+			if(t.second.ip->getPos() == pos){
+				std::cout << "\e[41;1m";
+				color = true;
+				break;
+			}
+		}
 		if(pos == center){
 			std::cout << "\e[42;1m";
+			color = true;
 		}
 		std::cout << static_cast<char>(i);
-		if(pos == center){
+		if(color){
 			std::cout << "\e[0m";
 		}
 		pos.set(0, pos[0]+1); // ++x
