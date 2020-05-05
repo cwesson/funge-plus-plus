@@ -39,6 +39,8 @@ specification.  This mode can be enabled with `-fthreads=native`.
 the `-std` argument.
 
 ## Fingerprints
+`BASE` I/O for numbers in other bases.
+
 `BOOL` Boolean operators.
 
 `BITW` Bitwise operators.
@@ -46,6 +48,8 @@ the `-std` argument.
 `HRTI` High Resolution Timer Interface.
 
 `MODU` Modulo Arithmetic Extension.
+
+`NFUN` N-Dimensional Funge.
 
 `NULL` Null Fingerprint.
 
