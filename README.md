@@ -1,13 +1,18 @@
 # C-Funge
 C-Funge is Befunge interpreter originally written by Conlan Wesson in Java for a Programming Laguage Concepts course
-with minimal functionality.  It has since been converted to C++, and an effort is underway to implement all Funge-98 instructions
-and support N-dimensional Funge.
+with minimal functionality.  It has since been converted to C++, and an effort is underway to implement all Funge-98
+instructions and support N-dimensional Funge.
 
 ## Running
 The C-Funge executable `funge` uses the first file argument to load the funge program.  The first character of the
 file is an instruction at (0,0).  Each subsequent character is an instruction at X+1.  Both carriage returns and
 line feed (as well as CRLF) are treated as Y+1 and reset X to zero.  Form feeds in the file represent Z+1 and reset
-X and Y to zero.  Carriage returns and line feeds following a form feed are ignore (i.e FF may be own its own line).
+X and Y to zero.  Carriage returns and line feeds following a form feed are ignored (i.e FF may be own its own line).
+
+### Higher Dimensions
+Vertical Tabs in the file represent 4D+1 and reset X, Y, and Z to zero.  Carriage returns and line feeds
+following a vertical tab are ignored.  This is not part of the Funge-98 specification, but provides a simple way to
+create 4-dimensional funges.
 
 ### Arguments
 `funge [ARGS] file`

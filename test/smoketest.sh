@@ -97,6 +97,7 @@ test_diff test/input.txt test/output.txt
 # Fingerprint Tests
 test_simple test/test_roma.bf "1000 500 100 50 10 5 1 "
 test_simple test/test_bool.bf "1 2 "
+test_simple test/test_nfun.bf "Funge++ in the Forth Dimension!"
 # Mycology Tests
 test_simple test/Mycology/sanity.bf "0 1 2 3 4 5 6 7 8 9 "
 test_mycology mycology.b98 15
