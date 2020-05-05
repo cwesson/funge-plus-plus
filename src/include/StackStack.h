@@ -26,7 +26,7 @@ class StackStack {
 		void pop();
 		void push();
 		
-		size_t size();
+		size_t size() const;
 		
 	private:
 		std::vector<Stack> stack;

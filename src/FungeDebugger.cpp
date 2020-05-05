@@ -97,11 +97,16 @@ void FungeDebugger::debug(const Field& field, const StackStack& stack, const Ins
 			size_t c = 0;
 			iss >> c;
 			if(c == 0){
-				for(size_t i = 0; i < threads[tid].stack->top().size(); ++i){
-					std::cout << threads[tid].stack->top().get(i+1) << " " << std::endl;
+				for(size_t j = 0; j < threads[tid].stack->size(); ++j){
+					for(size_t i = 0; i < threads[tid].stack->at(j).size(); ++i){
+						std::cout << threads[tid].stack->at(j).get(i+1) << " ";
+					}
+					std::cout << std::endl;
 				}
 			}else{
-				std::cout << threads[tid].stack->top().get(c) << std::endl;
+				size_t s = 0;
+				iss >> s;
+				std::cout << threads[tid].stack->at(s).get(c) << std::endl;
 			}
 		}else if(cmd == "get" || cmd == "g"){
 			Vector v;

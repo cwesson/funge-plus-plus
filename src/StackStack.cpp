@@ -33,7 +33,7 @@ const Stack& StackStack::second() const{
 }
 
 const Stack& StackStack::at(size_t x) const{
-	return stack[x];
+	return stack[stack.size()-x-1];
 }
 
 void StackStack::pop(){
@@ -44,7 +44,7 @@ void StackStack::push(){
 	stack.push_back(Stack());
 }
 
-size_t StackStack::size(){
+size_t StackStack::size() const{
 	return stack.size();
 }
 
