@@ -143,10 +143,12 @@ void Field::parseBeq(std::istream& file){
 			}
 		}
 	}
-	if(dims == 0){
-		dims = maxs.size();
+	if(funge_config.dimensions == 0){
+		if(dims == 0){
+			dims = maxs.size();
+		}
+		funge_config.dimensions = dims;
 	}
-	funge_config.dimensions = dims;
 }
 
 void Field::dump(const Vector& start, const Vector& delta, std::ostream& file, bool binary){
