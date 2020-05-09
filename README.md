@@ -33,6 +33,10 @@ create 4-dimensional funges.
 
 `-fthreads=[native|funge]` Set the threading mode.
 
+`-l[fingerprint]` Load fingerprint at start as if loaded by `(`.
+
+`-g` Start in debugger mode.
+
 ### Exit Code
 `funge` sets the program exit code to the value popped by the quit instruction `q` if encountered.  If `funge` fails
 to load the funge program, the exit code is set to an error.  In any other case, the exit code is zero.
@@ -42,13 +46,14 @@ to load the funge program, the exit code is set to an error.  In any other case,
 specification.  This mode can be enabled with `-fthreads=native`.
 2. The dimensionality (up to 3D) is determined automatically based on the file contents.  This can be overriden with
 the `-std` argument.
+3. BeQunge formatted files can be loaded as `.beq` files.  This automatically loads the `NFUN` fingerprint.
 
 ## Fingerprints
 `BASE` I/O for numbers in other bases.
 
-`BOOL` Boolean operators.
-
 `BITW` Bitwise operators.
+
+`BOOL` Boolean operators.
 
 `HRTI` High Resolution Timer Interface.
 

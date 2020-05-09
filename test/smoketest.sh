@@ -96,6 +96,7 @@ test_simple test/test_in.bf "3 2 1 5 4 6 "
 test_diff test/input.txt test/output.txt
 # BeQunge Tests
 test_simple test/example3d.beq "Hello World"
+test_simple test/example5d.beq "Hello World"
 # Fingerprint Tests
 test_simple test/test_roma.bf "1000 500 100 50 10 5 1 "
 test_simple test/test_bool.bf "1 2 "

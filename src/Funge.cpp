@@ -106,6 +106,13 @@ int main(int argc, char **argv, char **envp){
 				std::cerr << "Unsupported topology: " << arg << std::endl;
 				return EINVAL;
 			}
+		}else if(strncmp(argv[a], "-l", 2) == 0){
+			std::string fing(&argv[a][2]);
+			uint64_t fingerprint = 0;
+			for(auto c : fing){
+				fingerprint = (fingerprint << 8) + c;
+			}
+			Funge::funge_config.fingerprints.push_back(fingerprint);
 		}else if(strcmp(argv[a], "-g") == 0){
 			Funge::funge_config.debug = true;
 		}
@@ -133,6 +140,7 @@ int main(int argc, char **argv, char **envp){
 	Funge::Field::FileFormat fmt = Funge::Field::FORMAT_BF;
 	if(filepath.substr(filepath.find_last_of(".") + 1) == "beq"){
 		fmt = Funge::Field::FORMAT_BEQ;
+		Funge::funge_config.fingerprints.push_back(0x4e46554e);
 	}
 	Funge::Field field(file, Funge::funge_config.dimensions, fmt);
 	

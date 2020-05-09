@@ -11,6 +11,7 @@ namespace Funge {
 struct FungeConfig funge_config = {
 	.args = {},
 	.env = {},
+	.fingerprints = {},
 	.dimensions = 0,
 	.standard = 98,
 	.topo = TOPO_LAHEY,

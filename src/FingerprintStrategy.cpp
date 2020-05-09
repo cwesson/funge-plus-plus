@@ -5,6 +5,7 @@
  */
 
 #include "FingerprintStrategy.h"
+#include "FungeConfig.h"
 #include "FingerprintBASE.h"
 #include "FingerprintBITW.h"
 #include "FingerprintBOOL.h"
@@ -35,6 +36,10 @@ FingerprintStrategy::FingerprintStrategy(Field& f, InstructionPointer& i, StackS
 	available[0x4f525448] = new FingerprintORTH(f, i, s);
 	available[0x52454643] = new FingerprintREFC(f, i, s);
 	available[0x524f4d41] = new FingerprintROMA(f, i, s);
+	
+	for(auto f : funge_config.fingerprints){
+		load(f);
+	}
 }
 
 FingerprintStrategy::~FingerprintStrategy(){

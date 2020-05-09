@@ -35,6 +35,7 @@ enum FungeThread {
 struct FungeConfig {
 	std::vector<std::string> args;
 	std::vector<std::string> env;
+	std::vector<uint64_t> fingerprints;
 	size_t dimensions;
 	unsigned int standard;
 	FungeTopo topo;
