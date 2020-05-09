@@ -37,8 +37,8 @@ FingerprintStrategy::FingerprintStrategy(Field& f, InstructionPointer& i, StackS
 	available[0x52454643] = new FingerprintREFC(f, i, s);
 	available[0x524f4d41] = new FingerprintROMA(f, i, s);
 	
-	for(auto f : funge_config.fingerprints){
-		load(f);
+	for(auto fing : funge_config.fingerprints){
+		load(fing);
 	}
 }
 

@@ -17,6 +17,8 @@ class FungeStateString : public FungeState {
 		
 		virtual bool execute(inst_t i) override;
 	private:
+		void escape(inst_t i);
+		
 		inst_t previous;
 };
 

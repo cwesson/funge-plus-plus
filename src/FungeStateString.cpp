@@ -17,20 +17,69 @@ FungeStateString::FungeStateString(FungeRunner& r, StackStack& s, InstructionPoi
 	
 }
 
+void FungeStateString::escape(inst_t i){
+	stack_t code = i;
+	switch(i){
+		case '0':
+			code = '\0';
+			break;
+		case 'a':
+			code = '\a';
+			break;
+		case 'b':
+			code = '\b';
+			break;
+		case 't':
+			code = '\t';
+			break;
+		case 'n':
+			code = '\n';
+			break;
+		case 'v':
+			code = '\v';
+			break;
+		case 'f':
+			code = '\f';
+			break;
+		case 'r':
+			code = '\r';
+			break;
+		case 'e':
+			code = '\e';
+			break;
+		default:
+			code = i;
+			break;
+	}
+	stack.top().push(code);
+}
+
 bool FungeStateString::execute(inst_t i){
 	if(i == '\"'){
 		runner.setState(runner.getNormalState());
 	}else{
-		if(funge_config.strings == STRING_MULTISPACE){
-			stack.top().push(static_cast<int>(i));
-		}else{
-			if(i != ' ' || previous != ' '){
-				stack.top().push(static_cast<int>(i));
-				previous = i;
-			}
-			if(i == ' '){
+		switch(funge_config.strings){
+			case STRING_MULTISPACE:
+				stack.top().push(static_cast<stack_t>(i));
+				break;
+			case STRING_SGML:
+				if(i != ' ' || previous != ' '){
+					stack.top().push(static_cast<stack_t>(i));
+					previous = i;
+				}else{
+					return false;
+				}
+				break;
+			case STRING_C:
+				if(i == '\\'){
+					ip.next();
+					escape(ip.get());
+				}else{
+					stack.top().push(static_cast<stack_t>(i));
+				}
+				break;
+			default:
 				return false;
-			}
 		}
 	}
 	return true;

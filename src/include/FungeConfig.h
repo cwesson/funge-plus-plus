@@ -20,6 +20,7 @@ enum FungeTopo {
 enum FungeString {
 	STRING_MULTISPACE,
 	STRING_SGML,
+	STRING_C,
 };
 
 enum FungeCell {

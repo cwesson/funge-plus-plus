@@ -80,6 +80,8 @@ int main(int argc, char **argv, char **envp){
 				Funge::funge_config.strings = Funge::STRING_MULTISPACE;
 			}else if(strcmp(arg, "sgml") == 0){
 				Funge::funge_config.strings = Funge::STRING_SGML;
+			}else if(strcmp(arg, "c") == 0){
+				Funge::funge_config.strings = Funge::STRING_C;
 			}else{
 				std::cerr << "Unsupported topology: " << arg << std::endl;
 				return EINVAL;

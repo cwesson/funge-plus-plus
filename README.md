@@ -27,7 +27,7 @@ create 4-dimensional funges.
 
 `-ftopo=[torus|lahey]` Set the topology.
 
-`-fstrings=[multispace|sgml]` Set the string mode.
+`-fstrings=[multispace|sgml|c]` Set the string mode.
 
 `-fcells=[char|int]` Set the cell size.
 
@@ -46,7 +46,10 @@ to load the funge program, the exit code is set to an error.  In any other case,
 specification.  This mode can be enabled with `-fthreads=native`.
 2. The dimensionality (up to 3D) is determined automatically based on the file contents.  This can be overriden with
 the `-std` argument.
-3. BeQunge formatted files can be loaded as `.beq` files.  This automatically loads the `NFUN` fingerprint.
+3. BeQunge formatted files can be loaded as `.beq` files.  This implies `-lNFUN`.
+4. C-style strings can be enabled with `-fstrings=c`.  In this mode, backslashes in strings are not pused to the stack,
+instead, it and the following character are interpretted as an escape sequence.  This happens in one tick.  In addition
+to special characters, this allows quotes and ANSI escape codes in strings.
 
 ## Errata
 1. The Funge-98 specification is inconsistent about the delta of the `h` and `l`  instructions.  Funge++ uses the
