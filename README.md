@@ -48,6 +48,10 @@ specification.  This mode can be enabled with `-fthreads=native`.
 the `-std` argument.
 3. BeQunge formatted files can be loaded as `.beq` files.  This automatically loads the `NFUN` fingerprint.
 
+## Errata
+1. The Funge-98 specification is inconsistent about the delta of the `h` and `l`  instructions.  Funge++ uses the
+definition in the quick reference, that is `h` is Z-1 and `l` is Z+1.
+
 ## Fingerprints
 `BASE` I/O for numbers in other bases.
 
