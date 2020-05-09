@@ -7,12 +7,33 @@
 #include "Field.h"
 #include "FungeConfig.h"
 #include <limits>
+#include <string>
+#include <sstream>
 
 namespace Funge{
 
-Field::Field(std::istream& file, size_t dim){
-	parse(Vector{0}, file);
-	//std::cout << *this << std::endl;
+Field::Field() :
+	field(),
+	maxs(),
+	mins()
+{
+
+}
+
+Field::Field(std::istream& file, size_t dim, FileFormat fmt) :
+	field(),
+	maxs(),
+	mins()
+{
+	switch(fmt){
+		default:
+		case FORMAT_BF:
+			parse(Vector{0}, file);
+			break;
+		case FORMAT_BEQ:
+			parseBeq(file);
+			break;
+	}
 	if(dim == 0){
 		funge_config.dimensions = maxs.size();
 	}else{
@@ -32,7 +53,7 @@ Vector Field::parse(const Vector& start, std::istream& file, bool binary){
 					file.get();
 				}
 			}
-			if(last != '\f'){
+			if(last != '\f' && last != '\v'){
 				increment(1, v, max);    // ++y
 				reset(0, v, start, max); // x = 0
 			}
@@ -43,6 +64,14 @@ Vector Field::parse(const Vector& start, std::istream& file, bool binary){
 				increment(2, v, max);    // ++z
 				last = '\f';
 			}
+		}else if((i == '\v') && !binary){
+			if(funge_config.dimensions == 0 || funge_config.dimensions >= 3){
+				reset(0, v, start, max); // x = 0
+				reset(1, v, start, max); // y = 0
+				reset(2, v, start, max); // z = 0
+				increment(3, v, max);    // ++d4
+				last = '\v';
+			}
 		}else{
 			if(i != ' '){
 				set(v, i);
@@ -52,6 +81,74 @@ Vector Field::parse(const Vector& start, std::istream& file, bool binary){
 		}
 	}
 	return max-start;
+}
+
+std::vector<std::string> splitString(std::string str, char delim){
+	std::vector<std::string> ret;
+	auto iss = std::istringstream(str);
+	while(iss.good()){
+		std::string substr;
+		std::getline(iss, substr, delim);
+		ret.push_back(substr);
+	}
+	return ret;
+}
+
+void Field::parseBeq(std::istream& file){
+	size_t dims = 0;
+	while(file.good()){
+		std::string line;
+		std::getline(file, line);
+		auto ctrl = splitString(line, ',');
+		size_t lines = 0;
+		Vector origin;
+		size_t dim = 0;
+		for(auto c : ctrl){
+			auto cmd = splitString(c, ' ');
+			if(cmd[0] == "Version"){
+				// ok
+			}else if(cmd[0] == "Dimensions"){
+				if(dims == 0){
+					dims = std::stoul(cmd[1]);
+				}else{
+					std::cerr << "Unexpected dimensions" << std::endl;
+				}
+			}else if(cmd[0] == "Lines"){
+				lines = std::stoul(cmd[1]);
+			}else if(cmd[0] == "Origin"){
+				auto orig = splitString(cmd[1], ':');
+				for(dim = 0; dim < orig.size(); ++dim){
+					origin.set(dim, std::stoi(orig[dim]));
+				}
+			}else if(cmd[0] == "Coord"){
+				auto orig = splitString(cmd[1], ':');
+				size_t start = dim;
+				for( ; dim < orig.size()+start; ++dim){
+					if(orig[dim-start].size() > 0){
+						origin.set(dim, std::stoi(orig[dim-start]));
+					}
+				}
+			}
+		}
+		if(lines > 0){
+			Vector pos(origin);
+			for(size_t i = 0; i < lines; ++i){
+				std::getline(file, line);
+				for(auto c : line){
+					set(pos, c);
+					pos.set(0, pos.get(0)+1); // ++x
+				}
+				pos.set(0, origin.get(0)); // x=0
+				pos.set(1, pos.get(1)+1);  // ++y
+			}
+		}
+	}
+	if(funge_config.dimensions == 0){
+		if(dims == 0){
+			dims = maxs.size();
+		}
+		funge_config.dimensions = dims;
+	}
 }
 
 void Field::dump(const Vector& start, const Vector& delta, std::ostream& file, bool binary){

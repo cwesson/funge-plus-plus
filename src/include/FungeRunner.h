@@ -11,7 +11,6 @@
 #include "InstructionPointer.h"
 #include "FungeStateNormal.h"
 #include "FungeStateString.h"
-#include <thread>
 
 namespace Funge {
 class FungeState;
@@ -21,19 +20,19 @@ class FungeRunner {
 		explicit FungeRunner(Field& f);
 		FungeRunner(Field& f, const StackStack& s, const InstructionPointer& i);
 		
-		void join() const;
+		bool isRunning() const;
 		
 		void setState(FungeState& s);
 		FungeState& getNormalState();
 		FungeState& getStringState();
 		
 		void operator()();
+		void tick();
 	
 	private:
 		Field& field;
 		StackStack stack;
 		InstructionPointer ip;
-		std::thread* thread;
 		
 		FungeStateNormal normalState;
 		FungeStateString stringState;

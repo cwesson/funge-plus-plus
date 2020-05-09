@@ -25,8 +25,8 @@ B93   U98
 
 A 4D-
 B Enter Befunge
-C
-D
+C 6D-
+D 6D+
 E
 F
 G
@@ -36,16 +36,16 @@ J
 K
 L 5D+
 M 5D if
-N
+N Enter ND
 O
-P
+P Enter Pefunge (5D)
 Q Enter Quefunge (4D)
-R
-S
+R 6D if
+S Enter Sefunge (6D)
 T Enter Trefunge
 U Enter Unefunge
 V 4D+
 W
-X
-Y
-Z
+X ND if
+Y ND- (BeQunge compatible)
+Z ND+ (BeQunge compatible)

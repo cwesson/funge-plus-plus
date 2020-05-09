@@ -20,6 +20,7 @@ enum FungeTopo {
 enum FungeString {
 	STRING_MULTISPACE,
 	STRING_SGML,
+	STRING_C,
 };
 
 enum FungeCell {
@@ -27,14 +28,22 @@ enum FungeCell {
 	CELL_INT,
 };
 
+enum FungeThread {
+	THREAD_NATIVE,
+	THREAD_FUNGE,
+};
+
 struct FungeConfig {
 	std::vector<std::string> args;
 	std::vector<std::string> env;
+	std::vector<uint64_t> fingerprints;
 	size_t dimensions;
 	unsigned int standard;
 	FungeTopo topo;
 	FungeString strings;
 	FungeCell cells;
+	FungeThread threads;
+	bool debug;
 	bool concurrent;
 	bool execute;
 	bool filesystem;

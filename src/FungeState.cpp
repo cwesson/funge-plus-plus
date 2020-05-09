@@ -8,9 +8,10 @@
 
 namespace Funge {
 
-FungeState::FungeState(FungeRunner& r, StackStack& s) :
+FungeState::FungeState(FungeRunner& r, StackStack& s, InstructionPointer& i) :
 	runner(r),
-	stack(s)
+	stack(s),
+	ip(i)
 {
 	
 }

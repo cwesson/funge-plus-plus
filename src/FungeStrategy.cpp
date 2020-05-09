@@ -8,15 +8,21 @@
 
 namespace Funge {
 
-FungeStrategy::FungeStrategy(Field& f, InstructionPointer& i, StackStack& s) :
+FungeStrategy::FungeStrategy(Field& f, InstructionPointer& i, StackStack& s, FungeState& t, std::initializer_list<inst_t> in) :
 	field(f),
 	ip(i),
 	stack(s),
+	state(t),
 	rd(),
 	gen(rd()),
-	dis()
+	dis(),
+	inst(in)
 {
 	
+}
+
+const std::vector<inst_t>& FungeStrategy::instructions() const{
+	return inst;
 }
 
 stack_t FungeStrategy::random(){

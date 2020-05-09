@@ -8,6 +8,8 @@
 
 #include "FungeState.h"
 #include "FungeStrategy.h"
+#include <map>
+#include <stack>
 
 namespace Funge {
 
@@ -22,7 +24,10 @@ class FungeStateNormal : public FungeState {
 		FungeStateNormal& operator=(const FungeStateNormal&) = delete;
 	
 	protected:
-		FungeStrategy* strategy;
+		std::vector<FungeStrategy*> strategies;
+		std::map<inst_t, std::stack<FungeStrategy*>> semantics;
+		
+		bool load(FungeStrategy* strategy);
 };
 
 }

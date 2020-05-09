@@ -9,8 +9,8 @@
 namespace Funge {
 
 
-Trefunge98Strategy::Trefunge98Strategy(Field& f, InstructionPointer& i, StackStack& s) :
-	Befunge98Strategy(f, i, s)
+Trefunge98Strategy::Trefunge98Strategy(Field& f, InstructionPointer& i, StackStack& s, FungeState& t) :
+	FungeStrategy(f, i, s, t, {'h', 'l', 'm'})
 {
 	
 }
@@ -30,7 +30,7 @@ bool Trefunge98Strategy::execute(inst_t cmd){
 			break;
 		
 		default:
-			return Befunge98Strategy::execute(cmd);
+			return false;
 	}
 	return true;
 }

@@ -1,5 +1,5 @@
 /**
- * @file FingerprintNULL.h
+ * @file FingerprintNULL.cpp
  * Null Fingerprint.
  * @author Conlan Wesson
  */

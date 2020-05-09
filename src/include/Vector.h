@@ -37,8 +37,10 @@ class Vector {
 		
 		bool operator<(const Vector& other) const;
 		bool operator==(const Vector& other) const;
+		bool operator!=(const Vector& other) const;
 		
 		friend std::ostream& operator<<(std::ostream& os, const Vector& rhs);
+		friend std::istream& operator>>(std::istream& is, Vector& rhs);
 	
 	private:
 		std::vector<dim_t> values;

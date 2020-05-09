@@ -12,7 +12,7 @@ namespace Funge {
 
 class Unefunge93Strategy : public FungeStrategy {
 	public:
-		Unefunge93Strategy(Field& f, InstructionPointer& i, StackStack& s);
+		Unefunge93Strategy(Field& f, InstructionPointer& i, StackStack& s, FungeState& t);
 		virtual ~Unefunge93Strategy() = default;
 		
 		virtual bool execute(inst_t cmd) override;

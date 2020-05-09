@@ -29,7 +29,8 @@ class Fingerprint {
 		Field& field;
 		InstructionPointer& ip;
 		StackStack& stack;
-		
+	
+	private:
 		std::vector<inst_t> inst;
 };
 

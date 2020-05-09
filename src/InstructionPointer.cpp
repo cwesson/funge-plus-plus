@@ -9,7 +9,10 @@
 
 namespace Funge {
 
+size_t InstructionPointer::count = 0;
+
 InstructionPointer::InstructionPointer(Field& f) :
+	id(count++),
 	stopped(false),
 	pos({0}),
 	delta({1}),
@@ -20,6 +23,7 @@ InstructionPointer::InstructionPointer(Field& f) :
 }
 
 InstructionPointer::InstructionPointer(const InstructionPointer& orig) :
+	id(count++),
 	stopped(orig.stopped),
 	pos(orig.pos),
 	delta(orig.delta),
@@ -102,7 +106,7 @@ void InstructionPointer::stop(){
 	stopped = true;
 }
 
-bool InstructionPointer::isStopped(){
+bool InstructionPointer::isStopped() const{
 	return stopped;
 }
 
@@ -116,6 +120,10 @@ const Vector& InstructionPointer::getDelta() const{
 
 const Vector& InstructionPointer::getStorage() const{
 	return storage;
+}
+
+size_t InstructionPointer::getID() const{
+	return id;
 }
 
 std::ostream& operator<<(std::ostream& os, const InstructionPointer& rhs){

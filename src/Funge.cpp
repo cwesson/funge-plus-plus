@@ -14,14 +14,14 @@
 #include <cstring>
 
 int main(int argc, char **argv, char **envp){
-	const char* filepath = NULL;
+	std::string filepath;
 	int a = 1;
 	for( ; a < argc; ++a){
 		if(argv[a][0] != '-'){
 			break;
 		}else if(strncmp(argv[a], "-std=", 5) == 0){
-			strtok(argv[a], "=");
-			char* arg = strtok(NULL, "=");
+			std::strtok(argv[a], "=");
+			char* arg = std::strtok(NULL, "=");
 			if(strcmp(arg, "une93") == 0){
 				Funge::funge_config.dimensions = 1;
 				Funge::funge_config.standard = 93;
@@ -63,7 +63,7 @@ int main(int argc, char **argv, char **envp){
 		}else if(strcmp(argv[a], "-fno-filesystem") == 0){
 			Funge::funge_config.filesystem = false;
 		}else if(strncmp(argv[a], "-ftopo=", 7) == 0){
-			strtok(argv[a], "=");
+			std::strtok(argv[a], "=");
 			char* arg = strtok(NULL, "=");
 			if(strcmp(arg, "torus") == 0){
 				Funge::funge_config.topo = Funge::TOPO_TORUS;
@@ -74,19 +74,21 @@ int main(int argc, char **argv, char **envp){
 				return EINVAL;
 			}
 		}else if(strncmp(argv[a], "-fstrings=", 10) == 0){
-			strtok(argv[a], "=");
-			char* arg = strtok(NULL, "=");
+			std::strtok(argv[a], "=");
+			char* arg = std::strtok(NULL, "=");
 			if(strcmp(arg, "multispace") == 0){
 				Funge::funge_config.strings = Funge::STRING_MULTISPACE;
 			}else if(strcmp(arg, "sgml") == 0){
 				Funge::funge_config.strings = Funge::STRING_SGML;
+			}else if(strcmp(arg, "c") == 0){
+				Funge::funge_config.strings = Funge::STRING_C;
 			}else{
 				std::cerr << "Unsupported topology: " << arg << std::endl;
 				return EINVAL;
 			}
 		}else if(strncmp(argv[a], "-fcells=", 8) == 0){
-			strtok(argv[a], "=");
-			char* arg = strtok(NULL, "=");
+			std::strtok(argv[a], "=");
+			char* arg = std::strtok(NULL, "=");
 			if(strcmp(arg, "char") == 0){
 				Funge::funge_config.cells = Funge::CELL_CHAR;
 			}else if(strcmp(arg, "int") == 0){
@@ -95,13 +97,33 @@ int main(int argc, char **argv, char **envp){
 				std::cerr << "Unsupported topology: " << arg << std::endl;
 				return EINVAL;
 			}
+		}else if(strncmp(argv[a], "-fthreads=", 10) == 0){
+			std::strtok(argv[a], "=");
+			char* arg = std::strtok(NULL, "=");
+			if(strcmp(arg, "native") == 0){
+				Funge::funge_config.threads = Funge::THREAD_NATIVE;
+			}else if(strcmp(arg, "funge") == 0){
+				Funge::funge_config.threads = Funge::THREAD_FUNGE;
+			}else{
+				std::cerr << "Unsupported topology: " << arg << std::endl;
+				return EINVAL;
+			}
+		}else if(strncmp(argv[a], "-l", 2) == 0){
+			std::string fing(&argv[a][2]);
+			uint64_t fingerprint = 0;
+			for(auto c : fing){
+				fingerprint = (fingerprint << 8) + c;
+			}
+			Funge::funge_config.fingerprints.push_back(fingerprint);
+		}else if(strcmp(argv[a], "-g") == 0){
+			Funge::funge_config.debug = true;
 		}
 	}
 	if(a < argc){
 		filepath = argv[a++];
 		Funge::funge_config.args.push_back(filepath);
 	}
-	if(!filepath){
+	if(filepath == ""){
 		std::cerr << "No input file specified.";
 		return EINVAL;
 	}
@@ -117,9 +139,14 @@ int main(int argc, char **argv, char **envp){
 	if(file.fail()){
 		return EIO;
 	}
-	Funge::Field field(file, Funge::funge_config.dimensions);
-	Funge::FungeRunner runner(field);
+	Funge::Field::FileFormat fmt = Funge::Field::FORMAT_BF;
+	if(filepath.substr(filepath.find_last_of(".") + 1) == "beq"){
+		fmt = Funge::Field::FORMAT_BEQ;
+		Funge::funge_config.fingerprints.push_back(0x4e46554e);
+	}
+	Funge::Field field(file, Funge::funge_config.dimensions, fmt);
 	
+	Funge::FungeRunner runner(field);
 	Funge::FungeManager::getInstance()->waitAll();
 	
 	return 0;

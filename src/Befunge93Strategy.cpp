@@ -5,13 +5,12 @@
  */
 
 #include "Befunge93Strategy.h"
-#include <iostream>
 
 namespace Funge {
 
 
-Befunge93Strategy::Befunge93Strategy(Field& f, InstructionPointer& i, StackStack& s) :
-	Unefunge93Strategy(f, i, s)
+Befunge93Strategy::Befunge93Strategy(Field& f, InstructionPointer& i, StackStack& s, FungeState& t) :
+	FungeStrategy(f, i, s, t, {'^', 'v', '|'})
 {
 	
 }
@@ -31,7 +30,7 @@ bool Befunge93Strategy::execute(inst_t cmd){
 			break;
 
 		default:
-			return Unefunge93Strategy::execute(cmd);
+			return false;
 	}
 	return true;
 }

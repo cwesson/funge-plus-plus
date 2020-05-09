@@ -27,17 +27,20 @@ class InstructionPointer {
 		void right();
 		
 		void stop();
-		bool isStopped();
+		bool isStopped() const;
 		
 		void next();
 		
 		const Vector& getPos() const;
 		const Vector& getDelta() const;
 		const Vector& getStorage() const;
+		size_t getID() const;
 		
 		friend std::ostream& operator<<(std::ostream& os, const InstructionPointer& rhs);
 	
 	private:
+		static size_t count;
+		size_t id;
 		bool stopped;
 		Vector pos;
 		Vector delta;

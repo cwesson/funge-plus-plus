@@ -5,7 +5,6 @@
  */
 
 #include "Stack.h"
-#include <iostream>
 
 namespace Funge {
 
@@ -22,7 +21,7 @@ stack_t Stack::pop(){
 	return ret;
 }
 
-stack_t Stack::peek(){
+stack_t Stack::peek() const{
 	stack_t ret = 0;
 	if(!stack.empty()){
 		ret = stack.back();
@@ -39,7 +38,7 @@ void Stack::clear(){
 	stack.clear();
 }
 
-size_t Stack::size(){
+size_t Stack::size() const{
 	return stack.size();
 }
 

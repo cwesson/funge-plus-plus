@@ -5,10 +5,13 @@
  */
 
 #include "FingerprintStrategy.h"
+#include "FungeConfig.h"
+#include "FingerprintBASE.h"
 #include "FingerprintBITW.h"
 #include "FingerprintBOOL.h"
 #include "FingerprintHRTI.h"
 #include "FingerprintMODU.h"
+#include "FingerprintNFUN.h"
 #include "FingerprintNULL.h"
 #include "FingerprintORTH.h"
 #include "FingerprintREFC.h"
@@ -16,19 +19,27 @@
 
 namespace Funge {
 
-FingerprintStrategy::FingerprintStrategy(Field& f, InstructionPointer& i, StackStack& s) :
-	FungeStrategy(f, i, s),
+FingerprintStrategy::FingerprintStrategy(Field& f, InstructionPointer& i, StackStack& s, FungeState& t) :
+	FungeStrategy(f, i, s, t,
+			{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+			'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'}),
 	available(),
 	loaded()
 {
+	available[0x42415345] = new FingerprintBASE(f, i, s);
 	available[0x42495457] = new FingerprintBITW(f, i, s);
 	available[0x424F4F4C] = new FingerprintBOOL(f, i, s);
 	available[0x48525449] = new FingerprintHRTI(f, i, s);
 	available[0x4d4f4455] = new FingerprintMODU(f, i, s);
+	available[0x4e46554e] = new FingerprintNFUN(f, i, s);
 	available[0x4e554c4c] = new FingerprintNULL(f, i, s);
 	available[0x4f525448] = new FingerprintORTH(f, i, s);
 	available[0x52454643] = new FingerprintREFC(f, i, s);
 	available[0x524f4d41] = new FingerprintROMA(f, i, s);
+	
+	for(auto fing : funge_config.fingerprints){
+		load(fing);
+	}
 }
 
 FingerprintStrategy::~FingerprintStrategy(){
@@ -41,7 +52,9 @@ bool FingerprintStrategy::execute(inst_t cmd){
 	bool done = false;
 	auto found = loaded.find(cmd);
 	if(found != loaded.cend()){
-		done = found->second.top()->execute(cmd);
+		if(found->second.size() > 0){
+			done = found->second.top()->execute(cmd);
+		}
 	}
 	return done;
 }
