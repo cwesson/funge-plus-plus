@@ -14,7 +14,7 @@
 #include <cstring>
 
 int main(int argc, char **argv, char **envp){
-	const char* filepath = NULL;
+	std::string filepath;
 	int a = 1;
 	for( ; a < argc; ++a){
 		if(argv[a][0] != '-'){
@@ -114,7 +114,7 @@ int main(int argc, char **argv, char **envp){
 		filepath = argv[a++];
 		Funge::funge_config.args.push_back(filepath);
 	}
-	if(!filepath){
+	if(filepath == ""){
 		std::cerr << "No input file specified.";
 		return EINVAL;
 	}
@@ -130,9 +130,13 @@ int main(int argc, char **argv, char **envp){
 	if(file.fail()){
 		return EIO;
 	}
-	Funge::Field field(file, Funge::funge_config.dimensions);
-	Funge::FungeRunner runner(field);
+	Funge::Field::FileFormat fmt = Funge::Field::FORMAT_BF;
+	if(filepath.substr(filepath.find_last_of(".") + 1) == "beq"){
+		fmt = Funge::Field::FORMAT_BEQ;
+	}
+	Funge::Field field(file, Funge::funge_config.dimensions, fmt);
 	
+	Funge::FungeRunner runner(field);
 	Funge::FungeManager::getInstance()->waitAll();
 	
 	return 0;

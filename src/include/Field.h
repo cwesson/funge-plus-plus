@@ -15,13 +15,20 @@ namespace Funge {
 
 class Field {
 	public:
-		explicit Field(std::istream& file, size_t dim=0);
+		enum FileFormat {
+			FORMAT_BF,
+			FORMAT_BEQ,
+		};
+		
+		Field();
+		explicit Field(std::istream& file, size_t dim, FileFormat fmt);
 		
 		void set(const Vector& p, inst_t v);
 		inst_t get(const Vector& p) const;
 		
 		Vector parse(const Vector& start, std::istream& file, bool binary=false);
 		void dump(const Vector& start, const Vector& delta, std::ostream& file, bool binary=false);
+		void parseBeq(std::istream& file);
 		
 		dim_t min(size_t d) const;
 		dim_t max(size_t d) const;

@@ -31,9 +31,7 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 	if(cmd >= 'a' && cmd <= 'f'){
 		stack.top().push(cmd-'a'+10);
 	}else if(cmd >= 'A' && cmd <= 'Z'){
-		if(!finger.execute(cmd)){
-			ip.reverse();
-		}
+		return finger.execute(cmd);
 	}else{
 		switch(cmd){
 			case 'z': break; //No-op

@@ -7,11 +7,33 @@
 #include "Field.h"
 #include "FungeConfig.h"
 #include <limits>
+#include <string>
+#include <sstream>
 
 namespace Funge{
 
-Field::Field(std::istream& file, size_t dim){
-	parse(Vector{0}, file);
+Field::Field() :
+	field(),
+	maxs(),
+	mins()
+{
+
+}
+
+Field::Field(std::istream& file, size_t dim, FileFormat fmt) :
+	field(),
+	maxs(),
+	mins()
+{
+	switch(fmt){
+		default:
+		case FORMAT_BF:
+			parse(Vector{0}, file);
+			break;
+		case FORMAT_BEQ:
+			parseBeq(file);
+			break;
+	}
 	if(dim == 0){
 		funge_config.dimensions = maxs.size();
 	}else{
@@ -59,6 +81,68 @@ Vector Field::parse(const Vector& start, std::istream& file, bool binary){
 		}
 	}
 	return max-start;
+}
+
+std::vector<std::string> splitString(std::string str, char delim){
+	std::vector<std::string> ret;
+	auto iss = std::istringstream(str);
+	while(iss.good()){
+		std::string substr;
+		std::getline(iss, substr, delim);
+		ret.push_back(substr);
+	}
+	return ret;
+}
+
+void Field::parseBeq(std::istream& file){
+	size_t dims = 0;
+	while(file.good()){
+		std::string line;
+		std::getline(file, line);
+		auto ctrl = splitString(line, ',');
+		size_t lines = 0;
+		Vector origin;
+		size_t dim = 0;
+		for(auto c : ctrl){
+			auto cmd = splitString(c, ' ');
+			if(cmd[0] == "Version"){
+				// ok
+			}else if(cmd[0] == "Dimensions"){
+				if(dims == 0){
+					dims = std::stoul(cmd[1]);
+				}else{
+					std::cerr << "Unexpected dimensions" << std::endl;
+				}
+			}else if(cmd[0] == "Lines"){
+				lines = std::stoul(cmd[1]);
+			}else if(cmd[0] == "Origin"){
+				auto orig = splitString(cmd[1], ':');
+				for(dim = 0; dim < orig.size(); ++dim){
+					origin.set(dim, std::stoi(orig[dim]));
+				}
+			}else if(cmd[0] == "Coord"){
+				auto orig = splitString(cmd[1], ':');
+				size_t start = dim;
+				for( ; dim < orig.size()+start; ++dim){
+					if(orig[dim-start].size() > 0){
+						origin.set(dim, std::stoi(orig[dim-start]));
+					}
+				}
+			}
+		}
+		if(lines > 0){
+			Vector pos(origin);
+			for(size_t i = 0; i < lines; ++i){
+				std::getline(file, line);
+				for(auto c : line){
+					set(pos, c);
+					pos.set(0, pos.get(0)+1); // ++x
+				}
+				pos.set(0, origin.get(0)); // x=0
+				pos.set(1, pos.get(1)+1);  // ++y
+			}
+		}
+	}
 }
 
 void Field::dump(const Vector& start, const Vector& delta, std::ostream& file, bool binary){

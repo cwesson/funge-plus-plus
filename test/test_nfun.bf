@@ -4,5 +4,13 @@
            >"NUFN"4#v)v
  '!,    h           < >
 
-imension"0<Vv"Funge++ in the Forth D
-           ^>:#,_
+"Funge++ in the "<l    v#
+                       V
+
+                  >:#,_h
+
+ns"<             A"Forth Dime
+                       V
+
+   A"ion"0<V
+           ^           <
