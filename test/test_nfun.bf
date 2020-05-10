@@ -1,13 +1,13 @@
-"NUFN"4#v(Alv
+"NUFN"4#v(Ahv
         @   <
 
            >"NUFN"4#v)v
- '!,    h           < >
+ '!,    l           < >
 
-"Funge++ in the "<l    v#
+"Funge++ in the "<h    v#
                        V
 
-                  >:#,_h
+                  >:#,_l
 
 ns"<             A"Forth Dime
                        V

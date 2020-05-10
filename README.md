@@ -55,6 +55,11 @@ The dimensionality (up to 4D) is determined automatically based on the file cont
 the `-std` argument.  Higher dimensions can be determined automatically from BeQunge formatted files with or without
 the `Dimensions` directive.
 
+Standard instructions which operate on vectors ('g', 'p', 'x', '?'), operate with vector lengths egual to the number of
+dimensions detected.  This enables those instructions to function in a standardized way in higher-dimension funges.  For
+example, in 4D mode, '?' will change the delta to one of 8 possible directions, while 'x' can move in all possible
+directions.
+
 ### C-Style Strings
 C-style strings can be enabled with `-fstrings=c`.  In this mode, backslashes in strings are not pused to the stack,
 instead, it and the following character are interpretted as an escape sequence.  This happens in one tick.  In addition
@@ -63,7 +68,8 @@ to special characters, this allows quotes and ANSI escape codes in strings.
 ## Errata
 ### High/Low
 The Funge-98 specification is inconsistent about the delta of the `h` and `l`  instructions.  Funge++ uses the
-definition in the quick reference, that is `h` is "delta <- (0,0,-1)" and `l` is "delta <- (0,0,1)".
+definition in the program flow section, that is `h` is "delta <- (0,0,1)" and `l` is "delta <- (0,0,-1)".  This makes
+it compatible with BeQunge and Rc/Funge-98.
 
 ## Fingerprints
 `BASE` I/O for numbers in other bases.
