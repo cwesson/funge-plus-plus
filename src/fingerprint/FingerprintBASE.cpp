@@ -9,20 +9,60 @@
 
 namespace Funge {
 
-char FingerprintBASE::digit_map[32] = {
+const char FingerprintBASE::digit_map[32] = {
 	'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
 	'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K',
 	'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'X',
 	'Y', 'Z'
 };
 
+const char FingerprintBASE::base36[36] = {
+	'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+	'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K',
+	'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V',
+	'W', 'X', 'Y', 'Z'
+};
+
+// Bitcoin base58
+const char FingerprintBASE::base58[58] = {
+	'1', '2', '3', '4', '5', '6', '7', '8', '9',
+	'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K',
+	'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V',
+	'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f',
+	'g', 'h', 'i', 'j', 'k', 'm', 'n', 'o', 'p', 'q',
+	'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
+};
+
+const char FingerprintBASE::base64[64] = {
+	'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
+	'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+	'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
+	'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '+', '/'
+};
+
+// RFC 1924 base85
+const char FingerprintBASE::base85[85] = {
+	'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+	'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+	'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+	'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+	'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+	'!', '#', '$', '%', '&', '(', ')', '*', '+', '-', ';', '<',
+	'=', '>', '?', '@', '^', '_', '`', '{', '|', '{', '~'
+};
+
 FingerprintBASE::FingerprintBASE(Field& f, InstructionPointer& i, StackStack& s) :
-	Fingerprint(f, i, s,
-			{'B', 'H', 'I', 'N', 'O'})
-{}
+	Fingerprint(f, i, s, {'B', 'H', 'I', 'N', 'O'}),
+	base_map()
+{
+	base_map[36] = &base36[0];
+	base_map[58] = &base58[0];
+	base_map[64] = &base64[0];
+	base_map[85] = &base85[0];
+}
 
 bool FingerprintBASE::execute(inst_t cmd){
-	switch ((cmd))
+	switch(cmd)
 	{
 		case 'B':{
 			stack_t a = stack.top().pop();
@@ -53,7 +93,7 @@ bool FingerprintBASE::execute(inst_t cmd){
 	return true;
 }
 
-void FingerprintBASE::printNum(stack_t num, unsigned int base){
+void FingerprintBASE::printNum(stack_t num, unsigned int base) const{
 	if(base > 1){
 		printBase(num, base, true);
 	}else{
@@ -64,7 +104,7 @@ void FingerprintBASE::printNum(stack_t num, unsigned int base){
 	std::cout << " " << std::flush;
 }
 
-void FingerprintBASE::printBase(stack_t num, unsigned int base, bool low){
+void FingerprintBASE::printBase(stack_t num, unsigned int base, bool low) const{
 	stack_t digit = num % base;
 	stack_t next = num / base;
 	if(next > 0){
@@ -73,14 +113,19 @@ void FingerprintBASE::printBase(stack_t num, unsigned int base, bool low){
 	if(base <= sizeof(digit_map)){
 		std::cout << digit_map[digit];
 	}else{
-		std::cout << digit;
-		if(!low){
-			std::cout << ",";
+		auto found = base_map.find(base);
+		if(found != base_map.end()){
+			std::cout << found->second[digit];
+		}else{
+			std::cout << digit;
+			if(!low){
+				std::cout << ",";
+			}
 		}
 	}
 }
 
-stack_t FingerprintBASE::readNum(unsigned int base){
+stack_t FingerprintBASE::readNum(unsigned int base) const{
 	std::string str;
 	std::cin >> str;
 	stack_t num = 0;
@@ -92,7 +137,7 @@ stack_t FingerprintBASE::readNum(unsigned int base){
 	return num;
 }
 
-bool FingerprintBASE::readBase(std::string str, stack_t* num, unsigned int base){
+bool FingerprintBASE::readBase(std::string str, stack_t* num, unsigned int base) const{
 	char digit = str[0];
 	bool found = false;
 	for(size_t i = 0; i <= base; ++i){
