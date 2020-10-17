@@ -125,6 +125,10 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 				const Vector& storage = ip.getStorage();
 				pushVector(stack.second(), storage);
 				ip.setStorage(ip.getPos()+ip.getDelta());
+				
+				if(funge_config.switchmode){
+					ip.set('}');
+				}
 			} break;
 			case '}':{
 				if(stack.size() > 1){
@@ -147,6 +151,10 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 					stack.pop();
 				}else{
 					ip.reverse();
+				}
+				
+				if(funge_config.switchmode){
+					ip.set('{');
 				}
 			} break;
 			case 'u':{
@@ -239,6 +247,10 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 					std::cerr << "Run with -ffingerprint to enable fingerprints." << std::endl;
 					ip.reverse();
 				}
+				
+				if(funge_config.switchmode){
+					ip.set(')');
+				}
 			} break;
 			case ')':{
 				if(funge_config.fingerprint){
@@ -254,6 +266,10 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 					std::cerr << "Unimplemented instruction " << static_cast<int>(cmd) << " \'" << static_cast<char>(cmd) << "\' at " << ip << "." << std::endl;
 					std::cerr << "Run with -ffingerprint to enable fingerprints." << std::endl;
 					ip.reverse();
+				}
+				
+				if(funge_config.switchmode){
+					ip.set('(');
 				}
 			} break;
 			

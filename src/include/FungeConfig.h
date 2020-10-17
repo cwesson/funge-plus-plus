@@ -48,6 +48,10 @@ struct FungeConfig {
 	bool execute;
 	bool filesystem;
 	bool fingerprint;
+	bool hovermode;
+	bool invertmode;
+	bool queuemode;
+	bool switchmode;
 };
 
 extern struct FungeConfig funge_config;

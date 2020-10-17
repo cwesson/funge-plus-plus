@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <vector>
+#include <list>
 #include "funge_types.h"
 
 namespace Funge {
@@ -26,7 +26,7 @@ class Stack {
 		stack_t operator[](size_t p) const;
 	
 	private:
-		std::vector<stack_t> stack;
+		std::list<stack_t> stack;
 };
 
 }

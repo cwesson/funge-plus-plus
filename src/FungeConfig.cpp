@@ -23,6 +23,10 @@ struct FungeConfig funge_config = {
 	.execute = true,
 	.filesystem = true,
 	.fingerprint = true,
+	.hovermode = false,
+	.invertmode = false,
+	.queuemode = false,
+	.switchmode = false,
 };
 
 }

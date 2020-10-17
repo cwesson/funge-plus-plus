@@ -5,6 +5,7 @@
  */
 
 #include "Stack.h"
+#include "FungeConfig.h"
 
 namespace Funge {
 
@@ -15,8 +16,13 @@ Stack::Stack(){
 stack_t Stack::pop(){
 	stack_t ret = 0;
 	if(!stack.empty()){
-		ret = stack.back();
-		stack.pop_back();
+		if(funge_config.queuemode){
+			ret = stack.front();
+			stack.pop_front();
+		}else{
+			ret = stack.back();
+			stack.pop_back();
+		}
 	}
 	return ret;
 }
@@ -24,13 +30,21 @@ stack_t Stack::pop(){
 stack_t Stack::peek() const{
 	stack_t ret = 0;
 	if(!stack.empty()){
-		ret = stack.back();
+		if(funge_config.queuemode){
+			ret = stack.front();
+		}else{
+			ret = stack.back();
+		}
 	}
 	return ret;
 }
 
 size_t Stack::push(stack_t v){
-	stack.push_back(v);
+	if(funge_config.invertmode){
+		stack.push_front(v);
+	}else{
+		stack.push_back(v);
+	}
 	return 1;
 }
 
@@ -43,8 +57,13 @@ size_t Stack::size() const{
 }
 
 stack_t Stack::get(size_t p) const{
-	if(p <= stack.size()){
-		return stack[stack.size()-p];
+	if(p <= stack.size() && p > 0){
+		auto it = stack.rbegin();
+		--p;
+		for( ; p > 0; --p){
+			++it;
+		}
+		return *it;
 	}
 	return 0;
 }

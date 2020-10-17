@@ -83,7 +83,14 @@ void InstructionPointer::setPos(const Vector& v){
 }
 
 void InstructionPointer::setDelta(const Vector& v){
-	delta = v;
+	if(funge_config.hovermode){
+		size_t size = std::max(delta.size(), v.size());
+		for(size_t i = 0; i < size; ++i){
+			delta.set(i, delta.get(i) + v.get(i));
+		}
+	}else{
+		delta = v;
+	}
 }
 
 void InstructionPointer::setStorage(const Vector& v){
