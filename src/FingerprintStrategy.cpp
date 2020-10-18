@@ -10,6 +10,7 @@
 #include "FingerprintBITW.h"
 #include "FingerprintBOOL.h"
 #include "FingerprintHRTI.h"
+#include "FingerprintMODE.h"
 #include "FingerprintMODU.h"
 #include "FingerprintNFUN.h"
 #include "FingerprintNULL.h"
@@ -30,6 +31,7 @@ FingerprintStrategy::FingerprintStrategy(Field& f, InstructionPointer& i, StackS
 	available[0x42495457] = new FingerprintBITW(f, i, s);
 	available[0x424F4F4C] = new FingerprintBOOL(f, i, s);
 	available[0x48525449] = new FingerprintHRTI(f, i, s);
+	available[0x4d4f4445] = new FingerprintMODE(f, i, s);
 	available[0x4d4f4455] = new FingerprintMODU(f, i, s);
 	available[0x4e46554e] = new FingerprintNFUN(f, i, s);
 	available[0x4e554c4c] = new FingerprintNULL(f, i, s);

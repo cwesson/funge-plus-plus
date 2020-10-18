@@ -21,7 +21,7 @@ bool FingerprintMODU::execute(inst_t cmd){
 			if(a == 0){
 				stack.top().push(0);
 			}else{
-				stack.top().push(b - std::floor(b / a) * a);
+				stack.top().push(b - std::floor(static_cast<double>(b) / static_cast<double>(a)) * a);
 			}
 		} break;
 		case 'U':{

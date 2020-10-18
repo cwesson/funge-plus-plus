@@ -3,7 +3,7 @@ Lines 1,Origin -14:0,Coord 0:0:0:0:
 h<            4Z
 Lines 1,Origin -14:0,Coord 0:0:1:0:
 Y4"Hello World"<
-Lines 2,Origin -14:-1,Coord -1:0:0:0:
+Lines 2,Origin -14:-1,Coord 1:0:0:0:
  v<
 :l
 Lines 3,Origin -14:-1,Coord 2:0:0:0:

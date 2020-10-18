@@ -5,6 +5,7 @@
  */
 
 #include "Befunge98Strategy.h"
+#include "FungeConfig.h"
 
 namespace Funge {
 
@@ -19,9 +20,15 @@ bool Befunge98Strategy::execute(inst_t cmd){
 	switch(cmd){
 		case '[':
 			ip.left();
+			if(funge_config.switchmode){
+				ip.set(']');
+			}
 			break;
 		case ']':
 			ip.right();
+			if(funge_config.switchmode){
+				ip.set('[');
+			}
 			break;
 		
 		case 'w':{

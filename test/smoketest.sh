@@ -87,6 +87,7 @@ test_simple test/test_comp.bf "3 2 1 "
 test_simple test/test_fetch.bf "2 v 1 ^<"
 test_simple test/test_store.bf "3 "
 test_befunge test/quine.bf `cat test/quine.bf`
+test_simple test/fizzbuzz.bf "1 2 Fizz 4 Buzz Fizz 7 8 Fizz Buzz 11 Fizz 13 14 FizzBuzz 16 17 Fizz 19 Buzz Fizz 22 23 Fizz Buzz 26 Fizz 28 29 FizzBuzz 31 32 Fizz 34 Buzz Fizz 37 38 Fizz Buzz 41 Fizz 43 44 FizzBuzz 46 47 Fizz 49 Buzz Fizz 52 53 Fizz Buzz 56 Fizz 58 59 FizzBuzz 61 62 Fizz 64 Buzz Fizz 67 68 Fizz Buzz 71 Fizz 73 74 FizzBuzz 76 77 Fizz 79 Buzz Fizz 82 83 Fizz Buzz 86 Fizz 88 89 FizzBuzz 91 92 Fizz 94 Buzz Fizz 97 98 Fizz Buzz "
 test_simple test/test_thread.bf "8 7 6 5 4 3 2 1 "
 test_simple test/test_3d.bf "1 2 3 4 5 6 7 8 "
 test_simple test/test_stackstack.bf "5 4 3 9 8 7 2 "
@@ -97,6 +98,7 @@ test_diff test/input.txt test/output.txt
 # BeQunge Tests
 test_simple test/example3d.beq "Hello World"
 test_simple test/example5d.beq "Hello World"
+test_simple test/hello3d.beq "Hello World!"
 # Fingerprint Tests
 test_simple test/test_roma.bf "1000 500 100 50 10 5 1 "
 test_simple test/test_bool.bf "1 2 "
