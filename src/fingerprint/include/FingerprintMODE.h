@@ -1,6 +1,6 @@
 /**
  * @file FingerprintMODE.h
- * Standard Modes Extension.
+ * Standard Modes.
  * @author Conlan Wesson
  */
 

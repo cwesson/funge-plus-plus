@@ -80,6 +80,8 @@ it compatible with BeQunge and Rc/Funge-98.
 
 `HRTI` High Resolution Timer Interface.
 
+`MODE` Standard Modes.
+
 `MODU` Modulo Arithmetic Extension.
 
 `NFUN` [N-Dimensional Funge](doc/NFUN.md).
