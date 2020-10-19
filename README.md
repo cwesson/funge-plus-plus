@@ -93,3 +93,5 @@ it compatible with BeQunge and Rc/Funge-98.
 `REFC` Referenced Cells Extension.
 
 `ROMA` Roman Numerals.
+
+`TOYS` Standard Toys.

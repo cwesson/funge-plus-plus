@@ -103,6 +103,8 @@ test_simple test/hello3d.beq "Hello World!"
 test_simple test/test_roma.bf "1000 500 100 50 10 5 1 "
 test_simple test/test_bool.bf "1 2 "
 test_simple test/test_nfun.bf "Funge++ in the Forth Dimension!"
+test_simple test/test_television.b98 "9 8 7 6 5 4 3 2 1 0 "
+test_simple test/test_tumbler.b98 "0 "
 # Mycology Tests
 test_simple test/Mycology/sanity.bf "0 1 2 3 4 5 6 7 8 9 "
 test_mycology mycology.b98 15

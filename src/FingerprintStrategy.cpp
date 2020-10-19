@@ -17,6 +17,7 @@
 #include "FingerprintORTH.h"
 #include "FingerprintREFC.h"
 #include "FingerprintROMA.h"
+#include "FingerprintTOYS.h"
 
 namespace Funge {
 
@@ -38,6 +39,7 @@ FingerprintStrategy::FingerprintStrategy(Field& f, InstructionPointer& i, StackS
 	available[0x4f525448] = new FingerprintORTH(f, i, s);
 	available[0x52454643] = new FingerprintREFC(f, i, s);
 	available[0x524f4d41] = new FingerprintROMA(f, i, s);
+	available[0x544f5953] = new FingerprintTOYS(f, i, s);
 	
 	for(auto fing : funge_config.fingerprints){
 		load(fing);
@@ -71,6 +73,7 @@ bool FingerprintStrategy::load(uint64_t fingerprint){
 			}
 			loaded[i].push(found->second);
 		}
+		//std::cout << "Loaded 0x" << std::hex << fingerprint << std::dec << std::endl;
 		return true;
 	}
 	return false;
