@@ -32,14 +32,14 @@ FungeDebugger* FungeDebugger::getInstance() {
 	return instance;
 }
 
-void FungeDebugger::tick(const Field& field, const StackStack& stack, const InstructionPointer& ip){
+void FungeDebugger::tick(const Field& field, const StackStack& stack, InstructionPointer& ip){
 	if(funge_config.debug){
 		FungeDebugger* inst = getInstance();
 		inst->debug(field, stack, ip);
 	}
 }
 
-void FungeDebugger::debug(const Field& field, const StackStack& stack, const InstructionPointer& ip){
+void FungeDebugger::debug(const Field& field, const StackStack& stack, InstructionPointer& ip){
 	std::lock_guard<std::mutex> guard(mutex);
 	const size_t id = ip.getID();
 	auto found = threads.find(id);
@@ -130,6 +130,8 @@ void FungeDebugger::debug(const Field& field, const StackStack& stack, const Ins
 			std::cout << "Delta " << threads[tid].ip->getDelta() << std::endl;
 		}else if(cmd == "storage"){
 			std::cout << "Storage " << threads[tid].ip->getStorage() << std::endl;
+		}else if(cmd == "position" || cmd == "pos"){
+			printIP(ip);
 		}else if(cmd == "thread" || cmd == "t"){
 			const size_t old = tid;
 			iss >> tid;
@@ -146,6 +148,16 @@ void FungeDebugger::debug(const Field& field, const StackStack& stack, const Ins
 			for(auto b : threads[tid].backtrace){
 				std::cout << "#" << i++ << "  " << b << " \"" << static_cast<char>(field.get(b)) << "\"" << std::endl;
 			}
+		}else if(cmd == "setdelta"){
+			Vector v;
+			iss >> v;
+			threads[tid].ip->setDelta(v);
+			std::cout << "Delta " << threads[tid].ip->getDelta() << std::endl;
+		}else if(cmd == "setpos"){
+			Vector v;
+			iss >> v;
+			threads[tid].ip->setPos(v);
+			printIP(ip);
 		}
 		
 	}

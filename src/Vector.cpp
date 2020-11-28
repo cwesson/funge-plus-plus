@@ -150,18 +150,28 @@ std::istream& operator>>(std::istream& is, Vector& rhs){
 		is >> c;
 		size_t d = 0;
 		dim_t v = 0;
+		bool neg = false;
 		while(c != ')'){
 			if(isdigit(c)){
 				v = (v*10)+(c-'0');
 			}else if(c == ','){
+				if(neg){
+					v = -v;
+				}
 				rhs.set(d, v);
 				++d;
 				v = 0;
+				neg = false;
+			}else if(v == 0 && c == '-'){
+				neg = true;
 			}else if(!isspace(c)){
 				is.unget();
 				break;
 			}
 			is >> c;
+		}
+		if(neg){
+			v = -v;
 		}
 		rhs.set(d, v);
 	}else{

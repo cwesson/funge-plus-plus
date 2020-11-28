@@ -52,8 +52,8 @@ void FungeRunner::operator()(){
 void FungeRunner::tick(){
 	bool done = false;
 	while(!done && !ip.isStopped()){
-		inst_t i = ip.get();
 		FungeDebugger::tick(field, stack, ip);
+		inst_t i = ip.get();
 		done = state->execute(i);
 		if(!done && i != ' '){
 			std::cerr << "Unimplemented instruction " << static_cast<int>(i) << " \'" << static_cast<char>(i) << "\' at " << ip << "." << std::endl;

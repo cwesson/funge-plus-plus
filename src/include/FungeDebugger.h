@@ -19,7 +19,7 @@ namespace Funge {
 class FungeDebugger {
 	public:
 		static FungeDebugger* getInstance();
-		static void tick(const Field& field, const StackStack& stack, const InstructionPointer& ip);
+		static void tick(const Field& field, const StackStack& stack, InstructionPointer& ip);
 	
 	private:
 		enum State {
@@ -34,7 +34,7 @@ class FungeDebugger {
 		};
 		
 		struct Thread {
-			const InstructionPointer* ip;
+			InstructionPointer* ip;
 			const StackStack* stack;
 			std::list<Vector> backtrace;
 			State state;
@@ -45,7 +45,7 @@ class FungeDebugger {
 		FungeDebugger();
 		~FungeDebugger();
 		
-		void debug(const Field& field, const StackStack& stack, const InstructionPointer& ip);
+		void debug(const Field& field, const StackStack& stack, InstructionPointer& ip);
 		void printIP(const InstructionPointer& ip);
 		void printField(const Field& field, const Vector& center, const Vector& size);
 		
