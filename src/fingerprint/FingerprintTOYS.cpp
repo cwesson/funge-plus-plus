@@ -30,6 +30,12 @@ bool FingerprintTOYS::execute(inst_t cmd){
 				stack.top().push(a);
 			}
 		} break;
+		case 'B':{
+			stack_t b = stack.top().pop();
+			stack_t a = stack.top().pop();
+			stack.top().push(a+b);
+			stack.top().push(a-b);
+		} break;
 		case 'D':{
 			stack.top().push(stack.top().pop()-1);
 		} break;

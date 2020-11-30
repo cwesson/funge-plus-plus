@@ -55,9 +55,9 @@ The dimensionality (up to 4D) is determined automatically based on the file cont
 the `-std` argument.  Higher dimensions can be determined automatically from BeQunge formatted files with or without
 the `Dimensions` directive.
 
-Standard instructions which operate on vectors ('g', 'p', 'x', '?'), operate with vector lengths egual to the number of
+Standard instructions which operate on vectors (`g`, `p`, `x`, `?`), operate with vector lengths egual to the number of
 dimensions detected.  This enables those instructions to function in a standardized way in higher-dimension funges.  For
-example, in 4D mode, '?' will change the delta to one of 8 possible directions, while 'x' can move in all possible
+example, in 4D mode, `?` will change the delta to one of 8 possible directions, while `x` can move in all possible
 directions.
 
 ### C-Style Strings
@@ -94,4 +94,4 @@ it compatible with BeQunge and Rc/Funge-98.
 
 `ROMA` Roman Numerals.
 
-`TOYS` Standard Toys.
+`TOYS` Standard Toys. (Not including funge space manipulation)
