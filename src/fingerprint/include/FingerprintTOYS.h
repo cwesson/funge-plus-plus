@@ -22,6 +22,9 @@ class FingerprintTOYS : public Fingerprint {
 		std::random_device rd;
 		std::mt19937 gen;
 		std::uniform_int_distribution<stack_t> dis;
+		
+		void copySpace(const Vector& src, const Vector& sz, const Vector& dest, bool low, bool move);
+		bool sizeToRange(Vector& size);
 };
 
 }

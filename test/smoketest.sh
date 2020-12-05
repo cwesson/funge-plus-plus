@@ -48,9 +48,9 @@ function test_diff() {
 function test_mycology() {
     echo TEST $1
     cd test/Mycology
-    timeout 15 ../../bin/funge -std=be98 mycology.b98 | grep BAD
-    rm mycotmp*.tmp
+    timeout 30 ../../bin/funge -std=be98 mycology.b98 | grep BAD
     code=$?
+    rm mycotmp*.tmp
     if [ -z "$2" ]; then
         expect=0
     else
@@ -105,6 +105,10 @@ test_simple test/test_bool.bf "1 2 "
 test_simple test/test_nfun.bf "Funge++ in the Forth Dimension!"
 test_simple test/test_television.b98 "9 8 7 6 5 4 3 2 1 0 "
 test_simple test/test_tumbler.b98 "0 "
+test_simple test/test_fishhook.b98 "1 2 3 4 5 6 "
+test_simple test/test_boulder.b98 "1 2 3 4 5 6 "
+test_simple test/test_bracelet.b98 "1 2 3 1 2 3 "
+test_simple test/test_chicane.b98 "6 5 4 3 2 1 "
 # Mycology Tests
 test_simple test/Mycology/sanity.bf "0 1 2 3 4 5 6 7 8 9 "
 test_mycology mycology.b98 15

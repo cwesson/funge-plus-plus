@@ -94,4 +94,4 @@ it compatible with BeQunge and Rc/Funge-98.
 
 `ROMA` Roman Numerals.
 
-`TOYS` Standard Toys. (Not including funge space manipulation)
+`TOYS` Standard Toys.
