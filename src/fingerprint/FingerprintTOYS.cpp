@@ -92,7 +92,7 @@ bool FingerprintTOYS::execute(inst_t cmd){
 				dim_t ymin = field.min(1);
 				dim_t ymax = field.max(1);
 				dim_t x = ip.getPos().get(0);
-				copySpace(Vector({x, ymin}), Vector({1, ymax-ymin}), Vector({x, ymin+n}), (n < 0), true);
+				copySpace(Vector({x, ymin}), Vector({1, ymax-ymin+1}), Vector({x, ymin+n}), (n < 0), true);
 			}
 		} break;
 		case 'K':{
@@ -123,7 +123,7 @@ bool FingerprintTOYS::execute(inst_t cmd){
 				dim_t xmin = field.min(0);
 				dim_t xmax = field.max(0);
 				dim_t y = ip.getPos().get(1);
-				copySpace(Vector({xmin, y}), Vector({xmax-xmin, 1}), Vector({xmin+n, y}), (n < 0), true);
+				copySpace(Vector({xmin, y}), Vector({xmax-xmin+1, 1}), Vector({xmin+n, y}), (n < 0), true);
 			}
 		} break;
 		case 'P':{

@@ -6,6 +6,7 @@
 
 #include "Field.h"
 #include "FungeConfig.h"
+#include "FungeDebugger.h"
 #include <limits>
 #include <string>
 #include <sstream>
@@ -216,6 +217,7 @@ void Field::set(const Vector& p, inst_t v){
 	while(mins.size() < p.size()){
 		mins.push_back(0);
 	}
+	FungeDebugger::write(*this, p, v);
 	if(v == ' '){
 		auto find = field.find(p);
 		if(find != field.end()){

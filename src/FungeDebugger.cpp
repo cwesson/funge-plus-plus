@@ -16,7 +16,8 @@ FungeDebugger* FungeDebugger::instance = nullptr;
 FungeDebugger::FungeDebugger() :
 	breakpoints(),
 	threads(),
-	mutex()
+	mutex(),
+	lastThread(0)
 {
 	std::cout << "Funge++ Debugger" << std::endl;
 	for(auto arg : funge_config.args){
@@ -39,6 +40,25 @@ void FungeDebugger::tick(const Field& field, const StackStack& stack, Instructio
 	}
 }
 
+void FungeDebugger::write(const Field& field, const Vector& pos, inst_t inst){
+	if(funge_config.debug){
+		FungeDebugger* dbg = getInstance();
+		dbg->debugWrite(field, pos, inst);
+	}
+}
+
+void FungeDebugger::debugWrite(const Field& field, const Vector& pos, inst_t inst){
+	auto wp = watchpoints.find(pos);
+	if(wp != watchpoints.end()){
+		threads[lastThread].state = STATE_BREAK;
+		std::cout << "Watchpoint " << pos << std::endl;
+		inst_t old = field.get(pos);
+		std::cout << "Old value = (" << old  << ") \"" << static_cast<char>(old) << "\"" << std::endl;
+		std::cout << "New value = (" << inst << ") \"" << static_cast<char>(inst) << "\"" << std::endl;
+		debug(field, *threads[lastThread].stack, *threads[lastThread].ip);
+	}
+}
+
 void FungeDebugger::debug(const Field& field, const StackStack& stack, InstructionPointer& ip){
 	std::lock_guard<std::mutex> guard(mutex);
 	const size_t id = ip.getID();
@@ -52,6 +72,7 @@ void FungeDebugger::debug(const Field& field, const StackStack& stack, Instructi
 		}});
 		std::cout << "New IP " << id << std::endl;
 	}
+	lastThread = id;
 	
 	auto bp = breakpoints.find(ip.getPos());
 	if(bp != breakpoints.end()){
@@ -126,6 +147,13 @@ void FungeDebugger::debug(const Field& field, const StackStack& stack, Instructi
 			for(auto b : breakpoints){
 				std::cout << "Breakpoint " << b << std::endl;
 			}
+		}else if(cmd == "watch" || cmd == "wp"){
+			Vector v;
+			iss >> v;
+			watchpoints.insert(v);
+			for(auto w : watchpoints){
+				std::cout << "Watchpoint " << w << std::endl;
+			}
 		}else if(cmd =="delta" || cmd == "dir" || cmd == "d"){
 			std::cout << "Delta " << threads[tid].ip->getDelta() << std::endl;
 		}else if(cmd == "storage"){
@@ -158,6 +186,11 @@ void FungeDebugger::debug(const Field& field, const StackStack& stack, Instructi
 			iss >> v;
 			threads[tid].ip->setPos(v);
 			printIP(ip);
+		}else if(cmd == "read"){
+			Vector v;
+			iss >> v;
+			inst_t i = field.get(v);
+			std::cout << "Value = (" << i << ") \"" << static_cast<char>(i) << "\"" << std::endl;
 		}
 		
 	}

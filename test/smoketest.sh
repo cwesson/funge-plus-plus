@@ -48,7 +48,8 @@ function test_diff() {
 function test_mycology() {
     echo TEST $1
     cd test/Mycology
-    timeout 30 ../../bin/funge -std=be98 mycology.b98 | grep BAD
+    timeout 30 ../../bin/funge -std=be98 mycology.b98 > mycology.log
+    grep BAD mycology.log
     code=$?
     rm mycotmp*.tmp
     if [ -z "$2" ]; then
