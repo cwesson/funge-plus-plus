@@ -72,26 +72,26 @@ definition in the program flow section, that is `h` is "delta <- (0,0,1)" and `l
 it compatible with BeQunge and Rc/Funge-98.
 
 ## Fingerprints
-`BASE` I/O for numbers in other bases.
+`BASE` [I/O for numbers in other bases](http://www.rcfunge98.com/rcfunge2_manual.html#BASE).
 
 `BITW` [Bitwise operators](doc/BITW.md).
 
-`BOOL` Boolean operators.
+`BOOL` [Boolean operators](http://www.rcfunge98.com/rcfunge2_manual.html#BOOL).
 
-`HRTI` High Resolution Timer Interface.
+`HRTI` [High Resolution Timer Interface](https://github.com/catseye/Funge-98/blob/master/library/HRTI.markdown).
 
-`MODE` Standard Modes.
+`MODE` [Standard Modes](https://github.com/catseye/Funge-98/blob/master/library/MODE.markdown).
 
-`MODU` Modulo Arithmetic Extension.
+`MODU` [Modulo Arithmetic Extension](https://github.com/catseye/Funge-98/blob/master/library/MODU.markdown).
 
 `NFUN` [N-Dimensional Funge](doc/NFUN.md).
 
-`NULL` Null Fingerprint.
+`NULL` [Null Fingerprint](https://github.com/catseye/Funge-98/blob/master/library/NULL.markdown).
 
-`ORTH` Orthogonal Easement Library.
+`ORTH` [Orthogonal Easement Library](https://github.com/catseye/Funge-98/blob/master/library/ORTH.markdown).
 
-`REFC` Referenced Cells Extension.
+`REFC` [Referenced Cells Extension](https://github.com/catseye/Funge-98/blob/master/library/REFC.markdown).
 
-`ROMA` Roman Numerals.
+`ROMA` [Roman Numerals](https://github.com/catseye/Funge-98/blob/master/library/ROMA.markdown).
 
-`TOYS` Standard Toys.
+`TOYS` [Standard Toys](https://github.com/catseye/Funge-98/blob/master/library/TOYS.markdown).
