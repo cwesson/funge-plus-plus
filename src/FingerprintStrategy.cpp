@@ -9,6 +9,7 @@
 #include "FingerprintBASE.h"
 #include "FingerprintBITW.h"
 #include "FingerprintBOOL.h"
+#include "FingerprintCPLI.h"
 #include "FingerprintHRTI.h"
 #include "FingerprintMODE.h"
 #include "FingerprintMODU.h"
@@ -31,6 +32,7 @@ FingerprintStrategy::FingerprintStrategy(Field& f, InstructionPointer& i, StackS
 	available[0x42415345] = new FingerprintBASE(f, i, s);
 	available[0x42495457] = new FingerprintBITW(f, i, s);
 	available[0x424F4F4C] = new FingerprintBOOL(f, i, s);
+	available[0x43504C49] = new FingerprintCPLI(f, i, s);
 	available[0x48525449] = new FingerprintHRTI(f, i, s);
 	available[0x4d4f4445] = new FingerprintMODE(f, i, s);
 	available[0x4d4f4455] = new FingerprintMODU(f, i, s);

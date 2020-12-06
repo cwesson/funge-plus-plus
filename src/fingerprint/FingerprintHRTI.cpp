@@ -1,5 +1,5 @@
 /**
- * @file FingerprintHRTI.h
+ * @file FingerprintHRTI.cpp
  * Referenced Cells Extension.
  * @author Conlan Wesson
  */

@@ -74,9 +74,11 @@ it compatible with BeQunge and Rc/Funge-98.
 ## Fingerprints
 `BASE` [I/O for numbers in other bases](http://www.rcfunge98.com/rcfunge2_manual.html#BASE).
 
-`BITW` [Bitwise operators](doc/BITW.md).
+`BITW` [Bitwise Operators](doc/BITW.md).
 
-`BOOL` [Boolean operators](http://www.rcfunge98.com/rcfunge2_manual.html#BOOL).
+`BOOL` [Boolean Operators](http://www.rcfunge98.com/rcfunge2_manual.html#BOOL)
+
+`CPLI` [Complex Integer Extension](http://www.rcfunge98.com/rcfunge2_manual.html#CPLI).
 
 `HRTI` [High Resolution Timer Interface](https://github.com/catseye/Funge-98/blob/master/library/HRTI.markdown).
 
