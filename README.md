@@ -92,6 +92,8 @@ it compatible with BeQunge and Rc/Funge-98.
 
 `ORTH` [Orthogonal Easement Library](https://github.com/catseye/Funge-98/blob/master/library/ORTH.markdown).
 
+`PERL` [Generic Interface to the Perl Language](https://github.com/catseye/Funge-98/blob/master/library/PERL.markdown).
+
 `REFC` [Referenced Cells Extension](https://github.com/catseye/Funge-98/blob/master/library/REFC.markdown).
 
 `ROMA` [Roman Numerals](https://github.com/catseye/Funge-98/blob/master/library/ROMA.markdown).

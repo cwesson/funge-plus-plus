@@ -50,7 +50,7 @@ lint:
 
 CPPUTESTLIB := test/cpputest/src/CppUTest/libCppUTest.a
 UTCPPARGS := -I src/include -I test/cpputest/include -lpthread
-UTSRCS := test/ut/unittest.cpp src/Vector.cpp
+UTSRCS := test/ut/unittest.cpp src/Vector.cpp src/VectorRange.cpp
 
 ut: unittest
 

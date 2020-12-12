@@ -48,7 +48,7 @@ function test_diff() {
 function test_mycology() {
     echo TEST $1
     cd test/Mycology
-    timeout 30 ../../bin/funge -std=be98 mycology.b98 > mycology.log
+    timeout 30 ../../bin/funge -std=be98 mycology.b98 | tee mycology.log | grep BAD
     grep BAD mycology.log
     code=$?
     rm mycotmp*.tmp
@@ -110,6 +110,7 @@ test_simple test/test_fishhook.b98 "1 2 3 4 5 6 "
 test_simple test/test_boulder.b98 "1 2 3 4 5 6 "
 test_simple test/test_bracelet.b98 "1 2 3 1 2 3 "
 test_simple test/test_chicane.b98 "6 5 4 3 2 1 "
+test_simple test/test_perl.b98 "78 243"
 # Mycology Tests
 test_simple test/Mycology/sanity.bf "0 1 2 3 4 5 6 7 8 9 "
 test_mycology mycology.b98 15
