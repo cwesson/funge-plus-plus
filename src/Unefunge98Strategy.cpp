@@ -92,8 +92,8 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 			
 			case 't':{
 				if(funge_config.concurrent){
-					FungeRunner* runner = new FungeRunner(field, stack, ip);
-					(void)runner;
+					FungeRunner& runner = this->state.getRunner();
+					runner.getUniverse().cloneRunner(runner);
 				}else{
 					std::cerr << "Unimplemented instruction " << static_cast<int>(cmd) << " \'" << static_cast<char>(cmd) << "\' at " << ip << "." << std::endl;
 					std::cerr << "Run with -fconcurrent to enable concurrency." << std::endl;

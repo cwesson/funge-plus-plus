@@ -11,14 +11,15 @@
 #include "InstructionPointer.h"
 #include "FungeStateNormal.h"
 #include "FungeStateString.h"
+#include "FungeUniverse.h"
 
 namespace Funge {
 class FungeState;
 
 class FungeRunner {
 	public:
-		explicit FungeRunner(Field& f);
-		FungeRunner(Field& f, const StackStack& s, const InstructionPointer& i);
+		FungeRunner(FungeUniverse& uni);
+		FungeRunner(FungeUniverse& uni, const FungeRunner& runner);
 		
 		bool isRunning() const;
 		
@@ -28,8 +29,11 @@ class FungeRunner {
 		
 		void operator()();
 		void tick();
+		
+		FungeUniverse& getUniverse();
 	
 	private:
+		FungeUniverse& universe;
 		Field& field;
 		StackStack stack;
 		InstructionPointer ip;

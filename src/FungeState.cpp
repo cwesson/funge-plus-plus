@@ -16,4 +16,8 @@ FungeState::FungeState(FungeRunner& r, StackStack& s, InstructionPointer& i) :
 	
 }
 
+FungeRunner& FungeState::getRunner(){
+	return runner;
+}
+
 }
