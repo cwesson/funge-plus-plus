@@ -1,5 +1,5 @@
 /**
- * @file FingerprintMODE.h
+ * @file FingerprintMODE.cpp
  * Standard Modes.
  * @author Conlan Wesson
  */

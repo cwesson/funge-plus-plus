@@ -9,7 +9,7 @@
 #include "Field.h"
 #include "FungeConfig.h"
 #include "FungeRunner.h"
-#include "FungeManager.h"
+#include "FungeUniverse.h"
 #include "Vector.h"
 #include <cstring>
 
@@ -110,10 +110,7 @@ int main(int argc, char **argv, char **envp){
 			}
 		}else if(strncmp(argv[a], "-l", 2) == 0){
 			std::string fing(&argv[a][2]);
-			uint64_t fingerprint = 0;
-			for(auto c : fing){
-				fingerprint = (fingerprint << 8) + c;
-			}
+			uint64_t fingerprint = std::accumulate(fing.begin(), fing.end(), 0, [](uint64_t f, char c){return (f << 8) + c;});
 			Funge::funge_config.fingerprints.push_back(fingerprint);
 		}else if(strcmp(argv[a], "-g") == 0){
 			Funge::funge_config.debug = true;
@@ -144,10 +141,9 @@ int main(int argc, char **argv, char **envp){
 		fmt = Funge::Field::FORMAT_BEQ;
 		Funge::funge_config.fingerprints.push_back(0x4e46554e);
 	}
-	Funge::Field field(file, Funge::funge_config.dimensions, fmt);
 	
-	Funge::FungeRunner runner(field);
-	Funge::FungeManager::getInstance()->waitAll();
+	Funge::FungeUniverse universe(file, Funge::funge_config.dimensions, fmt);
+	universe.waitAll();
 	
 	return 0;
 }

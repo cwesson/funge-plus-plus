@@ -1,5 +1,5 @@
 /**
- * @file FingerprintBITW.h
+ * @file FingerprintBITW.cpp
  * Bitwise operators.
  * @author Conlan Wesson
  */

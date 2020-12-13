@@ -16,7 +16,8 @@ FungeDebugger* FungeDebugger::instance = nullptr;
 FungeDebugger::FungeDebugger() :
 	breakpoints(),
 	threads(),
-	mutex()
+	mutex(),
+	lastThread(0)
 {
 	std::cout << "Funge++ Debugger" << std::endl;
 	for(auto arg : funge_config.args){
@@ -32,14 +33,33 @@ FungeDebugger* FungeDebugger::getInstance() {
 	return instance;
 }
 
-void FungeDebugger::tick(const Field& field, const StackStack& stack, const InstructionPointer& ip){
+void FungeDebugger::tick(const Field& field, const StackStack& stack, InstructionPointer& ip){
 	if(funge_config.debug){
 		FungeDebugger* inst = getInstance();
 		inst->debug(field, stack, ip);
 	}
 }
 
-void FungeDebugger::debug(const Field& field, const StackStack& stack, const InstructionPointer& ip){
+void FungeDebugger::write(const Field& field, const Vector& pos, inst_t inst){
+	if(funge_config.debug){
+		FungeDebugger* dbg = getInstance();
+		dbg->debugWrite(field, pos, inst);
+	}
+}
+
+void FungeDebugger::debugWrite(const Field& field, const Vector& pos, inst_t inst){
+	auto wp = watchpoints.find(pos);
+	if(wp != watchpoints.end()){
+		threads[lastThread].state = STATE_BREAK;
+		std::cout << "Watchpoint " << pos << std::endl;
+		inst_t old = field.get(pos);
+		std::cout << "Old value = (" << old  << ") \"" << static_cast<char>(old) << "\"" << std::endl;
+		std::cout << "New value = (" << inst << ") \"" << static_cast<char>(inst) << "\"" << std::endl;
+		debug(field, *threads[lastThread].stack, *threads[lastThread].ip);
+	}
+}
+
+void FungeDebugger::debug(const Field& field, const StackStack& stack, InstructionPointer& ip){
 	std::lock_guard<std::mutex> guard(mutex);
 	const size_t id = ip.getID();
 	auto found = threads.find(id);
@@ -52,6 +72,7 @@ void FungeDebugger::debug(const Field& field, const StackStack& stack, const Ins
 		}});
 		std::cout << "New IP " << id << std::endl;
 	}
+	lastThread = id;
 	
 	auto bp = breakpoints.find(ip.getPos());
 	if(bp != breakpoints.end()){
@@ -126,10 +147,19 @@ void FungeDebugger::debug(const Field& field, const StackStack& stack, const Ins
 			for(auto b : breakpoints){
 				std::cout << "Breakpoint " << b << std::endl;
 			}
+		}else if(cmd == "watch" || cmd == "wp"){
+			Vector v;
+			iss >> v;
+			watchpoints.insert(v);
+			for(auto w : watchpoints){
+				std::cout << "Watchpoint " << w << std::endl;
+			}
 		}else if(cmd =="delta" || cmd == "dir" || cmd == "d"){
 			std::cout << "Delta " << threads[tid].ip->getDelta() << std::endl;
 		}else if(cmd == "storage"){
 			std::cout << "Storage " << threads[tid].ip->getStorage() << std::endl;
+		}else if(cmd == "position" || cmd == "pos"){
+			printIP(ip);
 		}else if(cmd == "thread" || cmd == "t"){
 			const size_t old = tid;
 			iss >> tid;
@@ -146,6 +176,21 @@ void FungeDebugger::debug(const Field& field, const StackStack& stack, const Ins
 			for(auto b : threads[tid].backtrace){
 				std::cout << "#" << i++ << "  " << b << " \"" << static_cast<char>(field.get(b)) << "\"" << std::endl;
 			}
+		}else if(cmd == "setdelta"){
+			Vector v;
+			iss >> v;
+			threads[tid].ip->setDelta(v);
+			std::cout << "Delta " << threads[tid].ip->getDelta() << std::endl;
+		}else if(cmd == "setpos"){
+			Vector v;
+			iss >> v;
+			threads[tid].ip->setPos(v);
+			printIP(ip);
+		}else if(cmd == "read"){
+			Vector v;
+			iss >> v;
+			inst_t i = field.get(v);
+			std::cout << "Value = (" << i << ") \"" << static_cast<char>(i) << "\"" << std::endl;
 		}
 		
 	}

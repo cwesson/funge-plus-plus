@@ -56,6 +56,7 @@ void FungeStateString::escape(inst_t i){
 
 bool FungeStateString::execute(inst_t i){
 	if(i == '\"'){
+		previous = '\0';
 		runner.setState(runner.getNormalState());
 	}else{
 		switch(funge_config.strings){

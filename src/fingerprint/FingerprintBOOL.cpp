@@ -1,5 +1,5 @@
 /**
- * @file FingerprintBOOL.h
+ * @file FingerprintBOOL.cpp
  * Boolean operators.
  * @author Conlan Wesson
  */

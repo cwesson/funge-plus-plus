@@ -55,9 +55,9 @@ The dimensionality (up to 4D) is determined automatically based on the file cont
 the `-std` argument.  Higher dimensions can be determined automatically from BeQunge formatted files with or without
 the `Dimensions` directive.
 
-Standard instructions which operate on vectors ('g', 'p', 'x', '?'), operate with vector lengths egual to the number of
+Standard instructions which operate on vectors (`g`, `p`, `x`, `?`), operate with vector lengths egual to the number of
 dimensions detected.  This enables those instructions to function in a standardized way in higher-dimension funges.  For
-example, in 4D mode, '?' will change the delta to one of 8 possible directions, while 'x' can move in all possible
+example, in 4D mode, `?` will change the delta to one of 8 possible directions, while `x` can move in all possible
 directions.
 
 ### C-Style Strings
@@ -72,24 +72,30 @@ definition in the program flow section, that is `h` is "delta <- (0,0,1)" and `l
 it compatible with BeQunge and Rc/Funge-98.
 
 ## Fingerprints
-`BASE` I/O for numbers in other bases.
+`BASE` [I/O for numbers in other bases](http://www.rcfunge98.com/rcfunge2_manual.html#BASE).
 
-`BITW` [Bitwise operators](doc/BITW.md).
+`BITW` [Bitwise Operators](doc/BITW.md).
 
-`BOOL` Boolean operators.
+`BOOL` [Boolean Operators](http://www.rcfunge98.com/rcfunge2_manual.html#BOOL)
 
-`HRTI` High Resolution Timer Interface.
+`CPLI` [Complex Integer Extension](http://www.rcfunge98.com/rcfunge2_manual.html#CPLI).
 
-`MODE` Standard Modes.
+`HRTI` [High Resolution Timer Interface](https://github.com/catseye/Funge-98/blob/master/library/HRTI.markdown).
 
-`MODU` Modulo Arithmetic Extension.
+`MODE` [Standard Modes](https://github.com/catseye/Funge-98/blob/master/library/MODE.markdown).
+
+`MODU` [Modulo Arithmetic Extension](https://github.com/catseye/Funge-98/blob/master/library/MODU.markdown).
 
 `NFUN` [N-Dimensional Funge](doc/NFUN.md).
 
-`NULL` Null Fingerprint.
+`NULL` [Null Fingerprint](https://github.com/catseye/Funge-98/blob/master/library/NULL.markdown).
 
-`ORTH` Orthogonal Easement Library.
+`ORTH` [Orthogonal Easement Library](https://github.com/catseye/Funge-98/blob/master/library/ORTH.markdown).
 
-`REFC` Referenced Cells Extension.
+`PERL` [Generic Interface to the Perl Language](https://github.com/catseye/Funge-98/blob/master/library/PERL.markdown).
 
-`ROMA` Roman Numerals.
+`REFC` [Referenced Cells Extension](https://github.com/catseye/Funge-98/blob/master/library/REFC.markdown).
+
+`ROMA` [Roman Numerals](https://github.com/catseye/Funge-98/blob/master/library/ROMA.markdown).
+
+`TOYS` [Standard Toys](https://github.com/catseye/Funge-98/blob/master/library/TOYS.markdown).

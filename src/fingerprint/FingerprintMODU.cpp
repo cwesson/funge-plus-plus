@@ -1,5 +1,5 @@
 /**
- * @file FingerprintMODU.h
+ * @file FingerprintMODU.cpp
  * Modulo Arithmetic Extension.
  * @author Conlan Wesson
  */

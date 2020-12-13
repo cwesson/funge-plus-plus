@@ -5,37 +5,32 @@
  */
 
 #include "FungeRunner.h"
-#include "FungeManager.h"
 #include "FungeDebugger.h"
 
 namespace Funge {
 
-FungeRunner::FungeRunner(Field& f) :
-	field(f),
+FungeRunner::FungeRunner(FungeUniverse& uni) :
+	universe(uni),
+	field(uni.getField()),
 	stack(),
-	ip(f),
-	normalState(*this, f, stack, ip),
+	ip(uni.getField()),
+	normalState(*this, uni.getField(), stack, ip),
 	stringState(*this, stack, ip),
 	state(&normalState)
 {
-	run();
 }
 
-FungeRunner::FungeRunner(Field& f, const StackStack& s, const InstructionPointer& i) :
-	field(f),
-	stack(s),
-	ip(i),
-	normalState(*this, f, stack, ip),
+FungeRunner::FungeRunner(FungeUniverse& uni, const FungeRunner& runner) :
+	universe(uni),
+	field(runner.field),
+	stack(runner.stack),
+	ip(runner.ip),
+	normalState(*this, universe.getField(), stack, ip),
 	stringState(*this, stack, ip),
 	state(&normalState)
 {
 	ip.reverse();
 	ip.next();
-	run();
-}
-
-void FungeRunner::run(){
-	FungeManager::getInstance()->addRunner(this);
 }
 
 bool FungeRunner::isRunning() const{
@@ -52,8 +47,8 @@ void FungeRunner::operator()(){
 void FungeRunner::tick(){
 	bool done = false;
 	while(!done && !ip.isStopped()){
-		inst_t i = ip.get();
 		FungeDebugger::tick(field, stack, ip);
+		inst_t i = ip.get();
 		done = state->execute(i);
 		if(!done && i != ' '){
 			std::cerr << "Unimplemented instruction " << static_cast<int>(i) << " \'" << static_cast<char>(i) << "\' at " << ip << "." << std::endl;
@@ -73,6 +68,10 @@ FungeState& FungeRunner::getNormalState(){
 
 FungeState& FungeRunner::getStringState(){
 	return stringState;
+}
+
+FungeUniverse& FungeRunner::getUniverse(){
+	return universe;
 }
 
 }
