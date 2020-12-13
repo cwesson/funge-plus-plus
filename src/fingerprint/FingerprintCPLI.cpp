@@ -40,7 +40,7 @@ bool FingerprintCPLI::execute(inst_t cmd){
 			}else if(r == 0){
 				std::cout << i << "i ";
 			}else if(i < 0){
-				std::cout << r << '-' << -i << "i ";
+				std::cout << r << i << "i ";
 			}else{
 				std::cout << r << '+' << i << "i ";
 			}

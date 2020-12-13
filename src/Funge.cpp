@@ -110,10 +110,7 @@ int main(int argc, char **argv, char **envp){
 			}
 		}else if(strncmp(argv[a], "-l", 2) == 0){
 			std::string fing(&argv[a][2]);
-			uint64_t fingerprint = 0;
-			for(auto c : fing){
-				fingerprint = (fingerprint << 8) + c;
-			}
+			uint64_t fingerprint = std::accumulate(fing.begin(), fing.end(), 0, [](uint64_t f, char c){return (f << 8) + c;});
 			Funge::funge_config.fingerprints.push_back(fingerprint);
 		}else if(strcmp(argv[a], "-g") == 0){
 			Funge::funge_config.debug = true;
