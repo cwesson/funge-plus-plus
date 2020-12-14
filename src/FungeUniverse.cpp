@@ -35,6 +35,7 @@ FungeUniverse::~FungeUniverse(){
 	while(runners.size() > 0){
 		FungeRunner* runner = runners.front();
 		delete runner;
+		runners.pop();
 	}
 }
 

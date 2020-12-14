@@ -20,6 +20,7 @@ class FungeRunner {
 	public:
 		FungeRunner(FungeUniverse& uni);
 		FungeRunner(FungeUniverse& uni, const FungeRunner& runner);
+		virtual ~FungeRunner();
 		
 		bool isRunning() const;
 		
