@@ -18,8 +18,9 @@ Higher dimension funges can be loaded as BeQunge formatted files can be loaded a
 implies `-lNFUN`.
 
 ### Arguments
-`funge [ARGS] file`
+`funge [ARGS] file [YARGS]`
 
+#### ARGS:
 `-std=[un93|une98|be93|be98|tre98]` Overrides the automatically detected dimensionality.
 
 `-fconcurrent` `-fno-concurrent` Enable or disable use of split instruction `t`.
@@ -36,9 +37,13 @@ implies `-lNFUN`.
 
 `-fthreads=[native|funge]` Set the threading mode.
 
-`-l[fingerprint]` Load fingerprint at start as if loaded by `(`.
+`-l[fingerprint]` Load fingerprint at start.  This does not push the fingerprint ID to the stack.
 
-`-g` Start in debugger mode.
+`-g` Start in [debugger mode](#debugger).
+
+#### YARGS:
+Any arguments following the Befunge file are passed to the Befunge program.  These arguments are available to the
+program using the `y` instruction.
 
 ### Exit Code
 `funge` sets the program exit code to the value popped by the quit instruction `q` if encountered.  If `funge` fails
@@ -72,6 +77,9 @@ definition in the program flow section, that is `h` is "delta <- (0,0,1)" and `l
 it compatible with BeQunge and Rc/Funge-98.
 
 ## Fingerprints
+Funge++ supports the following fingerprints.  These can either be loaded at runtime by the '(' instruction, or by
+specifying the `-l` command line argument.
+
 `BASE` [I/O for numbers in other bases](http://www.rcfunge98.com/rcfunge2_manual.html#BASE).
 
 `BITW` [Bitwise Operators](doc/BITW.md).
@@ -98,4 +106,63 @@ it compatible with BeQunge and Rc/Funge-98.
 
 `ROMA` [Roman Numerals](https://github.com/catseye/Funge-98/blob/master/library/ROMA.markdown).
 
+`TERM` [Terminal extension](http://www.rcfunge98.com/rcfunge2_manual.html#TERM).
+
 `TOYS` [Standard Toys](https://github.com/catseye/Funge-98/blob/master/library/TOYS.markdown).
+
+## Debugger
+The Funge++ debugger, known as defunge, can be run on any Befunge program by specifying the `-g` command line argument.
+
+### Commands
+Defunge supports the follow commands.  Vector arguments to commands are a comma separated list of coordinates inside
+parenthesis, starting with the X dimension: `(x, y, z)`.  As manya dimensions as necessary are allowed.
+
+*run*
+Run the IP being debugged.
+
+*quit*
+Stop running the program and exit the debugger.
+
+*step*
+Execute the current instruction and break again.
+
+*peek c s*
+Print element *c* from stack *s*.  Stack 0 is the top stack, element 1 is the top of the stack.  If *c* is 0,
+print the entire stack stack.
+
+*read v*
+Print the cell at vector *v*.
+
+*get v*
+Print field around the cell at vector *v* in the X and Y directions.
+
+*list n*
+Display the field *n* cells in the X and Y directions from the current IP.
+
+*break v*
+Add a breakpoint on the cell at vector *v*.
+
+*watch v*
+Add a write watchpoint on the cell at vector *v*.
+
+*delta*
+Print the delta of the current IP.
+
+*storage*
+Print the storage offset of the current IP.
+
+*position*
+Print the position of the current IP.
+
+*thread n*
+Switch the debugger to the IP with ID *n*.
+
+*backtrace*
+Print the backtrace of the current IP.
+
+*setdelta v*
+Set the delta of the current IP to vector *v*.
+
+*setpos v*
+Set the postion of the current IP to vector *v*.
+
