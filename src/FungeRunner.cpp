@@ -33,6 +33,10 @@ FungeRunner::FungeRunner(FungeUniverse& uni, const FungeRunner& runner) :
 	ip.next();
 }
 
+FungeRunner::~FungeRunner(){
+	ip.stop();
+}
+
 bool FungeRunner::isRunning() const{
 	return !ip.isStopped();
 }

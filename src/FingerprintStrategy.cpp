@@ -19,6 +19,7 @@
 #include "FingerprintPERL.h"
 #include "FingerprintREFC.h"
 #include "FingerprintROMA.h"
+#include "FingerprintTERM.h"
 #include "FingerprintTOYS.h"
 
 namespace Funge {
@@ -35,14 +36,15 @@ FingerprintStrategy::FingerprintStrategy(Field& f, InstructionPointer& i, StackS
 	available[0x424F4F4C] = new FingerprintBOOL(f, i, s);
 	available[0x43504C49] = new FingerprintCPLI(f, i, s);
 	available[0x48525449] = new FingerprintHRTI(f, i, s);
-	available[0x4d4f4445] = new FingerprintMODE(f, i, s);
-	available[0x4d4f4455] = new FingerprintMODU(f, i, s);
-	available[0x4e46554e] = new FingerprintNFUN(f, i, s);
-	available[0x4e554c4c] = new FingerprintNULL(f, i, s);
-	available[0x4f525448] = new FingerprintORTH(f, i, s);
-	available[0x5045524c] = new FingerprintPERL(f, i, s);
+	available[0x4D4F4445] = new FingerprintMODE(f, i, s);
+	available[0x4D4F4455] = new FingerprintMODU(f, i, s);
+	available[0x4E46554E] = new FingerprintNFUN(f, i, s);
+	available[0x4E554C4C] = new FingerprintNULL(f, i, s);
+	available[0x4F525448] = new FingerprintORTH(f, i, s);
+	available[0x5045524C] = new FingerprintPERL(f, i, s);
 	available[0x52454643] = new FingerprintREFC(f, i, s);
-	available[0x524f4d41] = new FingerprintROMA(f, i, s);
+	available[0x524F4D41] = new FingerprintROMA(f, i, s);
+	available[0x5445524D] = new FingerprintTERM(f, i, s);
 	available[0x544f5953] = new FingerprintTOYS(f, i, s);
 	
 	for(auto fing : funge_config.fingerprints){
