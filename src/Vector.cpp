@@ -28,6 +28,13 @@ Vector& Vector::operator=(const Vector& orig){
 	return *this;
 }
 
+Vector& Vector::operator=(std::initializer_list<dim_t> orig){
+	values.clear();
+	values = orig;
+	normalize();
+	return *this;
+}
+
 void Vector::normalize(){
 	while(values.size() > 1 && values.back() == 0){
 		values.pop_back();
@@ -114,6 +121,20 @@ bool Vector::operator<(const Vector& other) const{
 		}
 	}
 	return false;
+}
+
+bool Vector::operator<=(const Vector& other) const{
+	size_t len = std::max(this->values.size(), other.values.size());
+	for(size_t i = len; i > 0; --i){
+		dim_t lhs = this->get(i-1);
+		dim_t rhs = other.get(i-1);
+		if(lhs > rhs){
+			return false;
+		}else if(lhs < rhs){
+			return true;
+		}
+	}
+	return true;
 }
 
 bool Vector::operator==(const Vector& other) const{

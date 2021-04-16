@@ -47,9 +47,16 @@ void FungeDebugger::write(const Field& field, const Vector& pos, inst_t inst){
 	}
 }
 
+void FungeDebugger::swbreak(const Field& field, const StackStack& stack, InstructionPointer& ip){
+	if(funge_config.debug){
+		std::cout << "Software Breakpoint " << ip.getPos() << std::endl;
+		threads[lastThread].state = STATE_BREAK;
+		debug(field, stack, ip);
+	}
+}
+
 void FungeDebugger::debugWrite(const Field& field, const Vector& pos, inst_t inst){
-	auto wp = watchpoints.find(pos);
-	if(wp != watchpoints.end()){
+	if(watchpoints.contains(pos)){
 		threads[lastThread].state = STATE_BREAK;
 		std::cout << "Watchpoint " << pos << std::endl;
 		inst_t old = field.get(pos);
@@ -60,7 +67,7 @@ void FungeDebugger::debugWrite(const Field& field, const Vector& pos, inst_t ins
 }
 
 void FungeDebugger::debug(const Field& field, const StackStack& stack, InstructionPointer& ip){
-	std::lock_guard<std::mutex> guard(mutex);
+	std::lock_guard<std::recursive_mutex> guard(mutex);
 	const size_t id = ip.getID();
 	auto found = threads.find(id);
 	if(found == threads.end()){
@@ -74,8 +81,7 @@ void FungeDebugger::debug(const Field& field, const StackStack& stack, Instructi
 	}
 	lastThread = id;
 	
-	auto bp = breakpoints.find(ip.getPos());
-	if(bp != breakpoints.end()){
+	if(breakpoints.contains(ip.getPos())){
 		std::cout << "Breakpoint " << ip.getPos() << std::endl;
 		threads[id].state = STATE_BREAK;
 	}
@@ -107,7 +113,7 @@ void FungeDebugger::debug(const Field& field, const StackStack& stack, Instructi
 		std::string cmd;
 		iss >> cmd;
 		
-		if(cmd == "run"){
+		if(cmd == "run" || cmd == "continue" || cmd == "con" || cmd == "c"){
 			threads[tid].state = STATE_RUN;
 		}else if(cmd == "quit" || cmd == "q"){
 			exit(1);
@@ -119,8 +125,9 @@ void FungeDebugger::debug(const Field& field, const StackStack& stack, Instructi
 			iss >> c;
 			if(c == 0){
 				for(size_t j = 0; j < threads[tid].stack->size(); ++j){
-					for(size_t i = 0; i < threads[tid].stack->at(j).size(); ++i){
-						std::cout << threads[tid].stack->at(j).get(i+1) << " ";
+					std::cout << "[0] ";
+					for(size_t i = threads[tid].stack->at(j).size(); i > 0; --i){
+						std::cout << threads[tid].stack->at(j).get(i) << " ";
 					}
 					std::cout << std::endl;
 				}
@@ -132,25 +139,43 @@ void FungeDebugger::debug(const Field& field, const StackStack& stack, Instructi
 		}else if(cmd == "get" || cmd == "g"){
 			Vector v;
 			iss >> v;
-			printField(field, v, Vector{3,3});
-		}else if(cmd == "list" || cmd == "l"){
-			dim_t s = 0;
-			iss >> s;
-			if(s == 0){
-				s = 3;
+			if(v.size() == 0){
+				v = ip.getPos();
 			}
-			printField(field, threads[tid].ip->getPos(), Vector{std::abs(s),std::abs(s)});
+			Vector s;
+			iss >> s;
+			if(s.size() == 0){
+				s = {3,3};
+			}
+			Vector d;
+			iss >> d;
+			if(d.size() == 0){
+				d = {0,1};
+			}
+			printField(field, v, s, d, *threads[tid].ip);
+		}else if(cmd == "list" || cmd == "l"){
+			Vector s;
+			iss >> s;
+			if(s.size() == 0){
+				s = {3,3};
+			}
+			Vector d;
+			iss >> d;
+			if(d.size() == 0){
+				d = {0,1};
+			}
+			printField(field, threads[tid].ip->getPos(), s, d, *threads[tid].ip);
 		}else if(cmd == "break" || cmd == "bp"){
 			Vector v;
 			iss >> v;
-			breakpoints.insert(v);
+			addBreakpoint(v);
 			for(auto b : breakpoints){
 				std::cout << "Breakpoint " << b << std::endl;
 			}
 		}else if(cmd == "watch" || cmd == "wp"){
 			Vector v;
 			iss >> v;
-			watchpoints.insert(v);
+			addWatchpoint(v);
 			for(auto w : watchpoints){
 				std::cout << "Watchpoint " << w << std::endl;
 			}
@@ -196,40 +221,65 @@ void FungeDebugger::debug(const Field& field, const StackStack& stack, Instructi
 	}
 }
 
+void FungeDebugger::addBreakpoint(const Vector& vec){
+	if(vec.size() > 0){
+		std::lock_guard<std::recursive_mutex> guard(mutex);
+		breakpoints.insert(vec);
+	}
+}
+
+void FungeDebugger::addWatchpoint(const Vector& vec){
+	if(vec.size() > 0){
+		std::lock_guard<std::recursive_mutex> guard(mutex);
+		watchpoints.insert(vec);
+	}
+}
+
 void FungeDebugger::printIP(const InstructionPointer& ip){
 	std::cout << ip.getID() << ": " << ip.getPos() << " \"" << static_cast<char>(ip.get()) << "\"" << std::endl;
 }
 
-void FungeDebugger::printField(const Field& field, const Vector& center, const Vector& size){
+void FungeDebugger::printField(const Field& field, const Vector& center, const Vector& size, const Vector& dim, const InstructionPointer& ip){
 	const Vector start = center-size;
 	const Vector end = center+size;
 	Vector pos = start;
-	while(pos != end){
+	while(pos <= end){
 		inst_t i = field.get(pos);
 		bool color = false;
 		for(auto t : threads){
 			if(t.second.ip->getPos() == pos){
-				std::cout << "\e[41;1m";
+				std::cout << "\e[43;1m"; // Yellow background
 				color = true;
 				break;
 			}
 		}
+		if(breakpoints.contains(pos)){
+			std::cout << "\e[41;1m"; // Red background
+			color = true;
+		}
+		if(watchpoints.contains(pos)){
+			std::cout << "\e[34;1m"; // Blue text
+			color = true;
+		}
 		if(pos == center){
-			std::cout << "\e[42;1m";
+			std::cout << "\e[4m"; // Underline
+			color = true;
+		}
+		if(pos == ip.getPos()){
+			std::cout << "\e[42;1m"; // Green background
 			color = true;
 		}
 		std::cout << static_cast<char>(i);
 		if(color){
 			std::cout << "\e[0m";
 		}
-		pos.set(0, pos[0]+1); // ++x
-		if(pos[0] > end[0]){
-			pos.set(1, pos[1]+1); // ++y
-			pos.set(0, start[0]); // x = 0
+		pos.set(dim[0], pos[dim[0]]+1); // ++x
+		if(pos[dim[0]] > end[dim[0]]){
+			pos.set(dim[1], pos[dim[1]]+1); // ++y
+			pos.set(dim[0], start[dim[0]]); // x = 0
 			std::cout << std::endl;
 		}
 	}
-	std::cout << std::endl;
 }
 
 }

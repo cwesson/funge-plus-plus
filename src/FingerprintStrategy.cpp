@@ -10,6 +10,7 @@
 #include "FingerprintBITW.h"
 #include "FingerprintBOOL.h"
 #include "FingerprintCPLI.h"
+#include "FingerprintDBUG.h"
 #include "FingerprintHRTI.h"
 #include "FingerprintMODE.h"
 #include "FingerprintMODU.h"
@@ -35,6 +36,7 @@ FingerprintStrategy::FingerprintStrategy(Field& f, InstructionPointer& i, StackS
 	available[0x42495457] = new FingerprintBITW(f, i, s);
 	available[0x424F4F4C] = new FingerprintBOOL(f, i, s);
 	available[0x43504C49] = new FingerprintCPLI(f, i, s);
+	available[0x44425547] = new FingerprintDBUG(f, i, s);
 	available[0x48525449] = new FingerprintHRTI(f, i, s);
 	available[0x4D4F4445] = new FingerprintMODE(f, i, s);
 	available[0x4D4F4455] = new FingerprintMODU(f, i, s);
@@ -79,6 +81,7 @@ bool FingerprintStrategy::load(uint64_t fingerprint){
 			}
 			loaded[i].push(found->second);
 		}
+		found->second->activate();
 		//std::cout << "Loaded 0x" << std::hex << fingerprint << std::dec << std::endl;
 		return true;
 	}

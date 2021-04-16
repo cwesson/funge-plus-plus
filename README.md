@@ -88,6 +88,8 @@ specifying the `-l` command line argument.
 
 `CPLI` [Complex Integer Extension](http://www.rcfunge98.com/rcfunge2_manual.html#CPLI).
 
+`DBUG` [Debugger Control](doc/DBUG.md).
+
 `HRTI` [High Resolution Timer Interface](https://github.com/catseye/Funge-98/blob/master/library/HRTI.markdown).
 
 `MODE` [Standard Modes](https://github.com/catseye/Funge-98/blob/master/library/MODE.markdown).
@@ -114,8 +116,9 @@ specifying the `-l` command line argument.
 The Funge++ debugger, known as defunge, can be run on any Befunge program by specifying the `-g` command line argument.
 
 ### Commands
-Defunge supports the follow commands.  Vector arguments to commands are a comma separated list of coordinates inside
-parenthesis, starting with the X dimension: `(x, y, z)`.  As manya dimensions as necessary are allowed.
+Defunge supports the follow commands.  All arguments are optional, but must be given in the order shown.  Vector
+arguments to commands are a comma separated list of coordinates inside parenthesis, starting with the X dimension:
+`(x, y, z)`.  As many dimensions as necessary are allowed.
 
 *run*
 Run the IP being debugged.
@@ -133,11 +136,11 @@ print the entire stack stack.
 *read v*
 Print the cell at vector *v*.
 
-*get v*
-Print field around the cell at vector *v* in the X and Y directions.
+*get v s d*
+Print field vector *s* cells around the cell at vector *v* in the dimensions specified by vector *d*.
 
-*list n*
-Display the field *n* cells in the X and Y directions from the current IP.
+*list s d*
+Print the field vector *s* cells around the current IP in the dimensions specified by vector *d*.
 
 *break v*
 Add a breakpoint on the cell at vector *v*.

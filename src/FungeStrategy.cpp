@@ -15,7 +15,6 @@ FungeStrategy::FungeStrategy(Field& f, InstructionPointer& i, StackStack& s, Fun
 	state(t),
 	rd(),
 	gen(rd()),
-	dis(),
 	inst(in)
 {
 	
@@ -25,7 +24,8 @@ const std::vector<inst_t>& FungeStrategy::instructions() const{
 	return inst;
 }
 
-stack_t FungeStrategy::random(){
+stack_t FungeStrategy::random(stack_t min, stack_t max){
+	std::uniform_int_distribution<> dis(min, max);
 	return dis(gen);
 }
 

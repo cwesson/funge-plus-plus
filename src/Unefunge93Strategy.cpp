@@ -140,7 +140,7 @@ bool Unefunge93Strategy::execute(inst_t cmd){
 				ip.setDelta(Vector{1}); break;
 			case '?':{
 				size_t d = funge_config.dimensions*2;
-				int r = random()%d;
+				int r = random(0, d-1);
 				Vector v;
 				if(r & 1){
 					v.set(r>>1, -1);

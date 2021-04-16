@@ -18,6 +18,7 @@ class Vector {
 		explicit Vector(std::initializer_list<dim_t> v);
 		Vector(const Vector& orig);
 		Vector& operator=(const Vector& orig);
+		Vector& operator=(std::initializer_list<dim_t> orig);
 		
 		size_t size() const;
 		
@@ -36,6 +37,7 @@ class Vector {
 		friend Vector operator-(const Vector& lhs, const Vector& rhs);
 		
 		bool operator<(const Vector& other) const;
+		bool operator<=(const Vector& other) const;
 		bool operator==(const Vector& other) const;
 		bool operator!=(const Vector& other) const;
 		

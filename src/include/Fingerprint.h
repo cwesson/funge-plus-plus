@@ -20,6 +20,8 @@ class Fingerprint {
 		virtual ~Fingerprint() = default;
 		
 		virtual bool execute(inst_t cmd) = 0;
+
+		virtual void activate(){}
 		
 		const std::vector<inst_t>& instructions() const{
 			return inst;

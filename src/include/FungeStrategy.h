@@ -29,12 +29,11 @@ class FungeStrategy {
 		StackStack& stack;
 		FungeState& state;
 		
-		stack_t random();
+		stack_t random(stack_t min, stack_t max);
 	
 	private:
 		std::random_device rd;
 		std::mt19937 gen;
-		std::uniform_int_distribution<stack_t> dis;
 		std::vector<inst_t> inst;
 };
 
