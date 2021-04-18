@@ -1,7 +1,7 @@
 # Funge++
 Funge++ is Befunge interpreter originally written by Conlan Wesson in Java for a Programming Language Concepts course
-with minimal functionality.  It has since been converted to C++, and an effort is underway to implement all Funge-98 instructions
-and support N-dimensional Funge.
+with minimal functionality.  It has since been converted to C++, and an effort is underway to implement all Funge-98
+instructions and support N-dimensional Funge.  The Funge++ handprint is 0x464E2B2B (`FN++`).
 
 ## Running
 The Funge++ executable `funge` uses the first file argument to load the funge program.  The first character of the
@@ -93,6 +93,8 @@ specifying the `-l` command line argument.
 `FPDP` [Double precision floating point](http://www.rcfunge98.com/rcfunge2_manual.html#FPDP).
 
 `FPSP` [Single precision floating point](http://www.rcfunge98.com/rcfunge2_manual.html#FPSP).
+
+`FRTH` [Some common forth commands](http://www.rcfunge98.com/rcfunge2_manual.html#FRTH).
 
 `HRTI` [High Resolution Timer Interface](https://github.com/catseye/Funge-98/blob/master/library/HRTI.markdown).
 
