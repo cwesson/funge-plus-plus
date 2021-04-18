@@ -110,6 +110,7 @@ test_simple test/test_boulder.b98 "1 2 3 4 5 6 "
 test_simple test/test_bracelet.b98 "1 2 3 1 2 3 "
 test_simple test/test_chicane.b98 "6 5 4 3 2 1 "
 test_simple test/test_perl.b98 "78 243"
+test_simple test/test_romap.b98 "MMCDXXI MLXVI MDCCLXXVI "
 # Mycology Tests
 test_simple test/Mycology/sanity.bf "0 1 2 3 4 5 6 7 8 9 "
 test_mycology mycology.b98 15

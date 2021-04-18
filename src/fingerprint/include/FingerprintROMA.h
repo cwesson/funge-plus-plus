@@ -16,6 +16,13 @@ class FingerprintROMA : public Fingerprint {
 		virtual ~FingerprintROMA() = default;
 		
 		virtual bool execute(inst_t cmd) override;
+	
+	private:
+		void print(stack_t n);
+
+		static const std::string hundreds[9];
+		static const std::string tens[9];
+		static const std::string ones[9];
 };
 
 }

@@ -1,5 +1,5 @@
 # Funge++
-Funge++ is Befunge interpreter originally written by Conlan Wesson in Java for a Programming Laguage Concepts course
+Funge++ is Befunge interpreter originally written by Conlan Wesson in Java for a Programming Language Concepts course
 with minimal functionality.  It has since been converted to C++, and an effort is underway to implement all Funge-98 instructions
 and support N-dimensional Funge.
 
@@ -60,7 +60,7 @@ The dimensionality (up to 4D) is determined automatically based on the file cont
 the `-std` argument.  Higher dimensions can be determined automatically from BeQunge formatted files with or without
 the `Dimensions` directive.
 
-Standard instructions which operate on vectors (`g`, `p`, `x`, `?`), operate with vector lengths egual to the number of
+Standard instructions which operate on vectors (`g`, `p`, `x`, `?`), operate with vector lengths equal to the number of
 dimensions detected.  This enables those instructions to function in a standardized way in higher-dimension funges.  For
 example, in 4D mode, `?` will change the delta to one of 8 possible directions, while `x` can move in all possible
 directions.
@@ -89,6 +89,10 @@ specifying the `-l` command line argument.
 `CPLI` [Complex Integer Extension](http://www.rcfunge98.com/rcfunge2_manual.html#CPLI).
 
 `DBUG` [Debugger Control](doc/DBUG.md).
+
+`FPDP` [Double precision floating point](http://www.rcfunge98.com/rcfunge2_manual.html#FPDP).
+
+`FPSP` [Single precision floating point](http://www.rcfunge98.com/rcfunge2_manual.html#FPSP).
 
 `HRTI` [High Resolution Timer Interface](https://github.com/catseye/Funge-98/blob/master/library/HRTI.markdown).
 

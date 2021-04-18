@@ -7,7 +7,7 @@
  >"s">      ^^         <"s"<    . >     ^ #n
    Written by Conlan Wesson     | :$ <    p
    Version 1.0 Aug. 01, 2009    >$00g1-:00^
-"99 bottles of beer on the wall."0         <v
+"99 bottles of beer on the wall."+91       <v
 "Go to the store and buy some more, "       <v
 "no more bottles of beer."+55                <v
 "No more bottles of beer on the wall, "       <v
