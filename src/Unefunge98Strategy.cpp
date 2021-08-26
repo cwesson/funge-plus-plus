@@ -65,8 +65,17 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 				ip.next();
 				char c = field.get(ip.getPos());
 				while(c == ' ' || c == ';'){
-					c = field.get(ip.getPos());
-					ip.next();
+					if(c == ';'){
+						do{
+							ip.next();
+							c = ip.get();
+						}while(c != ';');
+						ip.next();
+						c = ip.get();
+					}else{
+						ip.next();
+						c = ip.get();
+					}
 				}
 				ip.setPos(v);
 				int k = stack.top().pop();

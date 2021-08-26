@@ -21,8 +21,8 @@ function test_simple() {
     else
         expect=$code
     fi
-    assert_equal $1 $code $expect
-    assert_equal $1 "$res" "$2"
+    assert_equal "$1 exit code" $code $expect
+    assert_equal "$1 output" "$res" "$2"
 }
 
 function test_befunge() {
@@ -34,8 +34,8 @@ function test_befunge() {
     else
         expect=$code
     fi
-    assert_equal $1 $code $expect
-    assert_equal $1 "$res" "$2"
+    assert_equal "$1 exit code" $code $expect
+    assert_equal "$1 output" "$res" "$2"
 }
 
 function test_diff() {
