@@ -32,7 +32,7 @@ class FungeStrategy {
 		stack_t random(stack_t min, stack_t max);
 	
 	private:
-		std::random_device rd;
+		std::default_random_engine rd;
 		std::mt19937 gen;
 		std::vector<inst_t> inst;
 };

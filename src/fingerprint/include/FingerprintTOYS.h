@@ -19,7 +19,7 @@ class FingerprintTOYS : public Fingerprint {
 		virtual bool execute(inst_t cmd) override;
 		
 	private:
-		std::random_device rd;
+		std::default_random_engine rd;
 		std::mt19937 gen;
 		std::uniform_int_distribution<stack_t> dis;
 		
