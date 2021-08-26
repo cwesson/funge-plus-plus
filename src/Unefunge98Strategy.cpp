@@ -43,7 +43,9 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 				do{
 					ip.next();
 				}while(ip.get() != ';');
-				ip.next();
+				do{
+					ip.next();
+				}while(ip.get() == ' ');
 				state.execute(ip.get());
 			} break;
 			case 'j':{

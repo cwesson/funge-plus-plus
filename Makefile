@@ -68,7 +68,7 @@ cpputest:
 
 clean:
 	@echo CLEAN bin/
-	@rm -f $(OBJS)
+	@rm -f $(OBJS) $(DEPS)
 
 realclean:
 	@echo REALCLEAN
