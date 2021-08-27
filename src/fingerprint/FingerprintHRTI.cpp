@@ -26,7 +26,7 @@ bool FingerprintHRTI::execute(inst_t cmd){
 			hrti_mark = std::chrono::steady_clock::now();
 		} break;
 		case 'S':{
-			auto dur = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch());
+			auto dur = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch());
 			stack.top().push(dur.count() % static_cast<std::chrono::microseconds>(std::chrono::seconds(1)).count());
 		} break;
 		case 'T':{
