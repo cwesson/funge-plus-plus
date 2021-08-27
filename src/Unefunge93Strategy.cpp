@@ -100,20 +100,40 @@ bool Unefunge93Strategy::execute(inst_t cmd){
 			case '&':{
 				stack_t num = 0;
 				char c = getchar();
+				if(c == EOF){
+					ip.reverse();
+					break;
+				}
 				while(c < '0' || c > '9'){
 					c = getchar();
+					if(c == EOF){
+						ip.reverse();
+						return true;
+					}
 				}
 				while(c >= '0' && c <= '9'){
 					num = (num*10) + (c-'0');
 					c = getchar();
+					if(c == EOF){
+						ip.reverse();
+						return true;
+					}
 				}
 				ungetc(c, stdin);
 				stack.top().push(num);
 			} break;
 			case '~':{
 				int q = getchar();
+				if(q == EOF){
+					ip.reverse();
+					break;
+				}
 				if(q == 13){
 					q = getchar();
+					if(q == EOF){
+						ip.reverse();
+						break;
+					}
 				}
 				stack.top().push(q);
 			} break;
