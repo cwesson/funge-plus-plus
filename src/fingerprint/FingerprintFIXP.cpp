@@ -35,7 +35,7 @@ bool FingerprintFIXP::execute(inst_t cmd){
 		} break;
 		case 'D':{
 			stack_t n = stack.top().pop();
-			stack.top().push(n);
+			stack.top().push(random(n));
 		} break;
 		case 'I':{
 			double n = stackToFloat(stack.top().pop());
@@ -126,7 +126,7 @@ double FingerprintFIXP::radToDeg(double deg){
 }
 
 stack_t FingerprintFIXP::random(stack_t max){
-	std::uniform_int_distribution<> dis(max);
+	std::uniform_int_distribution<> dis(0, max);
 	return dis(gen);
 }
 
