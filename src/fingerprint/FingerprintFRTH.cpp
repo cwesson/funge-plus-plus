@@ -20,14 +20,25 @@ bool FingerprintFRTH::execute(inst_t cmd){
 		} break;
 		case 'L':{
 			stack_t u = stack.top().pop();
-			stack_t pops[u+1];
-			for(stack_t i = 0; i <= u; ++i){
+			stack_t count = u;
+			if(u < 0){
+				count = -u;
+			}
+			stack_t pops[count+1];
+			for(stack_t i = 0; i <= count; ++i){
 				pops[i] = stack.top().pop();
 			}
-			for(stack_t i = u-1; i >= 0; --i){
-				stack.top().push(pops[i]);
+			if(u < 0){
+				stack.top().push(pops[0]);
+				for(stack_t i = count; i > 0; --i){
+					stack.top().push(pops[i]);
+				}
+			}else{
+				for(stack_t i = count-1; i >= 0; --i){
+					stack.top().push(pops[i]);
+				}
+				stack.top().push(pops[count]);
 			}
-			stack.top().push(pops[u]);
 		} break;
 		case 'O':{
 			stack_t b = stack.top().pop();
@@ -38,6 +49,10 @@ bool FingerprintFRTH::execute(inst_t cmd){
 		} break;
 		case 'P':{
 			stack_t u = stack.top().pop();
+			if(u < 0){
+				ip.reverse();
+				break;
+			}
 			stack_t x = stack.top().get(u+1);
 			stack.top().push(x);
 		} break;
