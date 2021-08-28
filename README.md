@@ -84,11 +84,13 @@ specifying the `-l` command line argument.
 
 `BITW` [Bitwise Operators](doc/BITW.md).
 
-`BOOL` [Boolean Operators](http://www.rcfunge98.com/rcfunge2_manual.html#BOOL)
+`BOOL` [Boolean Operators](http://www.rcfunge98.com/rcfunge2_manual.html#BOOL).
 
 `CPLI` [Complex Integer Extension](http://www.rcfunge98.com/rcfunge2_manual.html#CPLI).
 
 `DBUG` [Debugger Control](doc/DBUG.md).
+
+`FIXP` [Fixed point math functions](http://www.rcfunge98.com/rcfunge2_manual.html#FIXP).
 
 `FPDP` [Double precision floating point](http://www.rcfunge98.com/rcfunge2_manual.html#FPDP).
 
