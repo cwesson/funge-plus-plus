@@ -8,11 +8,11 @@
 
 namespace Funge {
 
-FungeStrategy::FungeStrategy(Field& f, InstructionPointer& i, StackStack& s, FungeState& t, std::initializer_list<inst_t> in) :
+FungeStrategy::FungeStrategy(Field& f, InstructionPointer& i, StackStack& s, FungeRunner& r, std::initializer_list<inst_t> in) :
 	field(f),
 	ip(i),
 	stack(s),
-	state(t),
+	runner(r),
 	rd(),
 	gen(rd()),
 	inst(in)

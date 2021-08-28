@@ -30,6 +30,7 @@ class FungeRunner {
 		
 		void operator()();
 		void tick();
+		bool execute(inst_t i);
 		
 		FungeUniverse& getUniverse();
 	

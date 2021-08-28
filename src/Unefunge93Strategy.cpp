@@ -6,14 +6,15 @@
 
 #include "Unefunge93Strategy.h"
 #include "FungeConfig.h"
+#include "FungeRunner.h"
 #include "FungeUtilities.h"
 #include <iostream>
 
 namespace Funge {
 
 
-Unefunge93Strategy::Unefunge93Strategy(Field& f, InstructionPointer& i, StackStack& s, FungeState& t) :
-	FungeStrategy(f, i, s, t,
+Unefunge93Strategy::Unefunge93Strategy(Field& f, InstructionPointer& i, StackStack& s, FungeRunner& r) :
+	FungeStrategy(f, i, s, r,
 			{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '@',
 			'#', '!', '%', '*', '+', '/', '-', '`', ',', '.', '\"',
 			'&', '~', '$', ':', '\\', '<', '>', '?', '_', 'g', 'p'})
@@ -94,6 +95,11 @@ bool Unefunge93Strategy::execute(inst_t cmd){
 			case '.':{
 				stack_t x = stack.top().pop();
 				std::cout << static_cast<int>(x) << ' ';
+			} break;
+			
+			// Strings
+			case '\"':{
+				runner.setState(runner.getStringState());
 			} break;
 			
 			//Input

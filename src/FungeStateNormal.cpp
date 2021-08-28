@@ -5,7 +5,6 @@
  */
 
 #include "FungeStateNormal.h"
-#include "FungeRunner.h"
 #include "FungeConfig.h"
 #include "Unefunge93Strategy.h"
 #include "Unefunge98Strategy.h"
@@ -22,23 +21,23 @@ FungeStateNormal::FungeStateNormal(FungeRunner& r, Field& f, StackStack& s, Inst
 {
 	if(funge_config.dimensions >= 1){
 		if(funge_config.standard >= 93){
-			load(new Unefunge93Strategy(f, i, s, *this));
+			load(new Unefunge93Strategy(f, i, s, r));
 		}
 		if(funge_config.standard >= 98){
-			load(new Unefunge98Strategy(f, i, s, *this));
+			load(new Unefunge98Strategy(f, i, s, r));
 		}
 	}
 	if(funge_config.dimensions >= 2){
 		if(funge_config.standard >= 93){
-			load(new Befunge93Strategy(f, i, s, *this));
+			load(new Befunge93Strategy(f, i, s, r));
 		}
 		if(funge_config.standard >= 98){
-			load(new Befunge98Strategy(f, i, s, *this));
+			load(new Befunge98Strategy(f, i, s, r));
 		}
 	}
 	if(funge_config.dimensions >= 3){
 		if(funge_config.standard >= 98){
-			load(new Trefunge98Strategy(f, i, s, *this));
+			load(new Trefunge98Strategy(f, i, s, r));
 		}
 	}
 }
@@ -63,19 +62,14 @@ bool FungeStateNormal::load(FungeStrategy* strategy){
 }
 
 bool FungeStateNormal::execute(inst_t i){
-	if(i == ' '){
-		return false;
-	}else if(i == '\"'){
-		runner.setState(runner.getStringState());
-	}else{
-		bool done = false;
+	bool done = false;
+	if(i != ' '){
 		auto found = semantics.find(i);
 		if(found != semantics.cend()){
 			done = found->second.top()->execute(i);
 		}
-		return done;
 	}
-	return true;
+	return done;
 }
 
 }

@@ -16,13 +16,13 @@
 namespace Funge {
 
 
-Unefunge98Strategy::Unefunge98Strategy(Field& f, InstructionPointer& i, StackStack& s, FungeState& t) :
-	FungeStrategy(f, i, s, t,
+Unefunge98Strategy::Unefunge98Strategy(Field& f, InstructionPointer& i, StackStack& s, FungeRunner& r) :
+	FungeStrategy(f, i, s, r,
 			{'a', 'b', 'c', 'd', 'e', 'f', 'j', 'i', 'k', 'n', 'o', 'q', 'r', 's', 't', 'u', 'x', 'y', 'z',
 			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
 			'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
 			'\'', ';', '{', '}', '=', '(', ')'}),
-	finger(f, i, s, t)
+	finger(f, i, s, r)
 {
 	
 }
@@ -46,7 +46,7 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 				do{
 					ip.next();
 				}while(ip.get() == ' ');
-				state.execute(ip.get());
+				runner.execute(ip.get());
 			} break;
 			case 'j':{
 				int j = stack.top().pop();
@@ -80,7 +80,7 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 				ip.setPos(v);
 				int k = stack.top().pop();
 				for(int i = 0; i < k; i++){
-					state.execute(c);
+					runner.execute(c);
 				}
 				if(k == 0){
 					ip.next();
@@ -103,7 +103,6 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 			
 			case 't':{
 				if(funge_config.concurrent){
-					FungeRunner& runner = this->state.getRunner();
 					runner.getUniverse().cloneRunner(runner);
 				}else{
 					std::cerr << "Unimplemented instruction " << static_cast<int>(cmd) << " \'" << static_cast<char>(cmd) << "\' at " << ip << "." << std::endl;

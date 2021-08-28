@@ -9,8 +9,8 @@
 namespace Funge {
 
 
-Befunge93Strategy::Befunge93Strategy(Field& f, InstructionPointer& i, StackStack& s, FungeState& t) :
-	FungeStrategy(f, i, s, t, {'^', 'v', '|'})
+Befunge93Strategy::Befunge93Strategy(Field& f, InstructionPointer& i, StackStack& s, FungeRunner& r) :
+	FungeStrategy(f, i, s, r, {'^', 'v', '|'})
 {
 	
 }

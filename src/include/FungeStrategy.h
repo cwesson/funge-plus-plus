@@ -9,14 +9,15 @@
 #include "Field.h"
 #include "InstructionPointer.h"
 #include "StackStack.h"
-#include "FungeState.h"
 #include <random>
 
 namespace Funge {
 
+class FungeRunner;
+
 class FungeStrategy {
 	public:
-		FungeStrategy(Field& f, InstructionPointer& i, StackStack& s, FungeState& t, std::initializer_list<inst_t> in);
+		FungeStrategy(Field& f, InstructionPointer& i, StackStack& s, FungeRunner& r, std::initializer_list<inst_t> in);
 		virtual ~FungeStrategy() = default;
 		
 		virtual bool execute(inst_t cmd) = 0;
@@ -27,7 +28,7 @@ class FungeStrategy {
 		Field& field;
 		InstructionPointer& ip;
 		StackStack& stack;
-		FungeState& state;
+		FungeRunner& runner;
 		
 		stack_t random(stack_t min, stack_t max);
 	
