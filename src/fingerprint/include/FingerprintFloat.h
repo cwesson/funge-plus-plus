@@ -8,6 +8,7 @@
 
 #include "Fingerprint.h"
 #include "FungeUtilities.h"
+#include <iomanip>
 
 namespace Funge {
 
@@ -91,7 +92,7 @@ class FingerprintFloat : public Fingerprint {
 				} break;
 				case 'P':{
 					T n = stackToT(stack.top().pop());
-					std::cout << n << ' ';
+					std::cout << std::fixed << std::setprecision(6) << n << ' ';
 				} break;
 				case 'Q':{
 					T n = stackToT(stack.top().pop());
@@ -122,7 +123,7 @@ class FingerprintFloat : public Fingerprint {
 				} break;
 				case 'X':{
 					T n = stackToT(stack.top().pop());
-					n = std::asin(n);
+					n = std::exp(n);
 					stack.top().push(TToStack(n));
 				} break;
 				case 'Y':{
