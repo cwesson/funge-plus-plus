@@ -20,7 +20,7 @@ class FingerprintREFC : public Fingerprint {
 		virtual bool execute(inst_t cmd) override;
 	
 	protected:
-		std::map<stack_t, Vector> refc_map;
+		static std::map<stack_t, Vector> refc_map;
 };
 
 }
