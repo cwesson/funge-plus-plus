@@ -94,6 +94,8 @@ specifying the `-l` command line argument.
 
 `FPDP` [Double precision floating point](http://www.rcfunge98.com/rcfunge2_manual.html#FPDP).
 
+`FPRT` [Formatted print](http://www.rcfunge98.com/rcfunge2_manual.html#FPRT).
+
 `FPSP` [Single precision floating point](http://www.rcfunge98.com/rcfunge2_manual.html#FPSP).
 
 `FRTH` [Some common forth commands](http://www.rcfunge98.com/rcfunge2_manual.html#FRTH).

@@ -13,6 +13,7 @@
 #include "FingerprintDBUG.h"
 #include "FingerprintFIXP.h"
 #include "FingerprintFloat.h"
+#include "FingerprintFPRT.h"
 #include "FingerprintFRTH.h"
 #include "FingerprintHRTI.h"
 #include "FingerprintMODE.h"
@@ -42,6 +43,7 @@ FingerprintStrategy::FingerprintStrategy(Field& f, InstructionPointer& i, StackS
 	available[0x44425547] = new FingerprintDBUG(f, i, s);
 	available[0x46495850] = new FingerprintFIXP(f, i, s);
 	available[0x46504450] = new FingerprintFloat<double>(f, i, s);
+	available[0x46505254] = new FingerprintFPRT(f, i, s);
 	available[0x46505350] = new FingerprintFloat<float>(f, i, s);
 	available[0x46525448] = new FingerprintFRTH(f, i, s);
 	available[0x48525449] = new FingerprintHRTI(f, i, s);
