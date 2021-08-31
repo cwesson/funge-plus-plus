@@ -28,6 +28,8 @@ Higher dimension funges can be loaded as BeQunge formatted `.beq` files.  Loadin
 
 `-ffilesystem` `-fno-filesystem` Enable or disable use of filesystem instructions `i` and `o`.
 
+`-finvert-hl` Invert the `h` and `l` instructions.
+
 `-ftopo=[torus|lahey]` Set the topology.
 
 `-fstrings=[multispace|sgml|c]` Set the string mode.
@@ -75,9 +77,9 @@ numbers are 128-bit.
 
 ## Errata
 ### High/Low
-The Funge-98 specification is inconsistent about the delta of the `h` and `l`  instructions.  Funge++ uses the
+The Funge-98 specification is inconsistent about the delta of the `h` and `l`  instructions (https://github.com/catseye/Funge-98/issues/10).  Funge++ uses the
 definition in the program flow section, that is `h` is "delta <- (0,0,1)" and `l` is "delta <- (0,0,-1)".  This makes
-it compatible with BeQunge and Rc/Funge-98.
+it compatible with BeQunge and Rc/Funge-98.  The `-finvert-hl` argument flips this behavior.
 
 ## Fingerprints
 Funge++ supports the following fingerprints.  These can either be loaded at runtime by the '(' instruction, or by

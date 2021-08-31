@@ -62,6 +62,8 @@ int main(int argc, char **argv, char **envp){
 			Funge::funge_config.execute = false;
 		}else if(strcmp(argv[a], "-fno-filesystem") == 0){
 			Funge::funge_config.filesystem = false;
+		}else if(strcmp(argv[a], "-finvert-hl") == 0){
+			Funge::funge_config.inverthl = true;
 		}else if(strncmp(argv[a], "-ftopo=", 7) == 0){
 			std::strtok(argv[a], "=");
 			char* arg = strtok(NULL, "=");

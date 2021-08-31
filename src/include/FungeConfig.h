@@ -52,6 +52,7 @@ struct FungeConfig {
 	bool invertmode;
 	bool queuemode;
 	bool switchmode;
+	bool inverthl;
 };
 
 extern struct FungeConfig funge_config;
