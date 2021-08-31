@@ -112,6 +112,9 @@ test_simple test/test_roma.b98 "1000 500 100 50 10 5 1 "
 test_simple test/test_romap.b98 "MMCDXXI MLXVI MDCCLXXVI "
 test_simple test/test_television.b98 "9 8 7 6 5 4 3 2 1 0 "
 test_simple test/test_tumbler.b98 "0 "
+# Edge Cases
+test_simple test/kk.b98 "!12 "
+test_simple test/k_quote.b98 "2 "
 # Mycology Tests
 test_simple test/Mycology/sanity.bf "0 1 2 3 4 5 6 7 8 9 "
 test_mycology mycology.b98 15

@@ -14,8 +14,7 @@ Vertical Tabs in the file represent 4D+1 and reset X, Y, and Z to zero.  Carriag
 following a vertical tab are ignored.  This is not part of the Funge-98 specification, but provides a simple way to
 create 4-dimensional funges.
 
-Higher dimension funges can be loaded as BeQunge formatted files can be loaded as `.beq` files.  Loading a `.beq` file
-implies `-lNFUN`.
+Higher dimension funges can be loaded as BeQunge formatted `.beq` files.  Loading a `.beq` file implies `-lNFUN`.
 
 ### Arguments
 `funge [ARGS] file [YARGS]`
@@ -70,6 +69,10 @@ C-style strings can be enabled with `-fstrings=c`.  In this mode, backslashes in
 instead, it and the following character are interpretted as an escape sequence.  This happens in one tick.  In addition
 to special characters, this allows quotes and ANSI escape codes in strings.
 
+### 64-bit
+Funge++ stack and funge-space are 64-bit values.  For that reason, FPDP numbers use a single stack cell, and LONG
+numbers are 128-bit.
+
 ## Errata
 ### High/Low
 The Funge-98 specification is inconsistent about the delta of the `h` and `l`  instructions.  Funge++ uses the
@@ -101,6 +104,10 @@ specifying the `-l` command line argument.
 `FRTH` [Some common forth commands](http://www.rcfunge98.com/rcfunge2_manual.html#FRTH).
 
 `HRTI` [High Resolution Timer Interface](https://github.com/catseye/Funge-98/blob/master/library/HRTI.markdown).
+
+`JSTR` [3d string vectors](http://www.rcfunge98.com/rcfunge2_manual.html#JSTR)
+
+`LONG` [Long Integers](http://www.rcfunge98.com/rcfunge2_manual.html#LONG)
 
 `MODE` [Standard Modes](https://github.com/catseye/Funge-98/blob/master/library/MODE.markdown).
 

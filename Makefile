@@ -3,13 +3,13 @@
 # @author Conlan Wesson
 ##
 
-SRCS := $(shell find src/ -name \*.cpp)
-OBJS := $(subst src/,bin/,$(subst .cpp,.o,$(SRCS)))
+SRCS := third_party/bigint/bigint.cpp $(shell find src/ -name \*.cpp)
+OBJS := $(subst third_party/,bin/,$(subst src/,bin/,$(subst .cpp,.o,$(SRCS))))
 DEPS := $(OBJS:%.o=%.d)
 
 EXEC := bin/funge
 
-INCLUDES := -I src/include -I src/fingerprint/include
+INCLUDES := -I src/include -I src/fingerprint/include -I third_party/bigint/include
 
 CPP := g++
 CPPARGS := $(INCLUDES) -g -Wall -Wextra -Werror -std=c++2a
@@ -38,6 +38,11 @@ $(EXEC): $(OBJS)
 bin/%.o: src/%.cpp
 	@mkdir -p $(dir $@)
 	@echo "CPP " $(subst src/,,$<)
+	@$(CPP) $(CPPARGS) -MMD -o $@ -c $<
+
+bin/%.o: third_party/%.cpp
+	@mkdir -p $(dir $@)
+	@echo "CPP " $(subst third_party/,,$<)
 	@$(CPP) $(CPPARGS) -MMD -o $@ -c $<
 
 -include $(DEPS)

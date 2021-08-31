@@ -16,6 +16,8 @@
 #include "FingerprintFPRT.h"
 #include "FingerprintFRTH.h"
 #include "FingerprintHRTI.h"
+#include "FingerprintJSTR.h"
+#include "FingerprintLONG.h"
 #include "FingerprintMODE.h"
 #include "FingerprintMODU.h"
 #include "FingerprintNFUN.h"
@@ -47,6 +49,8 @@ FingerprintStrategy::FingerprintStrategy(Field& f, InstructionPointer& i, StackS
 	available[0x46505350] = new FingerprintFloat<float>(f, i, s);
 	available[0x46525448] = new FingerprintFRTH(f, i, s);
 	available[0x48525449] = new FingerprintHRTI(f, i, s);
+	available[0x4A535452] = new FingerprintJSTR(f, i, s);
+	available[0x4C4F4E47] = new FingerprintLONG(f, i, s);
 	available[0x4D4F4445] = new FingerprintMODE(f, i, s);
 	available[0x4D4F4455] = new FingerprintMODU(f, i, s);
 	available[0x4E46554E] = new FingerprintNFUN(f, i, s);
