@@ -26,6 +26,7 @@
 #include "FingerprintPERL.h"
 #include "FingerprintREFC.h"
 #include "FingerprintROMA.h"
+#include "FingerprintSUBR.h"
 #include "FingerprintTERM.h"
 #include "FingerprintTOYS.h"
 
@@ -59,6 +60,7 @@ FingerprintStrategy::FingerprintStrategy(Field& f, InstructionPointer& i, StackS
 	available[0x5045524C] = new FingerprintPERL(f, i, s);
 	available[0x52454643] = new FingerprintREFC(f, i, s);
 	available[0x524F4D41] = new FingerprintROMA(f, i, s);
+	available[0x53554252] = new FingerprintSUBR(f, i, s);
 	available[0x5445524D] = new FingerprintTERM(f, i, s);
 	available[0x544f5953] = new FingerprintTOYS(f, i, s);
 	
