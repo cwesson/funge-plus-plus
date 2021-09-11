@@ -107,13 +107,13 @@ bool Unefunge93Strategy::execute(inst_t cmd){
 				stack_t num = 0;
 				char c = getchar();
 				if(c == EOF){
-					ip.reverse();
+					ip.reflect();
 					break;
 				}
 				while(c < '0' || c > '9'){
 					c = getchar();
 					if(c == EOF){
-						ip.reverse();
+						ip.reflect();
 						return true;
 					}
 				}
@@ -121,7 +121,7 @@ bool Unefunge93Strategy::execute(inst_t cmd){
 					num = (num*10) + (c-'0');
 					c = getchar();
 					if(c == EOF){
-						ip.reverse();
+						ip.reflect();
 						return true;
 					}
 				}
@@ -131,13 +131,13 @@ bool Unefunge93Strategy::execute(inst_t cmd){
 			case '~':{
 				int q = getchar();
 				if(q == EOF){
-					ip.reverse();
+					ip.reflect();
 					break;
 				}
 				if(q == 13){
 					q = getchar();
 					if(q == EOF){
-						ip.reverse();
+						ip.reflect();
 						break;
 					}
 				}

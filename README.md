@@ -127,6 +127,8 @@ specifying the `-l` command line argument.
 
 `ROMA` [Roman Numerals](https://github.com/catseye/Funge-98/blob/master/library/ROMA.markdown).
 
+`STRN` [String functions](http://www.rcfunge98.com/rcfunge2_manual.html#STRN)
+
 `SUBR` [Subroutine extension](http://www.rcfunge98.com/rcfunge2_manual.html#SUBR)
 
 `TERM` [Terminal extension](http://www.rcfunge98.com/rcfunge2_manual.html#TERM).

@@ -16,7 +16,7 @@ FingerprintNULL::FingerprintNULL(Field& f, InstructionPointer& i, StackStack& s)
 
 bool FingerprintNULL::execute(inst_t cmd){
 	if(cmd >= 'A' && cmd <= 'Z'){
-		ip.reverse();
+		ip.reflect();
 		return true;
 	}
 	return false;

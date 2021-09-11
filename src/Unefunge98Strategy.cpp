@@ -51,13 +51,13 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 			case 'j':{
 				int j = stack.top().pop();
 				if(j < 0){
-					ip.reverse();
+					ip.reflect();
 				}
 				for(int i = 0; i < std::abs(j); i++){
 					ip.next();
 				}
 				if(j < 0){
-					ip.reverse();
+					ip.reflect();
 				}
 			} break;
 			case 'k':{
@@ -94,7 +94,7 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 				exit(r);
 			} break;
 			case 'r':
-				ip.reverse();
+				ip.reflect();
 				break;
 			case 's':{
 				ip.next();
@@ -107,7 +107,7 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 				}else{
 					std::cerr << "Unimplemented instruction " << static_cast<int>(cmd) << " \'" << static_cast<char>(cmd) << "\' at " << ip << "." << std::endl;
 					std::cerr << "Run with -fconcurrent to enable concurrency." << std::endl;
-					ip.reverse();
+					ip.reflect();
 				}
 			} break;
 			
@@ -160,7 +160,7 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 					}
 					stack.pop();
 				}else{
-					ip.reverse();
+					ip.reflect();
 				}
 				
 				if(funge_config.switchmode){
@@ -182,7 +182,7 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 						}
 					}
 				}else{
-					ip.reverse();
+					ip.reflect();
 				}
 			} break;
 			
@@ -194,7 +194,7 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 				}else{
 					std::cerr << "Unimplemented instruction " << static_cast<int>(cmd) << " \'" << static_cast<char>(cmd) << "\' at " << ip << "." << std::endl;
 					std::cerr << "Run with -fexecute to enable execution." << std::endl;
-					ip.reverse();
+					ip.reflect();
 				}
 			} break;
 			
@@ -210,12 +210,12 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 						pushVector(stack.top(), vb);
 						pushVector(stack.top(), va);
 					}else{
-						ip.reverse();
+						ip.reflect();
 					}
 				}else{
 					std::cerr << "Unimplemented instruction " << static_cast<int>(cmd) << " \'" << static_cast<char>(cmd) << "\' at " << ip << "." << std::endl;
 					std::cerr << "Run with -ffilesystem to enable execution." << std::endl;
-					ip.reverse();
+					ip.reflect();
 				}
 			} break;
 			case 'o':{
@@ -230,12 +230,12 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 					if(!file.fail()){
 						field.dump(va, vb, file, !(flags & FILE_OUT_TEXT));
 					}else{
-						ip.reverse();
+						ip.reflect();
 					}
 				}else{
 					std::cerr << "Unimplemented instruction " << static_cast<int>(cmd) << " \'" << static_cast<char>(cmd) << "\' at " << ip << "." << std::endl;
 					std::cerr << "Run with -ffilesystem to enable execution." << std::endl;
-					ip.reverse();
+					ip.reflect();
 				}
 			} break;
 			
@@ -250,12 +250,12 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 						stack.top().push(fingerprint);
 						stack.top().push(1);
 					}else{
-						ip.reverse();
+						ip.reflect();
 					}
 				}else{
 					std::cerr << "Unimplemented instruction " << static_cast<int>(cmd) << " \'" << static_cast<char>(cmd) << "\' at " << ip << "." << std::endl;
 					std::cerr << "Run with -ffingerprint to enable fingerprints." << std::endl;
-					ip.reverse();
+					ip.reflect();
 				}
 				
 				if(funge_config.switchmode){
@@ -270,12 +270,12 @@ bool Unefunge98Strategy::execute(inst_t cmd){
 						fingerprint = (fingerprint << 8) + stack.top().pop();
 					}
 					if(!finger.unload(fingerprint)){
-						ip.reverse();
+						ip.reflect();
 					}
 				}else{
 					std::cerr << "Unimplemented instruction " << static_cast<int>(cmd) << " \'" << static_cast<char>(cmd) << "\' at " << ip << "." << std::endl;
 					std::cerr << "Run with -ffingerprint to enable fingerprints." << std::endl;
-					ip.reverse();
+					ip.reflect();
 				}
 				
 				if(funge_config.switchmode){

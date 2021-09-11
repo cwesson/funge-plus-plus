@@ -22,7 +22,7 @@ bool FingerprintFPRT::execute(inst_t cmd){
 			char str[1024];
 			int ret = snprintf(str, sizeof(str), fmt.c_str(), f);
 			if(ret < 0){
-				ip.reverse();
+				ip.reflect();
 				break;
 			}
 			pushString(stack.top(), std::string(str));
@@ -34,7 +34,7 @@ bool FingerprintFPRT::execute(inst_t cmd){
 			char str[1024];
 			int ret = snprintf(str, sizeof(str), fmt.c_str(), f);
 			if(ret < 0){
-				ip.reverse();
+				ip.reflect();
 				break;
 			}
 			pushString(stack.top(), std::string(str));
@@ -45,7 +45,7 @@ bool FingerprintFPRT::execute(inst_t cmd){
 			char str[1024];
 			int ret = snprintf(str, sizeof(str), fmt.c_str(), i);
 			if(ret < 0){
-				ip.reverse();
+				ip.reflect();
 				break;
 			}
 			pushString(stack.top(), std::string(str));
@@ -58,7 +58,7 @@ bool FingerprintFPRT::execute(inst_t cmd){
 			char str[1024];
 			int ret = snprintf(str, sizeof(str), fmt.c_str(), n);
 			if(ret < 0){
-				ip.reverse();
+				ip.reflect();
 				break;
 			}
 			pushString(stack.top(), std::string(str));
@@ -69,7 +69,7 @@ bool FingerprintFPRT::execute(inst_t cmd){
 			char str[1024];
 			int ret = snprintf(str, sizeof(str), fmt.c_str(), s.c_str());
 			if(ret < 0){
-				ip.reverse();
+				ip.reflect();
 				break;
 			}
 			pushString(stack.top(), std::string(str));

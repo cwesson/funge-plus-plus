@@ -50,7 +50,7 @@ bool FingerprintFRTH::execute(inst_t cmd){
 		case 'P':{
 			stack_t u = stack.top().pop();
 			if(u < 0){
-				ip.reverse();
+				ip.reflect();
 				break;
 			}
 			stack_t x = stack.top().get(u+1);

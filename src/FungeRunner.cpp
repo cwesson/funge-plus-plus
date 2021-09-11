@@ -29,7 +29,7 @@ FungeRunner::FungeRunner(FungeUniverse& uni, const FungeRunner& runner) :
 	stringState(*this, stack, ip),
 	state(&normalState)
 {
-	ip.reverse();
+	ip.reflect();
 	ip.next();
 }
 
@@ -56,7 +56,7 @@ void FungeRunner::tick(){
 		done = execute(i);
 		if(!done && i != ' '){
 			std::cerr << "Unimplemented instruction " << static_cast<int>(i) << " \'" << static_cast<char>(i) << "\' at " << ip << "." << std::endl;
-			ip.reverse();
+			ip.reflect();
 		}
 		ip.next();
 	}

@@ -22,7 +22,7 @@ class InstructionPointer {
 		void setPos(const Vector& v);
 		void setDelta(const Vector& v);
 		void setStorage(const Vector& v);
-		void reverse();
+		void reflect();
 		void left();
 		void right();
 		

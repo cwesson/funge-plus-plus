@@ -22,7 +22,7 @@ bool FingerprintPERL::execute(inst_t cmd){
 				int e = perl(popString(stack.top()));
 				pushString(stack.top(), std::to_string(e));
 			}else{
-				ip.reverse();
+				ip.reflect();
 			}
 		} break;
 		case 'I':{
@@ -30,7 +30,7 @@ bool FingerprintPERL::execute(inst_t cmd){
 				int e = perl(popString(stack.top()));
 				stack.top().push(e);
 			}else{
-				ip.reverse();
+				ip.reflect();
 			}
 		} break;
 		case 'S':{
