@@ -10,8 +10,8 @@
 
 namespace Funge {
 
-FingerprintDBUG::FingerprintDBUG(Field& f, InstructionPointer& i, StackStack& s) :
-	Fingerprint(f, i, s, {'A', 'B', 'D', 'E', 'W'}),
+FingerprintDBUG::FingerprintDBUG(FungeRunner& r) :
+	Fingerprint(r, {'A', 'B', 'D', 'E', 'W'}),
 	dbg(nullptr)
 {}
 

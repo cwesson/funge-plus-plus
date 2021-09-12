@@ -5,13 +5,14 @@
  */
 
 #include "FungeState.h"
+#include "FungeRunner.h"
 
 namespace Funge {
 
-FungeState::FungeState(FungeRunner& r, StackStack& s, InstructionPointer& i) :
+FungeState::FungeState(FungeRunner& r) :
 	runner(r),
-	stack(s),
-	ip(i)
+	stack(r.getStack()),
+	ip(r.getIP())
 {
 	
 }

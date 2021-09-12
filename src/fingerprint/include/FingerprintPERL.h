@@ -13,7 +13,7 @@ namespace Funge {
 
 class FingerprintPERL : public Fingerprint {
 	public:
-		FingerprintPERL(Field& f, InstructionPointer& i, StackStack& s);
+		FingerprintPERL(FungeRunner& r);
 		virtual ~FingerprintPERL() = default;
 		
 		virtual bool execute(inst_t cmd) override;

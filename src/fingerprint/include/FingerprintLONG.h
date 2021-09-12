@@ -13,7 +13,7 @@ namespace Funge {
 
 class FingerprintLONG : public Fingerprint {
 	public:
-		FingerprintLONG(Field& f, InstructionPointer& i, StackStack& s);
+		FingerprintLONG(FungeRunner& r);
 		virtual ~FingerprintLONG() = default;
 		
 		virtual bool execute(inst_t cmd) override;

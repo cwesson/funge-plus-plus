@@ -17,7 +17,7 @@ class FungeRunner;
 
 class FungeStrategy {
 	public:
-		FungeStrategy(Field& f, InstructionPointer& i, StackStack& s, FungeRunner& r, std::initializer_list<inst_t> in);
+		FungeStrategy(FungeRunner& r, std::initializer_list<inst_t> in);
 		virtual ~FungeStrategy() = default;
 		
 		virtual bool execute(inst_t cmd) = 0;
@@ -25,10 +25,10 @@ class FungeStrategy {
 		const std::vector<inst_t>& instructions() const;
 	
 	protected:
+		FungeRunner& runner;
 		Field& field;
 		InstructionPointer& ip;
 		StackStack& stack;
-		FungeRunner& runner;
 		
 		stack_t random(stack_t min, stack_t max);
 	

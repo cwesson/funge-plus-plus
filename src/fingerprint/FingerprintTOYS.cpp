@@ -12,8 +12,8 @@
 
 namespace Funge {
 
-FingerprintTOYS::FingerprintTOYS(Field& f, InstructionPointer& i, StackStack& s) :
-	Fingerprint(f, i, s, {
+FingerprintTOYS::FingerprintTOYS(FungeRunner& r) :
+	Fingerprint(r, {
 			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
 			'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
 	}),

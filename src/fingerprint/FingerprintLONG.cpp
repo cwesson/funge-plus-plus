@@ -8,8 +8,8 @@
 
 namespace Funge {
 
-FingerprintLONG::FingerprintLONG(Field& f, InstructionPointer& i, StackStack& s) :
-	Fingerprint(f, i, s, {'A', 'B', 'D', 'E', 'L', 'M', 'N', 'O', 'P', 'R', 'S', 'Z'})
+FingerprintLONG::FingerprintLONG(FungeRunner& r) :
+	Fingerprint(r, {'A', 'B', 'D', 'E', 'L', 'M', 'N', 'O', 'P', 'R', 'S', 'Z'})
 {}
 
 bool FingerprintLONG::execute(inst_t cmd){

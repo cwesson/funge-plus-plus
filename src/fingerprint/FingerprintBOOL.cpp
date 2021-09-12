@@ -8,8 +8,8 @@
 
 namespace Funge {
 
-FingerprintBOOL::FingerprintBOOL(Field& f, InstructionPointer& i, StackStack& s) :
-	Fingerprint(f, i, s, {'A', 'L', 'N', 'O', 'R', 'X'})
+FingerprintBOOL::FingerprintBOOL(FungeRunner& r) :
+	Fingerprint(r, {'A', 'L', 'N', 'O', 'R', 'X'})
 {}
 
 bool FingerprintBOOL::execute(inst_t cmd){

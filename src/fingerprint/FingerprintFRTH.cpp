@@ -8,8 +8,8 @@
 
 namespace Funge {
 
-FingerprintFRTH::FingerprintFRTH(Field& f, InstructionPointer& i, StackStack& s) :
-	Fingerprint(f, i, s, {'D', 'L', 'O', 'P', 'R'})
+FingerprintFRTH::FingerprintFRTH(FungeRunner& r) :
+	Fingerprint(r, {'D', 'L', 'O', 'P', 'R'})
 {}
 
 bool FingerprintFRTH::execute(inst_t cmd){

@@ -9,8 +9,8 @@
 
 namespace Funge {
 
-FingerprintFIXP::FingerprintFIXP(Field& f, InstructionPointer& i, StackStack& s) :
-	Fingerprint(f, i, s, {'A', 'B', 'C', 'D', 'I', 'J', 'N', 'O', 'P', 'Q',
+FingerprintFIXP::FingerprintFIXP(FungeRunner& r) :
+	Fingerprint(r, {'A', 'B', 'C', 'D', 'I', 'J', 'N', 'O', 'P', 'Q',
 			'R', 'S', 'T', 'U', 'V', 'X'}),
 	rd(),
 	gen(rd())

@@ -14,30 +14,30 @@
 
 namespace Funge {
 
-FungeStateNormal::FungeStateNormal(FungeRunner& r, Field& f, StackStack& s, InstructionPointer& i) :
-	FungeState(r, s, i),
+FungeStateNormal::FungeStateNormal(FungeRunner& r) :
+	FungeState(r),
 	strategies(),
 	semantics()
 {
 	if(funge_config.dimensions >= 1){
 		if(funge_config.standard >= 93){
-			load(new Unefunge93Strategy(f, i, s, r));
+			load(new Unefunge93Strategy(runner));
 		}
 		if(funge_config.standard >= 98){
-			load(new Unefunge98Strategy(f, i, s, r));
+			load(new Unefunge98Strategy(runner));
 		}
 	}
 	if(funge_config.dimensions >= 2){
 		if(funge_config.standard >= 93){
-			load(new Befunge93Strategy(f, i, s, r));
+			load(new Befunge93Strategy(runner));
 		}
 		if(funge_config.standard >= 98){
-			load(new Befunge98Strategy(f, i, s, r));
+			load(new Befunge98Strategy(runner));
 		}
 	}
 	if(funge_config.dimensions >= 3){
 		if(funge_config.standard >= 98){
-			load(new Trefunge98Strategy(f, i, s, r));
+			load(new Trefunge98Strategy(runner));
 		}
 	}
 }

@@ -9,8 +9,8 @@
 
 namespace Funge {
 
-FingerprintJSTR::FingerprintJSTR(Field& f, InstructionPointer& i, StackStack& s) :
-	Fingerprint(f, i, s, {'G', 'P'})
+FingerprintJSTR::FingerprintJSTR(FungeRunner& r) :
+	Fingerprint(r, {'G', 'P'})
 {}
 
 bool FingerprintJSTR::execute(inst_t cmd){

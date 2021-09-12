@@ -9,8 +9,8 @@
 
 namespace Funge {
 
-FingerprintSUBR::FingerprintSUBR(Field& f, InstructionPointer& i, StackStack& s) :
-	Fingerprint(f, i, s, {'A', 'C', 'J', 'O', 'R'}),
+FingerprintSUBR::FingerprintSUBR(FungeRunner& r) :
+	Fingerprint(r, {'A', 'C', 'J', 'O', 'R'}),
 	offset(false)
 {}
 

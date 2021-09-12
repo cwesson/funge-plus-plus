@@ -15,7 +15,7 @@ namespace Funge {
 
 class FungeStateNormal : public FungeState {
 	public:
-		FungeStateNormal(FungeRunner& r, Field& f, StackStack& s, InstructionPointer& i);
+		FungeStateNormal(FungeRunner& r);
 		virtual ~FungeStateNormal();
 		
 		virtual bool execute(inst_t i) override;

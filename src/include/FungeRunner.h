@@ -19,7 +19,7 @@ class FungeState;
 class FungeRunner {
 	public:
 		FungeRunner(FungeUniverse& uni);
-		FungeRunner(FungeUniverse& uni, const FungeRunner& runner);
+		FungeRunner(const FungeRunner& runner);
 		virtual ~FungeRunner();
 		
 		bool isRunning() const;
@@ -33,6 +33,9 @@ class FungeRunner {
 		bool execute(inst_t i);
 		
 		FungeUniverse& getUniverse();
+		Field& getField();
+		StackStack& getStack();
+		InstructionPointer& getIP();
 	
 	private:
 		FungeUniverse& universe;

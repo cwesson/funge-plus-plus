@@ -12,7 +12,7 @@ namespace Funge {
 
 class Befunge98Strategy : public FungeStrategy {
 	public:
-		Befunge98Strategy(Field& f, InstructionPointer& i, StackStack& s, FungeRunner& r);
+		Befunge98Strategy(FungeRunner& r);
 		virtual ~Befunge98Strategy() = default;
 		
 		virtual bool execute(inst_t cmd) override;

@@ -14,7 +14,7 @@ class FungeRunner;
 
 class FungeState {
 	public:
-		FungeState(FungeRunner& r, StackStack& s, InstructionPointer& i);
+		FungeState(FungeRunner& r);
 		virtual ~FungeState() = default;
 		
 		virtual bool execute(inst_t i) = 0;

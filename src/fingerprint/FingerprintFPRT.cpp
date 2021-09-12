@@ -9,8 +9,8 @@
 
 namespace Funge {
 
-FingerprintFPRT::FingerprintFPRT(Field& f, InstructionPointer& i, StackStack& s) :
-	Fingerprint(f, i, s, {'D', 'F', 'I', 'L', 'S'})
+FingerprintFPRT::FingerprintFPRT(FungeRunner& r) :
+	Fingerprint(r, {'D', 'F', 'I', 'L', 'S'})
 {}
 
 bool FingerprintFPRT::execute(inst_t cmd){

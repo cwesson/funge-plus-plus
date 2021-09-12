@@ -14,19 +14,19 @@ FungeRunner::FungeRunner(FungeUniverse& uni) :
 	field(uni.getField()),
 	stack(),
 	ip(uni.getField()),
-	normalState(*this, uni.getField(), stack, ip),
-	stringState(*this, stack, ip),
+	normalState(*this),
+	stringState(*this),
 	state(&normalState)
 {
 }
 
-FungeRunner::FungeRunner(FungeUniverse& uni, const FungeRunner& runner) :
-	universe(uni),
+FungeRunner::FungeRunner(const FungeRunner& runner) :
+	universe(runner.universe),
 	field(runner.field),
 	stack(runner.stack),
 	ip(runner.ip),
-	normalState(*this, universe.getField(), stack, ip),
-	stringState(*this, stack, ip),
+	normalState(*this),
+	stringState(*this),
 	state(&normalState)
 {
 	ip.reflect();
@@ -80,6 +80,18 @@ FungeState& FungeRunner::getStringState(){
 
 FungeUniverse& FungeRunner::getUniverse(){
 	return universe;
+}
+
+Field& FungeRunner::getField(){
+	return field;
+}
+
+StackStack& FungeRunner::getStack(){
+	return stack;
+}
+
+InstructionPointer& FungeRunner::getIP(){
+	return ip;
 }
 
 }

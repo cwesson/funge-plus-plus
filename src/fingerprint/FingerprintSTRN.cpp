@@ -9,8 +9,8 @@
 
 namespace Funge {
 
-FingerprintSTRN::FingerprintSTRN(Field& f, InstructionPointer& i, StackStack& s) :
-	Fingerprint(f, i, s, {'A', 'C', 'D', 'F', 'G', 'I', 'L', 'M', 'N', 'P', 'R', 'S', 'V'})
+FingerprintSTRN::FingerprintSTRN(FungeRunner& r) :
+	Fingerprint(r, {'A', 'C', 'D', 'F', 'G', 'I', 'L', 'M', 'N', 'P', 'R', 'S', 'V'})
 {}
 
 bool FingerprintSTRN::execute(inst_t cmd){

@@ -8,8 +8,8 @@
 
 namespace Funge {
 
-FingerprintCPLI::FingerprintCPLI(Field& f, InstructionPointer& i, StackStack& s) :
-	Fingerprint(f, i, s, {'A', 'D', 'M', 'O', 'S', 'V'})
+FingerprintCPLI::FingerprintCPLI(FungeRunner& r) :
+	Fingerprint(r, {'A', 'D', 'M', 'O', 'S', 'V'})
 {}
 
 bool FingerprintCPLI::execute(inst_t cmd){

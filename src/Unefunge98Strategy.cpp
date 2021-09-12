@@ -16,13 +16,13 @@
 namespace Funge {
 
 
-Unefunge98Strategy::Unefunge98Strategy(Field& f, InstructionPointer& i, StackStack& s, FungeRunner& r) :
-	FungeStrategy(f, i, s, r,
+Unefunge98Strategy::Unefunge98Strategy(FungeRunner& r) :
+	FungeStrategy(r,
 			{'a', 'b', 'c', 'd', 'e', 'f', 'j', 'i', 'k', 'n', 'o', 'q', 'r', 's', 't', 'u', 'x', 'y', 'z',
 			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
 			'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
 			'\'', ';', '{', '}', '=', '(', ')'}),
-	finger(f, i, s, r)
+	finger(r)
 {
 	
 }

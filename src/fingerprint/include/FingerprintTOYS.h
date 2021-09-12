@@ -13,7 +13,7 @@ namespace Funge {
 
 class FingerprintTOYS : public Fingerprint {
 	public:
-		FingerprintTOYS(Field& f, InstructionPointer& i, StackStack& s);
+		FingerprintTOYS(FungeRunner& r);
 		virtual ~FingerprintTOYS() = default;
 		
 		virtual bool execute(inst_t cmd) override;

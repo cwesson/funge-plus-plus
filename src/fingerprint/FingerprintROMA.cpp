@@ -21,8 +21,8 @@ const std::string FingerprintROMA::ones[9] = {
 	"I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"
 };
 
-FingerprintROMA::FingerprintROMA(Field& f, InstructionPointer& i, StackStack& s) :
-	Fingerprint(f, i, s, {'C', 'D', 'I', 'L', 'M', 'P', 'V', 'X'})
+FingerprintROMA::FingerprintROMA(FungeRunner& r) :
+	Fingerprint(r, {'C', 'D', 'I', 'L', 'M', 'P', 'V', 'X'})
 {}
 
 bool FingerprintROMA::execute(inst_t cmd){

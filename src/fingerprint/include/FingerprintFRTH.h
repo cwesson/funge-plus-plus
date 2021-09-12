@@ -12,7 +12,7 @@ namespace Funge {
 
 class FingerprintFRTH : public Fingerprint {
 	public:
-		FingerprintFRTH(Field& f, InstructionPointer& i, StackStack& s);
+		FingerprintFRTH(FungeRunner& r);
 		virtual ~FingerprintFRTH() = default;
 		
 		virtual bool execute(inst_t cmd) override;

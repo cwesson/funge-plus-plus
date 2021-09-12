@@ -16,8 +16,8 @@ template <typename T>
 class FingerprintFloat : public Fingerprint {
 	static_assert(sizeof(T) <= sizeof(stack_t));
 	public:
-		FingerprintFloat(Field& f, InstructionPointer& i, StackStack& s) :
-			Fingerprint(f, i, s, {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I',
+		FingerprintFloat(FungeRunner& r) :
+			Fingerprint(r, {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I',
 					'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'X', 'Y'})
 		{}
 

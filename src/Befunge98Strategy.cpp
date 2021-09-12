@@ -10,8 +10,8 @@
 namespace Funge {
 
 
-Befunge98Strategy::Befunge98Strategy(Field& f, InstructionPointer& i, StackStack& s, FungeRunner& r) :
-	FungeStrategy(f, i, s, r, {'[', ']', 'w'})
+Befunge98Strategy::Befunge98Strategy(FungeRunner& r) :
+	FungeStrategy(r, {'[', ']', 'w'})
 {
 	
 }

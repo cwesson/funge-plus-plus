@@ -11,8 +11,8 @@
 
 namespace Funge {
 
-FingerprintPERL::FingerprintPERL(Field& f, InstructionPointer& i, StackStack& s) :
-	Fingerprint(f, i, s, {'E', 'I', 'S'})
+FingerprintPERL::FingerprintPERL(FungeRunner& r) :
+	Fingerprint(r, {'E', 'I', 'S'})
 {}
 
 bool FingerprintPERL::execute(inst_t cmd){

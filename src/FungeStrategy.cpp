@@ -5,14 +5,15 @@
  */
 
 #include "FungeStrategy.h"
+#include "FungeRunner.h"
 
 namespace Funge {
 
-FungeStrategy::FungeStrategy(Field& f, InstructionPointer& i, StackStack& s, FungeRunner& r, std::initializer_list<inst_t> in) :
-	field(f),
-	ip(i),
-	stack(s),
+FungeStrategy::FungeStrategy(FungeRunner& r, std::initializer_list<inst_t> in) :
 	runner(r),
+	field(r.getField()),
+	ip(r.getIP()),
+	stack(r.getStack()),
 	rd(),
 	gen(rd()),
 	inst(in)

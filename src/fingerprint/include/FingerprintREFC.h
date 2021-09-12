@@ -14,7 +14,7 @@ namespace Funge {
 
 class FingerprintREFC : public Fingerprint {
 	public:
-		FingerprintREFC(Field& f, InstructionPointer& i, StackStack& s);
+		FingerprintREFC(FungeRunner& r);
 		virtual ~FingerprintREFC() = default;
 		
 		virtual bool execute(inst_t cmd) override;

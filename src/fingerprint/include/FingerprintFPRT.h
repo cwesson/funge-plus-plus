@@ -12,7 +12,7 @@ namespace Funge {
 
 class FingerprintFPRT : public Fingerprint {
 	public:
-		FingerprintFPRT(Field& f, InstructionPointer& i, StackStack& s);
+		FingerprintFPRT(FungeRunner& r);
 		virtual ~FingerprintFPRT() = default;
 		
 		virtual bool execute(inst_t cmd) override;

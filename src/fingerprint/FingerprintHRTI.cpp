@@ -9,8 +9,8 @@
 
 namespace Funge {
 
-FingerprintHRTI::FingerprintHRTI(Field& f, InstructionPointer& i, StackStack& s) :
-	Fingerprint(f, i, s, {'E', 'G', 'M', 'S', 'T'})
+FingerprintHRTI::FingerprintHRTI(FungeRunner& r) :
+	Fingerprint(r, {'E', 'G', 'M', 'S', 'T'})
 {}
 
 bool FingerprintHRTI::execute(inst_t cmd){

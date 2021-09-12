@@ -51,8 +51,8 @@ const char FingerprintBASE::base85[85] = {
 	'=', '>', '?', '@', '^', '_', '`', '{', '|', '{', '~'
 };
 
-FingerprintBASE::FingerprintBASE(Field& f, InstructionPointer& i, StackStack& s) :
-	Fingerprint(f, i, s, {'B', 'H', 'I', 'N', 'O'}),
+FingerprintBASE::FingerprintBASE(FungeRunner& r) :
+	Fingerprint(r, {'B', 'H', 'I', 'N', 'O'}),
 	base_map()
 {
 	base_map[36] = &base36[0];

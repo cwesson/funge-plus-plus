@@ -12,7 +12,7 @@ namespace Funge {
 
 class FungeStateString : public FungeState {
 	public:
-		FungeStateString(FungeRunner& r, StackStack& s, InstructionPointer& i);
+		FungeStateString(FungeRunner& r);
 		virtual ~FungeStateString() = default;
 		
 		virtual bool execute(inst_t i) override;

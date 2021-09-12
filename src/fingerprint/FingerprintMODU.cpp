@@ -9,8 +9,8 @@
 
 namespace Funge {
 
-FingerprintMODU::FingerprintMODU(Field& f, InstructionPointer& i, StackStack& s) :
-	Fingerprint(f, i, s, {'M', 'R', 'U'})
+FingerprintMODU::FingerprintMODU(FungeRunner& r) :
+	Fingerprint(r, {'M', 'R', 'U'})
 {}
 
 bool FingerprintMODU::execute(inst_t cmd){
