@@ -378,4 +378,8 @@ void Unefunge98Strategy::pushSysInfo(int num){
 	}
 }
 
+FungeStrategy* Unefunge98Strategy::clone(FungeRunner& r) const{
+	return new Unefunge98Strategy(r);
+}
+
 }

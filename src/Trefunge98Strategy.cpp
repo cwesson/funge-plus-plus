@@ -46,4 +46,8 @@ bool Trefunge98Strategy::execute(inst_t cmd){
 	return true;
 }
 
+FungeStrategy* Trefunge98Strategy::clone(FungeRunner& r) const{
+	return new Trefunge98Strategy(r);
+}
+
 }

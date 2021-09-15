@@ -35,4 +35,8 @@ bool Befunge93Strategy::execute(inst_t cmd){
 	return true;
 }
 
+FungeStrategy* Befunge93Strategy::clone(FungeRunner& r) const{
+	return new Befunge93Strategy(r);
+}
+
 }

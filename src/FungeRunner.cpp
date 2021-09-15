@@ -25,7 +25,7 @@ FungeRunner::FungeRunner(const FungeRunner& runner) :
 	field(runner.field),
 	stack(runner.stack),
 	ip(runner.ip),
-	normalState(*this),
+	normalState(runner.normalState, *this),
 	stringState(*this),
 	state(&normalState)
 {

@@ -203,4 +203,8 @@ bool Unefunge93Strategy::execute(inst_t cmd){
 	return true;
 }
 
+FungeStrategy* Unefunge93Strategy::clone(FungeRunner& r) const{
+	return new Unefunge93Strategy(r);
+}
+
 }

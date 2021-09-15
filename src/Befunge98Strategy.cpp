@@ -47,4 +47,8 @@ bool Befunge98Strategy::execute(inst_t cmd){
 	return true;
 }
 
+FungeStrategy* Befunge98Strategy::clone(FungeRunner& r) const{
+	return new Befunge98Strategy(r);
+}
+
 }

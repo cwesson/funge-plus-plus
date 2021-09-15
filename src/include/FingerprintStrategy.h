@@ -19,6 +19,7 @@ class FingerprintStrategy : public FungeStrategy {
 		virtual ~FingerprintStrategy();
 		
 		virtual bool execute(inst_t cmd) override;
+		virtual FungeStrategy* clone(FungeRunner& r) const override;
 		
 		bool load(uint64_t fingerprint);
 		bool unload(uint64_t fingerprint);

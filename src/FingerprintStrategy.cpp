@@ -119,4 +119,8 @@ bool FingerprintStrategy::unload(uint64_t fingerprint){
 	return false;
 }
 
+FungeStrategy* FingerprintStrategy::clone(FungeRunner& r) const{
+	return new FingerprintStrategy(r);
+}
+
 }

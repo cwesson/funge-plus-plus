@@ -42,6 +42,16 @@ FungeStateNormal::FungeStateNormal(FungeRunner& r) :
 	}
 }
 
+FungeStateNormal::FungeStateNormal(const FungeStateNormal& orig, FungeRunner& r) :
+	FungeState(r),
+	strategies(),
+	semantics()
+{
+	for(auto s : orig.strategies){
+		load(s->clone(runner));
+	}
+}
+
 FungeStateNormal::~FungeStateNormal(){
 	while(strategies.size() > 0){
 		delete strategies.back();
