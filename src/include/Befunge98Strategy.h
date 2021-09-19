@@ -15,7 +15,7 @@ class Befunge98Strategy : public FungeStrategy {
 		Befunge98Strategy(FungeRunner& r);
 		virtual ~Befunge98Strategy() = default;
 		
-		virtual bool execute(inst_t cmd) override;
+		virtual bool operator()(inst_t cmd) override;
 		virtual FungeStrategy* clone(FungeRunner& r) const override;
 };
 

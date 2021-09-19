@@ -76,7 +76,7 @@ bool FungeStateNormal::execute(inst_t i){
 	if(i != ' '){
 		auto found = semantics.find(i);
 		if(found != semantics.cend()){
-			done = found->second.top()->execute(i);
+			done = (*found->second.top())(i);
 		}
 	}
 	return done;

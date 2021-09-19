@@ -16,7 +16,7 @@ Befunge98Strategy::Befunge98Strategy(FungeRunner& r) :
 	
 }
 
-bool Befunge98Strategy::execute(inst_t cmd){
+bool Befunge98Strategy::operator()(inst_t cmd){
 	switch(cmd){
 		case '[':
 			ip.left();

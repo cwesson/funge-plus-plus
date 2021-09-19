@@ -15,7 +15,7 @@ class Trefunge98Strategy : public FungeStrategy {
 		Trefunge98Strategy(FungeRunner& r);
 		virtual ~Trefunge98Strategy() = default;
 		
-		virtual bool execute(inst_t cmd) override;
+		virtual bool operator()(inst_t cmd) override;
 		virtual FungeStrategy* clone(FungeRunner& r) const override;
 };
 

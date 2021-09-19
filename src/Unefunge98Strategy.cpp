@@ -27,11 +27,11 @@ Unefunge98Strategy::Unefunge98Strategy(FungeRunner& r) :
 	
 }
 
-bool Unefunge98Strategy::execute(inst_t cmd){
+bool Unefunge98Strategy::operator()(inst_t cmd){
 	if(cmd >= 'a' && cmd <= 'f'){
 		stack.top().push(cmd-'a'+10);
 	}else if(cmd >= 'A' && cmd <= 'Z'){
-		return finger.execute(cmd);
+		return finger(cmd);
 	}else{
 		switch(cmd){
 			case 'z': break; //No-op

@@ -8,6 +8,7 @@
 
 #include "FungeState.h"
 #include "FungeStrategy.h"
+#include <functional>
 #include <map>
 #include <stack>
 

@@ -15,7 +15,7 @@ class Unefunge93Strategy : public FungeStrategy {
 		Unefunge93Strategy(FungeRunner& r);
 		virtual ~Unefunge93Strategy() = default;
 		
-		virtual bool execute(inst_t cmd) override;
+		virtual bool operator()(inst_t cmd) override;
 		virtual FungeStrategy* clone(FungeRunner& r) const override;
 };
 

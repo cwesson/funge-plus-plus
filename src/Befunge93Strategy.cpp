@@ -15,7 +15,7 @@ Befunge93Strategy::Befunge93Strategy(FungeRunner& r) :
 	
 }
 
-bool Befunge93Strategy::execute(inst_t cmd){
+bool Befunge93Strategy::operator()(inst_t cmd){
 	switch(cmd){
 		case '^':
 			ip.setDelta(Vector{0, -1}); break;

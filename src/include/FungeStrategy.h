@@ -20,7 +20,7 @@ class FungeStrategy {
 		FungeStrategy(FungeRunner& r, std::initializer_list<inst_t> in);
 		virtual ~FungeStrategy() = default;
 		
-		virtual bool execute(inst_t cmd) = 0;
+		virtual bool operator()(inst_t cmd) = 0;
 		virtual FungeStrategy* clone(FungeRunner& r) const = 0;
 		
 		const std::vector<inst_t>& instructions() const;

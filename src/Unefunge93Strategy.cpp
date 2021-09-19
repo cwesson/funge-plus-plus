@@ -22,7 +22,7 @@ Unefunge93Strategy::Unefunge93Strategy(FungeRunner& r) :
 	
 }
 
-bool Unefunge93Strategy::execute(inst_t cmd){
+bool Unefunge93Strategy::operator()(inst_t cmd){
 	if(cmd >= '0' && cmd <= '9'){
 		stack.top().push(cmd-'0');
 	}else{

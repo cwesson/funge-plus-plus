@@ -16,7 +16,7 @@ Trefunge98Strategy::Trefunge98Strategy(FungeRunner& r) :
 	
 }
 
-bool Trefunge98Strategy::execute(inst_t cmd){
+bool Trefunge98Strategy::operator()(inst_t cmd){
 	switch(cmd){
 		case 'h':
 			if(!funge_config.inverthl){

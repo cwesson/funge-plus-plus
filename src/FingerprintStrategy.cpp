@@ -77,7 +77,7 @@ FingerprintStrategy::~FingerprintStrategy(){
 	}
 }
 
-bool FingerprintStrategy::execute(inst_t cmd){
+bool FingerprintStrategy::operator()(inst_t cmd){
 	bool done = false;
 	auto found = loaded.find(cmd);
 	if(found != loaded.cend()){
