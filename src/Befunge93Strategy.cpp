@@ -5,14 +5,17 @@
  */
 
 #include "Befunge93Strategy.h"
+#include "FungeRunner.h"
 
 namespace Funge {
 
 
 Befunge93Strategy::Befunge93Strategy(FungeRunner& r) :
-	FungeStrategy(r, {'^', 'v', '|'})
+	FungeStrategy(r)
 {
-	
+	for(auto i : {'^', 'v', '|'}){
+		r.setSemantic(i, std::bind(&Befunge93Strategy::operator(), this, std::placeholders::_1));
+	}
 }
 
 bool Befunge93Strategy::operator()(inst_t cmd){

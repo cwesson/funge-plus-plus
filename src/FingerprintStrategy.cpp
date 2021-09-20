@@ -34,9 +34,7 @@
 namespace Funge {
 
 FingerprintStrategy::FingerprintStrategy(FungeRunner& r) :
-	FungeStrategy(r,
-			{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-			'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'}),
+	FungeStrategy(r),
 	available(),
 	loaded()
 {
@@ -68,6 +66,11 @@ FingerprintStrategy::FingerprintStrategy(FungeRunner& r) :
 	
 	for(auto fing : funge_config.fingerprints){
 		load(fing);
+	}
+
+	for(auto i : {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+				'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'}){
+		r.setSemantic(i, std::bind(&FingerprintStrategy::operator(), this, std::placeholders::_1));
 	}
 }
 

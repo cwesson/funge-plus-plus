@@ -9,20 +9,15 @@
 
 namespace Funge {
 
-FungeStrategy::FungeStrategy(FungeRunner& r, std::initializer_list<inst_t> in) :
+FungeStrategy::FungeStrategy(FungeRunner& r) :
 	runner(r),
 	field(r.getField()),
 	ip(r.getIP()),
 	stack(r.getStack()),
 	rd(),
-	gen(rd()),
-	inst(in)
+	gen(rd())
 {
 	
-}
-
-const std::vector<inst_t>& FungeStrategy::instructions() const{
-	return inst;
 }
 
 stack_t FungeStrategy::random(stack_t min, stack_t max){

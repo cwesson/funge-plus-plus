@@ -5,15 +5,18 @@
  */
 
 #include "Trefunge98Strategy.h"
+#include "FungeRunner.h"
 #include "FungeConfig.h"
 
 namespace Funge {
 
 
 Trefunge98Strategy::Trefunge98Strategy(FungeRunner& r) :
-	FungeStrategy(r, {'h', 'l', 'm'})
+	FungeStrategy(r)
 {
-	
+	for(auto i : {'h', 'l', 'm'}){
+		r.setSemantic(i, std::bind(&Trefunge98Strategy::operator(), this, std::placeholders::_1));
+	}
 }
 
 bool Trefunge98Strategy::operator()(inst_t cmd){

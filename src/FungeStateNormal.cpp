@@ -61,14 +61,15 @@ FungeStateNormal::~FungeStateNormal(){
 
 bool FungeStateNormal::load(FungeStrategy* strategy){
 	strategies.push_back(strategy);
-	for(auto i : strategy->instructions()){
-		auto exist = semantics.find(i);
-		if(exist == semantics.cend()){
-			semantics[i] = std::stack<FungeStrategy*>();
-		}
-		semantics[i].push(strategy);
-	}
 	return true;
+}
+
+void FungeStateNormal::setSemantic(inst_t i, std::function<bool(inst_t)> func){
+	auto exist = semantics.find(i);
+	if(exist == semantics.cend()){
+		semantics[i] = std::stack<std::function<bool(inst_t)>>();
+	}
+	semantics[i].push(func);
 }
 
 bool FungeStateNormal::execute(inst_t i){
@@ -76,7 +77,7 @@ bool FungeStateNormal::execute(inst_t i){
 	if(i != ' '){
 		auto found = semantics.find(i);
 		if(found != semantics.cend()){
-			done = (*found->second.top())(i);
+			done = found->second.top()(i);
 		}
 	}
 	return done;

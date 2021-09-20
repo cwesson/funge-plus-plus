@@ -14,12 +14,21 @@ namespace Funge {
 
 
 Unefunge93Strategy::Unefunge93Strategy(FungeRunner& r) :
-	FungeStrategy(r,
-			{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '@',
-			'#', '!', '%', '*', '+', '/', '-', '`', ',', '.', '\"',
-			'&', '~', '$', ':', '\\', '<', '>', '?', '_', 'g', 'p'})
+	FungeStrategy(r)
 {
-	
+	for(auto i : {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+				'#', '!', '%', '*', '+', '/', '-', '`', ',', '.', '\"',
+				'&', '~', '$', ':', '\\', '<', '>', '?', '_', 'g', 'p'}){
+		r.setSemantic(i, std::bind(&Unefunge93Strategy::operator(), this, std::placeholders::_1));
+	}
+	r.setSemantic('@', std::bind(&Unefunge93Strategy::instructionStop, *this, std::placeholders::_1));
+}
+
+
+bool Unefunge93Strategy::instructionStop(inst_t i){
+	(void)i;
+	ip.stop();
+	return true;
 }
 
 bool Unefunge93Strategy::operator()(inst_t cmd){
@@ -27,8 +36,6 @@ bool Unefunge93Strategy::operator()(inst_t cmd){
 		stack.top().push(cmd-'0');
 	}else{
 		switch(cmd){
-			case '@':
-				ip.stop(); break;
 			case '#':
 				ip.next(); break;
 			

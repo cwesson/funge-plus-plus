@@ -5,15 +5,18 @@
  */
 
 #include "Befunge98Strategy.h"
+#include "FungeRunner.h"
 #include "FungeConfig.h"
 
 namespace Funge {
 
 
 Befunge98Strategy::Befunge98Strategy(FungeRunner& r) :
-	FungeStrategy(r, {'[', ']', 'w'})
+	FungeStrategy(r)
 {
-	
+	for(auto i : {'[', ']', 'w'}){
+		r.setSemantic(i, std::bind(&Befunge98Strategy::operator(), this, std::placeholders::_1));
+	}
 }
 
 bool Befunge98Strategy::operator()(inst_t cmd){

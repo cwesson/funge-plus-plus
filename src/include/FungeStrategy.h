@@ -9,6 +9,7 @@
 #include "Field.h"
 #include "InstructionPointer.h"
 #include "StackStack.h"
+#include <functional>
 #include <random>
 
 namespace Funge {
@@ -17,13 +18,11 @@ class FungeRunner;
 
 class FungeStrategy {
 	public:
-		FungeStrategy(FungeRunner& r, std::initializer_list<inst_t> in);
+		FungeStrategy(FungeRunner& r);
 		virtual ~FungeStrategy() = default;
 		
 		virtual bool operator()(inst_t cmd) = 0;
 		virtual FungeStrategy* clone(FungeRunner& r) const = 0;
-		
-		const std::vector<inst_t>& instructions() const;
 	
 	protected:
 		FungeRunner& runner;
@@ -36,7 +35,6 @@ class FungeStrategy {
 	private:
 		std::default_random_engine rd;
 		std::mt19937 gen;
-		std::vector<inst_t> inst;
 };
 
 }

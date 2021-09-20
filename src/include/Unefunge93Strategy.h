@@ -17,6 +17,9 @@ class Unefunge93Strategy : public FungeStrategy {
 		
 		virtual bool operator()(inst_t cmd) override;
 		virtual FungeStrategy* clone(FungeRunner& r) const override;
+	
+	private:
+		bool instructionStop(inst_t i);
 };
 
 }

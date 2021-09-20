@@ -17,14 +17,15 @@ namespace Funge {
 
 
 Unefunge98Strategy::Unefunge98Strategy(FungeRunner& r) :
-	FungeStrategy(r,
-			{'a', 'b', 'c', 'd', 'e', 'f', 'j', 'i', 'k', 'n', 'o', 'q', 'r', 's', 't', 'u', 'x', 'y', 'z',
-			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-			'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-			'\'', ';', '{', '}', '=', '(', ')'}),
+	FungeStrategy(r),
 	finger(r)
 {
-	
+	for(auto i : {'a', 'b', 'c', 'd', 'e', 'f', 'j', 'i', 'k', 'n', 'o', 'q', 'r',
+				's', 't', 'u', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G',
+				'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+				'U', 'V', 'W', 'X', 'Y', 'Z', '\'', ';', '{', '}', '=', '(', ')'}){
+		r.setSemantic(i, std::bind(&Unefunge98Strategy::operator(), this, std::placeholders::_1));
+	}
 }
 
 bool Unefunge98Strategy::operator()(inst_t cmd){

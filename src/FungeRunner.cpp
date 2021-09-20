@@ -94,4 +94,8 @@ InstructionPointer& FungeRunner::getIP(){
 	return ip;
 }
 
+void FungeRunner::setSemantic(inst_t i, std::function<bool(inst_t)> func){
+	normalState.setSemantic(i, func);
+}
+
 }
