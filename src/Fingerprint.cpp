@@ -12,6 +12,7 @@
 namespace Funge {
 
 Fingerprint::Fingerprint(FungeRunner& r, std::initializer_list<inst_t> in) :
+	runner(r),
 	field(r.getField()),
 	ip(r.getIP()),
 	stack(r.getStack()),

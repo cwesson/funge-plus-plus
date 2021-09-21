@@ -23,6 +23,7 @@ class Fingerprint {
 		const std::vector<inst_t>& instructions() const;
 	
 	protected:
+		FungeRunner& runner;
 		Field& field;
 		InstructionPointer& ip;
 		StackStack& stack;

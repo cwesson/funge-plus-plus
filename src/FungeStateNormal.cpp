@@ -72,12 +72,21 @@ void FungeStateNormal::setSemantic(inst_t i, std::function<bool(inst_t)> func){
 	semantics[i].push(func);
 }
 
+void FungeStateNormal::popSemantic(inst_t i){
+	auto exist = semantics.find(i);
+	if(exist != semantics.cend()){
+		semantics[i].pop();
+	}
+}
+
 bool FungeStateNormal::execute(inst_t i){
 	bool done = false;
 	if(i != ' '){
 		auto found = semantics.find(i);
 		if(found != semantics.cend()){
-			done = found->second.top()(i);
+			if(found->second.size() > 0){
+				done = found->second.top()(i);
+			}
 		}
 	}
 	return done;

@@ -15,11 +15,9 @@ FingerprintNULL::FingerprintNULL(FungeRunner& r) :
 {}
 
 bool FingerprintNULL::execute(inst_t cmd){
-	if(cmd >= 'A' && cmd <= 'Z'){
-		ip.reflect();
-		return true;
-	}
-	return false;
+	(void)cmd;
+	ip.reflect();
+	return true;
 }
 
 }

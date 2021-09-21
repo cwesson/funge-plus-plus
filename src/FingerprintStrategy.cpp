@@ -67,11 +67,6 @@ FingerprintStrategy::FingerprintStrategy(FungeRunner& r) :
 	for(auto fing : funge_config.fingerprints){
 		load(fing);
 	}
-
-	for(auto i : {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-				'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'}){
-		r.setSemantic(i, std::bind(&FingerprintStrategy::operator(), this, std::placeholders::_1));
-	}
 }
 
 FingerprintStrategy::~FingerprintStrategy(){
@@ -80,26 +75,16 @@ FingerprintStrategy::~FingerprintStrategy(){
 	}
 }
 
-bool FingerprintStrategy::operator()(inst_t cmd){
-	bool done = false;
-	auto found = loaded.find(cmd);
-	if(found != loaded.cend()){
-		if(found->second.size() > 0){
-			done = found->second.top()->execute(cmd);
-		}
-	}
-	return done;
+bool FingerprintStrategy::execute(Fingerprint* fing, inst_t i, inst_t cmd){
+	(void)cmd;
+	return fing->execute(i);
 }
 
 bool FingerprintStrategy::load(uint64_t fingerprint){
 	auto found = available.find(fingerprint);
 	if(found != available.cend()){
 		for(auto i : found->second->instructions()){
-			auto exist = loaded.find(i);
-			if(exist == loaded.cend()){
-				loaded[i] = std::stack<Fingerprint*>();
-			}
-			loaded[i].push(found->second);
+			runner.setSemantic(i, std::bind(&FingerprintStrategy::execute, this, found->second, i, std::placeholders::_1));
 		}
 		found->second->activate();
 		//std::cout << "Loaded 0x" << std::hex << fingerprint << std::dec << std::endl;
@@ -112,10 +97,7 @@ bool FingerprintStrategy::unload(uint64_t fingerprint){
 	auto found = available.find(fingerprint);
 	if(found != available.cend()){
 		for(auto i : found->second->instructions()){
-			auto exist = loaded.find(i);
-			if(exist != loaded.cend()){
-				exist->second.pop();
-			}
+			runner.popSemantic(i);
 		}
 		return true;
 	}
