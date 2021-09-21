@@ -21,7 +21,6 @@ class FungeStrategy {
 		FungeStrategy(FungeRunner& r);
 		virtual ~FungeStrategy() = default;
 		
-		virtual bool operator()(inst_t cmd) = 0;
 		virtual FungeStrategy* clone(FungeRunner& r) const = 0;
 	
 	protected:

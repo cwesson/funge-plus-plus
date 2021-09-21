@@ -13,27 +13,29 @@ namespace Funge {
 Befunge93Strategy::Befunge93Strategy(FungeRunner& r) :
 	FungeStrategy(r)
 {
-	for(auto i : {'^', 'v', '|'}){
-		r.setSemantic(i, std::bind(&Befunge93Strategy::operator(), this, std::placeholders::_1));
-	}
+	r.setSemantic('^', std::bind(&Befunge93Strategy::instructionNorth, this, std::placeholders::_1));
+	r.setSemantic('v', std::bind(&Befunge93Strategy::instructionSouth, this, std::placeholders::_1));
+	r.setSemantic('|', std::bind(&Befunge93Strategy::instructionIf, this, std::placeholders::_1));
 }
 
-bool Befunge93Strategy::operator()(inst_t cmd){
-	switch(cmd){
-		case '^':
-			ip.setDelta(Vector{0, -1}); break;
-		case 'v':
-			ip.setDelta(Vector{0, 1}); break;
-		case '|':
-			if(stack.top().pop() == 0){
-				ip.setDelta(Vector{0, 1});
-			}else{
-				ip.setDelta(Vector{0, -1});
-			}
-			break;
+bool Befunge93Strategy::instructionNorth(inst_t i){
+	(void)i;
+	ip.setDelta(Vector{0, -1});
+	return true;
+}
 
-		default:
-			return false;
+bool Befunge93Strategy::instructionSouth(inst_t i){
+	(void)i;
+	ip.setDelta(Vector{0, 1});
+	return true;
+}
+
+bool Befunge93Strategy::instructionIf(inst_t i){
+	(void)i;
+	if(stack.top().pop() == 0){
+		ip.setDelta(Vector{0, 1});
+	}else{
+		ip.setDelta(Vector{0, -1});
 	}
 	return true;
 }

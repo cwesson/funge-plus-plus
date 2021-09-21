@@ -14,38 +14,37 @@ namespace Funge {
 Befunge98Strategy::Befunge98Strategy(FungeRunner& r) :
 	FungeStrategy(r)
 {
-	for(auto i : {'[', ']', 'w'}){
-		r.setSemantic(i, std::bind(&Befunge98Strategy::operator(), this, std::placeholders::_1));
-	}
+	r.setSemantic('[', std::bind(&Befunge98Strategy::instructionLeft, this, std::placeholders::_1));
+	r.setSemantic(']', std::bind(&Befunge98Strategy::instructionRight, this, std::placeholders::_1));
+	r.setSemantic('w', std::bind(&Befunge98Strategy::instructionCompare, this, std::placeholders::_1));
 }
 
-bool Befunge98Strategy::operator()(inst_t cmd){
-	switch(cmd){
-		case '[':
-			ip.left();
-			if(funge_config.switchmode){
-				ip.set(']');
-			}
-			break;
-		case ']':
-			ip.right();
-			if(funge_config.switchmode){
-				ip.set('[');
-			}
-			break;
-		
-		case 'w':{
-			stack_t b = stack.top().pop();
-			stack_t a = stack.top().pop();
-			if(a < b){
-				ip.left();
-			}else if(a > b){
-				ip.right();
-			}
-		} break;
-		
-		default:
-			return false;
+bool Befunge98Strategy::instructionLeft(inst_t i){
+	(void)i;
+	ip.left();
+	if(funge_config.switchmode){
+		ip.set(']');
+	}
+	return true;
+}
+
+bool Befunge98Strategy::instructionRight(inst_t i){
+	(void)i;
+	ip.right();
+	if(funge_config.switchmode){
+		ip.set('[');
+	}
+	return true;
+}
+
+bool Befunge98Strategy::instructionCompare(inst_t i){
+	(void)i;
+	stack_t b = stack.top().pop();
+	stack_t a = stack.top().pop();
+	if(a < b){
+		ip.left();
+	}else if(a > b){
+		ip.right();
 	}
 	return true;
 }

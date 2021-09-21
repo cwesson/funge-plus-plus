@@ -15,8 +15,12 @@ class Befunge98Strategy : public FungeStrategy {
 		Befunge98Strategy(FungeRunner& r);
 		virtual ~Befunge98Strategy() = default;
 		
-		virtual bool operator()(inst_t cmd) override;
 		virtual FungeStrategy* clone(FungeRunner& r) const override;
+
+	private:
+		bool instructionLeft(inst_t i);
+		bool instructionRight(inst_t i);
+		bool instructionCompare(inst_t i);
 };
 
 }
