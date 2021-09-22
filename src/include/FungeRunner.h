@@ -37,7 +37,7 @@ class FungeRunner {
 		StackStack& getStack();
 		InstructionPointer& getIP();
 
-		void setSemantic(inst_t i, std::function<bool(inst_t)> func);
+		void setSemantic(inst_t i, std::function<bool()> func);
 		void popSemantic(inst_t i);
 	
 	private:

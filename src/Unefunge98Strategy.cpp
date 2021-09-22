@@ -20,58 +20,54 @@ Unefunge98Strategy::Unefunge98Strategy(FungeRunner& r) :
 	FungeStrategy(r),
 	finger(r)
 {
-	r.setSemantic('a', std::bind(&Unefunge98Strategy::instructionPush, this, std::placeholders::_1, 0xA));
-	r.setSemantic('b', std::bind(&Unefunge98Strategy::instructionPush, this, std::placeholders::_1, 0xB));
-	r.setSemantic('c', std::bind(&Unefunge98Strategy::instructionPush, this, std::placeholders::_1, 0xC));
-	r.setSemantic('d', std::bind(&Unefunge98Strategy::instructionPush, this, std::placeholders::_1, 0xD));
-	r.setSemantic('e', std::bind(&Unefunge98Strategy::instructionPush, this, std::placeholders::_1, 0xE));
-	r.setSemantic('f', std::bind(&Unefunge98Strategy::instructionPush, this, std::placeholders::_1, 0xF));
-	r.setSemantic('y', std::bind(&Unefunge98Strategy::instructionSysInfo, this, std::placeholders::_1));
-	r.setSemantic('z', std::bind(&Unefunge98Strategy::instructionNoop, this, std::placeholders::_1));
+	r.setSemantic('a', std::bind(&Unefunge98Strategy::instructionPush, this, 0xA));
+	r.setSemantic('b', std::bind(&Unefunge98Strategy::instructionPush, this, 0xB));
+	r.setSemantic('c', std::bind(&Unefunge98Strategy::instructionPush, this, 0xC));
+	r.setSemantic('d', std::bind(&Unefunge98Strategy::instructionPush, this, 0xD));
+	r.setSemantic('e', std::bind(&Unefunge98Strategy::instructionPush, this, 0xE));
+	r.setSemantic('f', std::bind(&Unefunge98Strategy::instructionPush, this, 0xF));
+	r.setSemantic('y', std::bind(&Unefunge98Strategy::instructionSysInfo, this));
+	r.setSemantic('z', std::bind(&Unefunge98Strategy::instructionNoop, this));
 	// Flow Control
-	r.setSemantic(';', std::bind(&Unefunge98Strategy::instructionJumpOver, this, std::placeholders::_1));
-	r.setSemantic('j', std::bind(&Unefunge98Strategy::instructionJumpForward, this, std::placeholders::_1));
-	r.setSemantic('r', std::bind(&Unefunge98Strategy::instructionReflect, this, std::placeholders::_1));
-	r.setSemantic('x', std::bind(&Unefunge98Strategy::instructionAbsolute, this, std::placeholders::_1));
-	r.setSemantic('k', std::bind(&Unefunge98Strategy::instructionIterate, this, std::placeholders::_1));
-	r.setSemantic('q', std::bind(&Unefunge98Strategy::instructionQuit, this, std::placeholders::_1));
-	r.setSemantic('t', std::bind(&Unefunge98Strategy::instructionThread, this, std::placeholders::_1));
+	r.setSemantic(';', std::bind(&Unefunge98Strategy::instructionJumpOver, this));
+	r.setSemantic('j', std::bind(&Unefunge98Strategy::instructionJumpForward, this));
+	r.setSemantic('r', std::bind(&Unefunge98Strategy::instructionReflect, this));
+	r.setSemantic('x', std::bind(&Unefunge98Strategy::instructionAbsolute, this));
+	r.setSemantic('k', std::bind(&Unefunge98Strategy::instructionIterate, this));
+	r.setSemantic('q', std::bind(&Unefunge98Strategy::instructionQuit, this));
+	r.setSemantic('t', std::bind(&Unefunge98Strategy::instructionThread, this));
 	// Stack Operations
-	r.setSemantic('n', std::bind(&Unefunge98Strategy::instructionClear, this, std::placeholders::_1));
-	r.setSemantic('u', std::bind(&Unefunge98Strategy::instructionUnder, this, std::placeholders::_1));
-	r.setSemantic('{', std::bind(&Unefunge98Strategy::instructionBegin, this, std::placeholders::_1));
-	r.setSemantic('}', std::bind(&Unefunge98Strategy::instructionEnd, this, std::placeholders::_1));
+	r.setSemantic('n', std::bind(&Unefunge98Strategy::instructionClear, this));
+	r.setSemantic('u', std::bind(&Unefunge98Strategy::instructionUnder, this));
+	r.setSemantic('{', std::bind(&Unefunge98Strategy::instructionBegin, this));
+	r.setSemantic('}', std::bind(&Unefunge98Strategy::instructionEnd, this));
 	// I/O
-	r.setSemantic('i', std::bind(&Unefunge98Strategy::instructionFileIn, this, std::placeholders::_1));
-	r.setSemantic('o', std::bind(&Unefunge98Strategy::instructionFileOut, this, std::placeholders::_1));
-	r.setSemantic('=', std::bind(&Unefunge98Strategy::instructionExecute, this, std::placeholders::_1));
+	r.setSemantic('i', std::bind(&Unefunge98Strategy::instructionFileIn, this));
+	r.setSemantic('o', std::bind(&Unefunge98Strategy::instructionFileOut, this));
+	r.setSemantic('=', std::bind(&Unefunge98Strategy::instructionExecute, this));
 	// Self-Modifying
-	r.setSemantic('\'', std::bind(&Unefunge98Strategy::instructionFetch, this, std::placeholders::_1));
-	r.setSemantic('s', std::bind(&Unefunge98Strategy::instructionStore, this, std::placeholders::_1));
+	r.setSemantic('\'', std::bind(&Unefunge98Strategy::instructionFetch, this));
+	r.setSemantic('s', std::bind(&Unefunge98Strategy::instructionStore, this));
 	// Fingerprints
-	r.setSemantic('(', std::bind(&Unefunge98Strategy::instructionLoad, this, std::placeholders::_1));
-	r.setSemantic(')', std::bind(&Unefunge98Strategy::instructionUnload, this, std::placeholders::_1));
+	r.setSemantic('(', std::bind(&Unefunge98Strategy::instructionLoad, this));
+	r.setSemantic(')', std::bind(&Unefunge98Strategy::instructionUnload, this));
 }
 
-bool Unefunge98Strategy::instructionPush(inst_t i, int n){
-	(void)i;
+bool Unefunge98Strategy::instructionPush(int n){
 	stack.top().push(n);
 	return true;
 }
 
-bool Unefunge98Strategy::instructionSysInfo(inst_t i){
-	(void)i;
+bool Unefunge98Strategy::instructionSysInfo(){
 	pushSysInfo(stack.top().pop());
 	return true;
 }
 
-bool Unefunge98Strategy::instructionNoop(inst_t i){
-	(void)i;
+bool Unefunge98Strategy::instructionNoop(){
 	return true;
 }
 
-bool Unefunge98Strategy::instructionJumpOver(inst_t i){
-	(void)i;
+bool Unefunge98Strategy::instructionJumpOver(){
 	do{
 		ip.next();
 	}while(ip.get() != ';');
@@ -82,8 +78,7 @@ bool Unefunge98Strategy::instructionJumpOver(inst_t i){
 	return true;
 }
 
-bool Unefunge98Strategy::instructionJumpForward(inst_t i){
-	(void)i;
+bool Unefunge98Strategy::instructionJumpForward(){
 	int j = stack.top().pop();
 	if(j < 0){
 		ip.reflect();
@@ -97,21 +92,18 @@ bool Unefunge98Strategy::instructionJumpForward(inst_t i){
 	return true;
 }
 
-bool Unefunge98Strategy::instructionReflect(inst_t i){
-	(void)i;
+bool Unefunge98Strategy::instructionReflect(){
 	ip.reflect();
 	return true;
 }
 
-bool Unefunge98Strategy::instructionAbsolute(inst_t i){
-	(void)i;
+bool Unefunge98Strategy::instructionAbsolute(){
 	Vector v = popVector(stack.top());
 	ip.setDelta(v);
 	return true;
 }
 
-bool Unefunge98Strategy::instructionIterate(inst_t i){
-	(void)i;
+bool Unefunge98Strategy::instructionIterate(){
 	Vector v = ip.getPos();
 	ip.next();
 	char c = field.get(ip.getPos());
@@ -139,33 +131,29 @@ bool Unefunge98Strategy::instructionIterate(inst_t i){
 	return true;
 }
 
-bool Unefunge98Strategy::instructionQuit(inst_t i){
-	(void)i;
+bool Unefunge98Strategy::instructionQuit(){
 	int r = stack.top().pop();
 	exit(r);
 	// Unreachable
 	return true;
 }
 
-bool Unefunge98Strategy::instructionThread(inst_t i){
+bool Unefunge98Strategy::instructionThread(){
 	if(funge_config.concurrent){
 		runner.getUniverse().cloneRunner(runner);
 	}else{
-		std::cerr << "Unimplemented instruction " << static_cast<int>(i) << " \'" << static_cast<char>(i) << "\' at " << ip << "." << std::endl;
 		std::cerr << "Run with -fconcurrent to enable concurrency." << std::endl;
-		ip.reflect();
+		return false;
 	}
 	return true;
 }
 
-bool Unefunge98Strategy::instructionClear(inst_t i){
-	(void)i;
+bool Unefunge98Strategy::instructionClear(){
 	stack.top().clear();
 	return true;
 }
 
-bool Unefunge98Strategy::instructionUnder(inst_t i){
-	(void)i;
+bool Unefunge98Strategy::instructionUnder(){
 	if(stack.size() > 1){
 		const stack_t n = stack.top().pop();
 		if(n > 0){
@@ -185,8 +173,7 @@ bool Unefunge98Strategy::instructionUnder(inst_t i){
 	return true;
 }
 
-bool Unefunge98Strategy::instructionBegin(inst_t i){
-	(void)i;
+bool Unefunge98Strategy::instructionBegin(){
 	const stack_t n = stack.top().pop();
 	stack.push();
 	if(n > 0){
@@ -212,8 +199,7 @@ bool Unefunge98Strategy::instructionBegin(inst_t i){
 	return true;
 }
 
-bool Unefunge98Strategy::instructionEnd(inst_t i){
-	(void)i;
+bool Unefunge98Strategy::instructionEnd(){
 	if(stack.size() > 1){
 		const stack_t n = stack.top().pop();
 		Vector v = popVector(stack.second());
@@ -242,7 +228,7 @@ bool Unefunge98Strategy::instructionEnd(inst_t i){
 	return true;
 }
 
-bool Unefunge98Strategy::instructionFileIn(inst_t i){
+bool Unefunge98Strategy::instructionFileIn(){
 	if(funge_config.filesystem){
 		std::string filepath = popString(stack.top());
 		stack_t flags = stack.top().pop();
@@ -257,14 +243,13 @@ bool Unefunge98Strategy::instructionFileIn(inst_t i){
 			ip.reflect();
 		}
 	}else{
-		std::cerr << "Unimplemented instruction " << static_cast<int>(i) << " \'" << static_cast<char>(i) << "\' at " << ip << "." << std::endl;
 		std::cerr << "Run with -ffilesystem to enable execution." << std::endl;
-		ip.reflect();
+		return false;
 	}
 	return true;
 }
 
-bool Unefunge98Strategy::instructionFileOut(inst_t i){
+bool Unefunge98Strategy::instructionFileOut(){
 	if(funge_config.filesystem){
 		std::string filepath = popString(stack.top());
 		stack_t flags = stack.top().pop();
@@ -279,41 +264,37 @@ bool Unefunge98Strategy::instructionFileOut(inst_t i){
 			ip.reflect();
 		}
 	}else{
-		std::cerr << "Unimplemented instruction " << static_cast<int>(i) << " \'" << static_cast<char>(i) << "\' at " << ip << "." << std::endl;
 		std::cerr << "Run with -ffilesystem to enable execution." << std::endl;
-		ip.reflect();
+		return false;
 	}
 	return true;
 }
 
-bool Unefunge98Strategy::instructionExecute(inst_t i){
+bool Unefunge98Strategy::instructionExecute(){
 	if(funge_config.execute){
 		std::string sys = popString(stack.top());
 		int code = system(sys.c_str());
 		stack.top().push(code);
 	}else{
-		std::cerr << "Unimplemented instruction " << static_cast<int>(i) << " \'" << static_cast<char>(i) << "\' at " << ip << "." << std::endl;
 		std::cerr << "Run with -fexecute to enable execution." << std::endl;
-		ip.reflect();
+		return false;
 	}
 	return true;
 }
 
-bool Unefunge98Strategy::instructionFetch(inst_t i){
-	(void)i;
+bool Unefunge98Strategy::instructionFetch(){
 	ip.next();
 	stack.top().push((int)ip.get());
 	return true;
 }
 
-bool Unefunge98Strategy::instructionStore(inst_t i){
-	(void)i;
+bool Unefunge98Strategy::instructionStore(){
 	ip.next();
 	ip.set((char)(int)stack.top().pop());
 	return true;
 }
 
-bool Unefunge98Strategy::instructionLoad(inst_t i){
+bool Unefunge98Strategy::instructionLoad(){
 	if(funge_config.fingerprint){
 		const stack_t count = stack.top().pop();
 		uint64_t fingerprint = 0;
@@ -327,9 +308,8 @@ bool Unefunge98Strategy::instructionLoad(inst_t i){
 			ip.reflect();
 		}
 	}else{
-		std::cerr << "Unimplemented instruction " << static_cast<int>(i) << " \'" << static_cast<char>(i) << "\' at " << ip << "." << std::endl;
 		std::cerr << "Run with -ffingerprint to enable fingerprints." << std::endl;
-		ip.reflect();
+		return false;
 	}
 	
 	if(funge_config.switchmode){
@@ -338,7 +318,7 @@ bool Unefunge98Strategy::instructionLoad(inst_t i){
 	return true;
 }
 
-bool Unefunge98Strategy::instructionUnload(inst_t i){
+bool Unefunge98Strategy::instructionUnload(){
 	if(funge_config.fingerprint){
 		const stack_t count = stack.top().pop();
 		uint64_t fingerprint = 0;
@@ -349,9 +329,8 @@ bool Unefunge98Strategy::instructionUnload(inst_t i){
 			ip.reflect();
 		}
 	}else{
-		std::cerr << "Unimplemented instruction " << static_cast<int>(i) << " \'" << static_cast<char>(i) << "\' at " << ip << "." << std::endl;
 		std::cerr << "Run with -ffingerprint to enable fingerprints." << std::endl;
-		ip.reflect();
+		return false;
 	}
 	
 	if(funge_config.switchmode){

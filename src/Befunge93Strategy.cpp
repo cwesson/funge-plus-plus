@@ -13,25 +13,22 @@ namespace Funge {
 Befunge93Strategy::Befunge93Strategy(FungeRunner& r) :
 	FungeStrategy(r)
 {
-	r.setSemantic('^', std::bind(&Befunge93Strategy::instructionNorth, this, std::placeholders::_1));
-	r.setSemantic('v', std::bind(&Befunge93Strategy::instructionSouth, this, std::placeholders::_1));
-	r.setSemantic('|', std::bind(&Befunge93Strategy::instructionIf, this, std::placeholders::_1));
+	r.setSemantic('^', std::bind(&Befunge93Strategy::instructionNorth, this));
+	r.setSemantic('v', std::bind(&Befunge93Strategy::instructionSouth, this));
+	r.setSemantic('|', std::bind(&Befunge93Strategy::instructionIf, this));
 }
 
-bool Befunge93Strategy::instructionNorth(inst_t i){
-	(void)i;
+bool Befunge93Strategy::instructionNorth(){
 	ip.setDelta(Vector{0, -1});
 	return true;
 }
 
-bool Befunge93Strategy::instructionSouth(inst_t i){
-	(void)i;
+bool Befunge93Strategy::instructionSouth(){
 	ip.setDelta(Vector{0, 1});
 	return true;
 }
 
-bool Befunge93Strategy::instructionIf(inst_t i){
-	(void)i;
+bool Befunge93Strategy::instructionIf(){
 	if(stack.top().pop() == 0){
 		ip.setDelta(Vector{0, 1});
 	}else{

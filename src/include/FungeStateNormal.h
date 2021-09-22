@@ -22,7 +22,7 @@ class FungeStateNormal : public FungeState {
 		
 		virtual bool execute(inst_t i) override;
 
-		void setSemantic(inst_t i, std::function<bool(inst_t)> func);
+		void setSemantic(inst_t i, std::function<bool()> func);
 		void popSemantic(inst_t i);
 		
 		FungeStateNormal& operator=(const FungeStateNormal&) = delete;
@@ -30,7 +30,7 @@ class FungeStateNormal : public FungeState {
 	
 	protected:
 		std::vector<FungeStrategy*> strategies;
-		std::map<inst_t, std::stack<std::function<bool(inst_t)>>> semantics;
+		std::map<inst_t, std::stack<std::function<bool()>>> semantics;
 		
 		bool load(FungeStrategy* strategy);
 };

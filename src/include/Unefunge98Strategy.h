@@ -19,32 +19,32 @@ class Unefunge98Strategy : public FungeStrategy {
 		virtual FungeStrategy* clone(FungeRunner& r) const override;
 	
 	private:
-		bool instructionPush(inst_t i, int n);
-		bool instructionSysInfo(inst_t i);
-		bool instructionNoop(inst_t i);
+		bool instructionPush(int n);
+		bool instructionSysInfo();
+		bool instructionNoop();
 		// Flow Control
-		bool instructionJumpOver(inst_t i);
-		bool instructionJumpForward(inst_t i);
-		bool instructionReflect(inst_t i);
-		bool instructionAbsolute(inst_t i);
-		bool instructionIterate(inst_t i);
-		bool instructionQuit(inst_t i);
-		bool instructionThread(inst_t i);
+		bool instructionJumpOver();
+		bool instructionJumpForward();
+		bool instructionReflect();
+		bool instructionAbsolute();
+		bool instructionIterate();
+		bool instructionQuit();
+		bool instructionThread();
 		// Stack Operations
-		bool instructionClear(inst_t i);
-		bool instructionUnder(inst_t i);
-		bool instructionBegin(inst_t i);
-		bool instructionEnd(inst_t i);
+		bool instructionClear();
+		bool instructionUnder();
+		bool instructionBegin();
+		bool instructionEnd();
 		// I/O
-		bool instructionFileIn(inst_t i);
-		bool instructionFileOut(inst_t i);
-		bool instructionExecute(inst_t i);
+		bool instructionFileIn();
+		bool instructionFileOut();
+		bool instructionExecute();
 		// Self-Modifying
-		bool instructionFetch(inst_t i);
-		bool instructionStore(inst_t i);
+		bool instructionFetch();
+		bool instructionStore();
 		// Fingerprints
-		bool instructionLoad(inst_t i);
-		bool instructionUnload(inst_t i);
+		bool instructionLoad();
+		bool instructionUnload();
 
 		void pushSysInfo(int num);
 		FingerprintStrategy finger;

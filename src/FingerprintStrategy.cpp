@@ -75,8 +75,7 @@ FingerprintStrategy::~FingerprintStrategy(){
 	}
 }
 
-bool FingerprintStrategy::execute(Fingerprint* fing, inst_t i, inst_t cmd){
-	(void)cmd;
+bool FingerprintStrategy::execute(Fingerprint* fing, inst_t i){
 	return fing->execute(i);
 }
 
@@ -84,7 +83,7 @@ bool FingerprintStrategy::load(uint64_t fingerprint){
 	auto found = available.find(fingerprint);
 	if(found != available.cend()){
 		for(auto i : found->second->instructions()){
-			runner.setSemantic(i, std::bind(&FingerprintStrategy::execute, this, found->second, i, std::placeholders::_1));
+			runner.setSemantic(i, std::bind(&FingerprintStrategy::execute, this, found->second, i));
 		}
 		found->second->activate();
 		//std::cout << "Loaded 0x" << std::hex << fingerprint << std::dec << std::endl;

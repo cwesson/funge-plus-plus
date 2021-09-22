@@ -16,79 +16,73 @@ namespace Funge {
 Unefunge93Strategy::Unefunge93Strategy(FungeRunner& r) :
 	FungeStrategy(r)
 {
-	r.setSemantic('0', std::bind(&Unefunge93Strategy::instructionPush, this, std::placeholders::_1, 0));
-	r.setSemantic('1', std::bind(&Unefunge93Strategy::instructionPush, this, std::placeholders::_1, 1));
-	r.setSemantic('2', std::bind(&Unefunge93Strategy::instructionPush, this, std::placeholders::_1, 2));
-	r.setSemantic('3', std::bind(&Unefunge93Strategy::instructionPush, this, std::placeholders::_1, 3));
-	r.setSemantic('4', std::bind(&Unefunge93Strategy::instructionPush, this, std::placeholders::_1, 4));
-	r.setSemantic('5', std::bind(&Unefunge93Strategy::instructionPush, this, std::placeholders::_1, 5));
-	r.setSemantic('6', std::bind(&Unefunge93Strategy::instructionPush, this, std::placeholders::_1, 6));
-	r.setSemantic('7', std::bind(&Unefunge93Strategy::instructionPush, this, std::placeholders::_1, 7));
-	r.setSemantic('8', std::bind(&Unefunge93Strategy::instructionPush, this, std::placeholders::_1, 8));
-	r.setSemantic('9', std::bind(&Unefunge93Strategy::instructionPush, this, std::placeholders::_1, 9));
+	r.setSemantic('0', std::bind(&Unefunge93Strategy::instructionPush, this, 0));
+	r.setSemantic('1', std::bind(&Unefunge93Strategy::instructionPush, this, 1));
+	r.setSemantic('2', std::bind(&Unefunge93Strategy::instructionPush, this, 2));
+	r.setSemantic('3', std::bind(&Unefunge93Strategy::instructionPush, this, 3));
+	r.setSemantic('4', std::bind(&Unefunge93Strategy::instructionPush, this, 4));
+	r.setSemantic('5', std::bind(&Unefunge93Strategy::instructionPush, this, 5));
+	r.setSemantic('6', std::bind(&Unefunge93Strategy::instructionPush, this, 6));
+	r.setSemantic('7', std::bind(&Unefunge93Strategy::instructionPush, this, 7));
+	r.setSemantic('8', std::bind(&Unefunge93Strategy::instructionPush, this, 8));
+	r.setSemantic('9', std::bind(&Unefunge93Strategy::instructionPush, this, 9));
 	// Flow Control
-	r.setSemantic('<', std::bind(&Unefunge93Strategy::instructionWest, this, std::placeholders::_1));
-	r.setSemantic('>', std::bind(&Unefunge93Strategy::instructionEast, this, std::placeholders::_1));
-	r.setSemantic('@', std::bind(&Unefunge93Strategy::instructionStop, this, std::placeholders::_1));
-	r.setSemantic('#', std::bind(&Unefunge93Strategy::instructionTrampoline, this, std::placeholders::_1));
-	r.setSemantic('_', std::bind(&Unefunge93Strategy::instructionIf, this, std::placeholders::_1));
-	r.setSemantic('?', std::bind(&Unefunge93Strategy::instructionGoAway, this, std::placeholders::_1));
+	r.setSemantic('<', std::bind(&Unefunge93Strategy::instructionWest, this));
+	r.setSemantic('>', std::bind(&Unefunge93Strategy::instructionEast, this));
+	r.setSemantic('@', std::bind(&Unefunge93Strategy::instructionStop, this));
+	r.setSemantic('#', std::bind(&Unefunge93Strategy::instructionTrampoline, this));
+	r.setSemantic('_', std::bind(&Unefunge93Strategy::instructionIf, this));
+	r.setSemantic('?', std::bind(&Unefunge93Strategy::instructionGoAway, this));
 	// Arithmetic Operators
-	r.setSemantic('!', std::bind(&Unefunge93Strategy::instructionNot, this, std::placeholders::_1));
-	r.setSemantic('%', std::bind(&Unefunge93Strategy::instructionRemainder, this, std::placeholders::_1));
-	r.setSemantic('*', std::bind(&Unefunge93Strategy::instructionMultiply, this, std::placeholders::_1));
-	r.setSemantic('+', std::bind(&Unefunge93Strategy::instructionAdd, this, std::placeholders::_1));
-	r.setSemantic('-', std::bind(&Unefunge93Strategy::instructionSubtract, this, std::placeholders::_1));
-	r.setSemantic('/', std::bind(&Unefunge93Strategy::instructionDivide, this, std::placeholders::_1));
-	r.setSemantic('`', std::bind(&Unefunge93Strategy::instructionGreater, this, std::placeholders::_1));
+	r.setSemantic('!', std::bind(&Unefunge93Strategy::instructionNot, this));
+	r.setSemantic('%', std::bind(&Unefunge93Strategy::instructionRemainder, this));
+	r.setSemantic('*', std::bind(&Unefunge93Strategy::instructionMultiply, this));
+	r.setSemantic('+', std::bind(&Unefunge93Strategy::instructionAdd, this));
+	r.setSemantic('-', std::bind(&Unefunge93Strategy::instructionSubtract, this));
+	r.setSemantic('/', std::bind(&Unefunge93Strategy::instructionDivide, this));
+	r.setSemantic('`', std::bind(&Unefunge93Strategy::instructionGreater, this));
 	// Stack Operators
-	r.setSemantic('$', std::bind(&Unefunge93Strategy::instructionPop, this, std::placeholders::_1));
-	r.setSemantic(':', std::bind(&Unefunge93Strategy::instructionDuplicate, this, std::placeholders::_1));
-	r.setSemantic('\\', std::bind(&Unefunge93Strategy::instructionSwap, this, std::placeholders::_1));
+	r.setSemantic('$', std::bind(&Unefunge93Strategy::instructionPop, this));
+	r.setSemantic(':', std::bind(&Unefunge93Strategy::instructionDuplicate, this));
+	r.setSemantic('\\', std::bind(&Unefunge93Strategy::instructionSwap, this));
 	// Input
-	r.setSemantic('&', std::bind(&Unefunge93Strategy::instructionNumIn, this, std::placeholders::_1));
-	r.setSemantic('~', std::bind(&Unefunge93Strategy::instructionCharIn, this, std::placeholders::_1));
-	r.setSemantic('\"', std::bind(&Unefunge93Strategy::instructionString, this, std::placeholders::_1));
+	r.setSemantic('&', std::bind(&Unefunge93Strategy::instructionNumIn, this));
+	r.setSemantic('~', std::bind(&Unefunge93Strategy::instructionCharIn, this));
+	r.setSemantic('\"', std::bind(&Unefunge93Strategy::instructionString, this));
 	// Output
-	r.setSemantic('.', std::bind(&Unefunge93Strategy::instructionNumOut, this, std::placeholders::_1));
-	r.setSemantic(',', std::bind(&Unefunge93Strategy::instructionCharOut, this, std::placeholders::_1));
+	r.setSemantic('.', std::bind(&Unefunge93Strategy::instructionNumOut, this));
+	r.setSemantic(',', std::bind(&Unefunge93Strategy::instructionCharOut, this));
 	// Self-Modifying
-	r.setSemantic('g', std::bind(&Unefunge93Strategy::instructionGet, this, std::placeholders::_1));
-	r.setSemantic('p', std::bind(&Unefunge93Strategy::instructionPut, this, std::placeholders::_1));
+	r.setSemantic('g', std::bind(&Unefunge93Strategy::instructionGet, this));
+	r.setSemantic('p', std::bind(&Unefunge93Strategy::instructionPut, this));
 }
 
-bool Unefunge93Strategy::instructionPush(inst_t i, int n){
-	(void)i;
+bool Unefunge93Strategy::instructionPush(int n){
 	stack.top().push(n);
 	return true;
 }
 
-bool Unefunge93Strategy::instructionWest(inst_t i){
-	(void)i;
+bool Unefunge93Strategy::instructionWest(){
 	ip.setDelta(Vector{-1});
 	return true;
 }
 
-bool Unefunge93Strategy::instructionEast(inst_t i){
-	(void)i;
+bool Unefunge93Strategy::instructionEast(){
 	ip.setDelta(Vector{1});
 	return true;
 }
 
-bool Unefunge93Strategy::instructionStop(inst_t i){
-	(void)i;
+bool Unefunge93Strategy::instructionStop(){
 	ip.stop();
 	return true;
 }
 
-bool Unefunge93Strategy::instructionTrampoline(inst_t i){
-	(void)i;
+bool Unefunge93Strategy::instructionTrampoline(){
 	ip.next();
 	return true;
 }
 
-bool Unefunge93Strategy::instructionIf(inst_t i){
-	(void)i;
+bool Unefunge93Strategy::instructionIf(){
 	if(stack.top().pop() == 0){
 		ip.setDelta(Vector{1});
 	}else{
@@ -97,8 +91,7 @@ bool Unefunge93Strategy::instructionIf(inst_t i){
 	return true;
 }
 
-bool Unefunge93Strategy::instructionGoAway(inst_t i){
-	(void)i;
+bool Unefunge93Strategy::instructionGoAway(){
 	size_t d = funge_config.dimensions*2;
 	int r = random(0, d-1);
 	Vector v;
@@ -111,14 +104,12 @@ bool Unefunge93Strategy::instructionGoAway(inst_t i){
 	return true;
 }
 
-bool Unefunge93Strategy::instructionNot(inst_t i){
-	(void)i;
+bool Unefunge93Strategy::instructionNot(){
 	stack.top().push(!stack.top().pop());
 	return true;
 }
 
-bool Unefunge93Strategy::instructionRemainder(inst_t i){
-	(void)i;
+bool Unefunge93Strategy::instructionRemainder(){
 	stack_t a = stack.top().pop();
 	stack_t b = stack.top().pop();
 	if(a == 0){
@@ -129,32 +120,28 @@ bool Unefunge93Strategy::instructionRemainder(inst_t i){
 	return true;
 }
 
-bool Unefunge93Strategy::instructionMultiply(inst_t i){
-	(void)i;
+bool Unefunge93Strategy::instructionMultiply(){
 	stack_t a = stack.top().pop();
 	stack_t b = stack.top().pop();
 	stack.top().push(b*a);
 	return true;
 }
 
-bool Unefunge93Strategy::instructionAdd(inst_t i){
-	(void)i;
+bool Unefunge93Strategy::instructionAdd(){
 	stack_t a = stack.top().pop();
 	stack_t b = stack.top().pop();
 	stack.top().push(b+a);
 	return true;
 }
 
-bool Unefunge93Strategy::instructionSubtract(inst_t i){
-	(void)i;
+bool Unefunge93Strategy::instructionSubtract(){
 	stack_t a = stack.top().pop();
 	stack_t b = stack.top().pop();
 	stack.top().push(b-a);
 	return true;
 }
 
-bool Unefunge93Strategy::instructionDivide(inst_t i){
-	(void)i;
+bool Unefunge93Strategy::instructionDivide(){
 	stack_t a = stack.top().pop();
 	stack_t b = stack.top().pop();
 	if(a == 0){
@@ -165,8 +152,7 @@ bool Unefunge93Strategy::instructionDivide(inst_t i){
 	return true;
 }
 
-bool Unefunge93Strategy::instructionGreater(inst_t i){
-	(void)i;
+bool Unefunge93Strategy::instructionGreater(){
 	stack_t a = stack.top().pop();
 	stack_t b = stack.top().pop();
 	if(b > a){
@@ -177,22 +163,19 @@ bool Unefunge93Strategy::instructionGreater(inst_t i){
 	return true;
 }
 
-bool Unefunge93Strategy::instructionPop(inst_t i){
-	(void)i;
+bool Unefunge93Strategy::instructionPop(){
 	stack.top().pop();
 	return true;
 }
 
-bool Unefunge93Strategy::instructionDuplicate(inst_t i){
-	(void)i;
+bool Unefunge93Strategy::instructionDuplicate(){
 	stack_t x = stack.top().pop();
 	stack.top().push(x);
 	stack.top().push(x);
 	return true;
 }
 
-bool Unefunge93Strategy::instructionSwap(inst_t i){
-	(void)i;
+bool Unefunge93Strategy::instructionSwap(){
 	stack_t a = stack.top().pop();
 	stack_t b = stack.top().pop();
 	stack.top().push(a);
@@ -200,8 +183,7 @@ bool Unefunge93Strategy::instructionSwap(inst_t i){
 	return true;
 }
 
-bool Unefunge93Strategy::instructionNumIn(inst_t i){
-	(void)i;
+bool Unefunge93Strategy::instructionNumIn(){
 	stack_t num = 0;
 	char c = getchar();
 	if(c == EOF){
@@ -228,8 +210,7 @@ bool Unefunge93Strategy::instructionNumIn(inst_t i){
 	return true;
 }
 
-bool Unefunge93Strategy::instructionCharIn(inst_t i){
-	(void)i;
+bool Unefunge93Strategy::instructionCharIn(){
 	int q = getchar();
 	if(q == EOF){
 		ip.reflect();
@@ -246,14 +227,12 @@ bool Unefunge93Strategy::instructionCharIn(inst_t i){
 	return true;
 }
 
-bool Unefunge93Strategy::instructionString(inst_t i){
-	(void)i;
+bool Unefunge93Strategy::instructionString(){
 	runner.setState(runner.getStringState());
 	return true;
 }
 
-bool Unefunge93Strategy::instructionCharOut(inst_t i){
-	(void)i;
+bool Unefunge93Strategy::instructionCharOut(){
 	stack_t x = stack.top().pop();
 	if(x == 10){
 		std::cout << std::endl;
@@ -263,23 +242,20 @@ bool Unefunge93Strategy::instructionCharOut(inst_t i){
 	return true;
 }
 
-bool Unefunge93Strategy::instructionNumOut(inst_t i){
-	(void)i;
+bool Unefunge93Strategy::instructionNumOut(){
 	stack_t x = stack.top().pop();
 	std::cout << static_cast<int>(x) << ' ';
 	return true;
 }
 
-bool Unefunge93Strategy::instructionGet(inst_t i){
-	(void)i;
+bool Unefunge93Strategy::instructionGet(){
 	const Vector& storage = ip.getStorage();
 	Vector v = popVector(stack.top());
 	stack.top().push(static_cast<stack_t>(field.get(v+storage)));
 	return true;
 }
 
-bool Unefunge93Strategy::instructionPut(inst_t i){
-	(void)i;
+bool Unefunge93Strategy::instructionPut(){
 	const Vector& storage = ip.getStorage();
 	Vector v = popVector(stack.top());
 	field.set(v+storage, stack.top().pop());

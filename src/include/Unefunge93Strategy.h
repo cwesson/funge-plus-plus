@@ -18,36 +18,36 @@ class Unefunge93Strategy : public FungeStrategy {
 		virtual FungeStrategy* clone(FungeRunner& r) const override;
 	
 	private:
-		bool instructionPush(inst_t i, int n);
+		bool instructionPush(int n);
 		// Flow Control
-		bool instructionWest(inst_t i);
-		bool instructionEast(inst_t i);
-		bool instructionStop(inst_t i);
-		bool instructionTrampoline(inst_t i);
-		bool instructionIf(inst_t i);
-		bool instructionGoAway(inst_t i);
+		bool instructionWest();
+		bool instructionEast();
+		bool instructionStop();
+		bool instructionTrampoline();
+		bool instructionIf();
+		bool instructionGoAway();
 		// Arithmetic Operators
-		bool instructionNot(inst_t i);
-		bool instructionRemainder(inst_t i);
-		bool instructionMultiply(inst_t i);
-		bool instructionAdd(inst_t i);
-		bool instructionSubtract(inst_t i);
-		bool instructionDivide(inst_t i);
-		bool instructionGreater(inst_t i);
+		bool instructionNot();
+		bool instructionRemainder();
+		bool instructionMultiply();
+		bool instructionAdd();
+		bool instructionSubtract();
+		bool instructionDivide();
+		bool instructionGreater();
 		// Stack Operators
-		bool instructionPop(inst_t i);
-		bool instructionDuplicate(inst_t i);
-		bool instructionSwap(inst_t i);
+		bool instructionPop();
+		bool instructionDuplicate();
+		bool instructionSwap();
 		// Input
-		bool instructionNumIn(inst_t i);
-		bool instructionCharIn(inst_t i);
-		bool instructionString(inst_t i);
+		bool instructionNumIn();
+		bool instructionCharIn();
+		bool instructionString();
 		// Output
-		bool instructionNumOut(inst_t i);
-		bool instructionCharOut(inst_t i);
+		bool instructionNumOut();
+		bool instructionCharOut();
 		// Self-Modifying
-		bool instructionGet(inst_t i);
-		bool instructionPut(inst_t i);
+		bool instructionGet();
+		bool instructionPut();
 };
 
 }
