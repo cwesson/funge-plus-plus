@@ -16,6 +16,7 @@ namespace Funge {
 class FingerprintStrategy : public FungeStrategy {
 	public:
 		FingerprintStrategy(FungeRunner& r);
+		FingerprintStrategy(const FingerprintStrategy& orig, FungeRunner& r);
 		virtual ~FingerprintStrategy();
 		virtual FungeStrategy* clone(FungeRunner& r) const override;
 		
@@ -24,9 +25,9 @@ class FingerprintStrategy : public FungeStrategy {
 	
 	protected:
 		bool execute(Fingerprint* fing, inst_t i);
-		
+
 		std::map<uint64_t, Fingerprint*> available;
-		std::map<inst_t, std::stack<Fingerprint*>> loaded;
+		std::vector<uint64_t> loaded;
 };
 
 }

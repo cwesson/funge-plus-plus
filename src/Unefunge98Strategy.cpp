@@ -20,37 +20,48 @@ Unefunge98Strategy::Unefunge98Strategy(FungeRunner& r) :
 	FungeStrategy(r),
 	finger(r)
 {
-	r.setSemantic('a', std::bind(&Unefunge98Strategy::instructionPush, this, 0xA));
-	r.setSemantic('b', std::bind(&Unefunge98Strategy::instructionPush, this, 0xB));
-	r.setSemantic('c', std::bind(&Unefunge98Strategy::instructionPush, this, 0xC));
-	r.setSemantic('d', std::bind(&Unefunge98Strategy::instructionPush, this, 0xD));
-	r.setSemantic('e', std::bind(&Unefunge98Strategy::instructionPush, this, 0xE));
-	r.setSemantic('f', std::bind(&Unefunge98Strategy::instructionPush, this, 0xF));
-	r.setSemantic('y', std::bind(&Unefunge98Strategy::instructionSysInfo, this));
-	r.setSemantic('z', std::bind(&Unefunge98Strategy::instructionNoop, this));
+	init();
+}
+
+Unefunge98Strategy::Unefunge98Strategy(const Unefunge98Strategy& orig, FungeRunner& r) :
+	FungeStrategy(r),
+	finger(orig.finger, r)
+{
+	init();
+}
+
+void Unefunge98Strategy::init(){
+	runner.setSemantic('a', std::bind(&Unefunge98Strategy::instructionPush, this, 0xA));
+	runner.setSemantic('b', std::bind(&Unefunge98Strategy::instructionPush, this, 0xB));
+	runner.setSemantic('c', std::bind(&Unefunge98Strategy::instructionPush, this, 0xC));
+	runner.setSemantic('d', std::bind(&Unefunge98Strategy::instructionPush, this, 0xD));
+	runner.setSemantic('e', std::bind(&Unefunge98Strategy::instructionPush, this, 0xE));
+	runner.setSemantic('f', std::bind(&Unefunge98Strategy::instructionPush, this, 0xF));
+	runner.setSemantic('y', std::bind(&Unefunge98Strategy::instructionSysInfo, this));
+	runner.setSemantic('z', std::bind(&Unefunge98Strategy::instructionNoop, this));
 	// Flow Control
-	r.setSemantic(';', std::bind(&Unefunge98Strategy::instructionJumpOver, this));
-	r.setSemantic('j', std::bind(&Unefunge98Strategy::instructionJumpForward, this));
-	r.setSemantic('r', std::bind(&Unefunge98Strategy::instructionReflect, this));
-	r.setSemantic('x', std::bind(&Unefunge98Strategy::instructionAbsolute, this));
-	r.setSemantic('k', std::bind(&Unefunge98Strategy::instructionIterate, this));
-	r.setSemantic('q', std::bind(&Unefunge98Strategy::instructionQuit, this));
-	r.setSemantic('t', std::bind(&Unefunge98Strategy::instructionThread, this));
+	runner.setSemantic(';', std::bind(&Unefunge98Strategy::instructionJumpOver, this));
+	runner.setSemantic('j', std::bind(&Unefunge98Strategy::instructionJumpForward, this));
+	runner.setSemantic('r', std::bind(&Unefunge98Strategy::instructionReflect, this));
+	runner.setSemantic('x', std::bind(&Unefunge98Strategy::instructionAbsolute, this));
+	runner.setSemantic('k', std::bind(&Unefunge98Strategy::instructionIterate, this));
+	runner.setSemantic('q', std::bind(&Unefunge98Strategy::instructionQuit, this));
+	runner.setSemantic('t', std::bind(&Unefunge98Strategy::instructionThread, this));
 	// Stack Operations
-	r.setSemantic('n', std::bind(&Unefunge98Strategy::instructionClear, this));
-	r.setSemantic('u', std::bind(&Unefunge98Strategy::instructionUnder, this));
-	r.setSemantic('{', std::bind(&Unefunge98Strategy::instructionBegin, this));
-	r.setSemantic('}', std::bind(&Unefunge98Strategy::instructionEnd, this));
+	runner.setSemantic('n', std::bind(&Unefunge98Strategy::instructionClear, this));
+	runner.setSemantic('u', std::bind(&Unefunge98Strategy::instructionUnder, this));
+	runner.setSemantic('{', std::bind(&Unefunge98Strategy::instructionBegin, this));
+	runner.setSemantic('}', std::bind(&Unefunge98Strategy::instructionEnd, this));
 	// I/O
-	r.setSemantic('i', std::bind(&Unefunge98Strategy::instructionFileIn, this));
-	r.setSemantic('o', std::bind(&Unefunge98Strategy::instructionFileOut, this));
-	r.setSemantic('=', std::bind(&Unefunge98Strategy::instructionExecute, this));
+	runner.setSemantic('i', std::bind(&Unefunge98Strategy::instructionFileIn, this));
+	runner.setSemantic('o', std::bind(&Unefunge98Strategy::instructionFileOut, this));
+	runner.setSemantic('=', std::bind(&Unefunge98Strategy::instructionExecute, this));
 	// Self-Modifying
-	r.setSemantic('\'', std::bind(&Unefunge98Strategy::instructionFetch, this));
-	r.setSemantic('s', std::bind(&Unefunge98Strategy::instructionStore, this));
+	runner.setSemantic('\'', std::bind(&Unefunge98Strategy::instructionFetch, this));
+	runner.setSemantic('s', std::bind(&Unefunge98Strategy::instructionStore, this));
 	// Fingerprints
-	r.setSemantic('(', std::bind(&Unefunge98Strategy::instructionLoad, this));
-	r.setSemantic(')', std::bind(&Unefunge98Strategy::instructionUnload, this));
+	runner.setSemantic('(', std::bind(&Unefunge98Strategy::instructionLoad, this));
+	runner.setSemantic(')', std::bind(&Unefunge98Strategy::instructionUnload, this));
 }
 
 bool Unefunge98Strategy::instructionPush(int n){
@@ -424,7 +435,7 @@ void Unefunge98Strategy::pushSysInfo(int num){
 }
 
 FungeStrategy* Unefunge98Strategy::clone(FungeRunner& r) const{
-	return new Unefunge98Strategy(r);
+	return new Unefunge98Strategy(*this, r);
 }
 
 }

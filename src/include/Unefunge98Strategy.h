@@ -19,6 +19,9 @@ class Unefunge98Strategy : public FungeStrategy {
 		virtual FungeStrategy* clone(FungeRunner& r) const override;
 	
 	private:
+		Unefunge98Strategy(const Unefunge98Strategy& orig, FungeRunner& r);
+		void init();
+
 		bool instructionPush(int n);
 		bool instructionSysInfo();
 		bool instructionNoop();
