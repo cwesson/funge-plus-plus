@@ -11,6 +11,7 @@
 #include "FingerprintBOOL.h"
 #include "FingerprintCPLI.h"
 #include "FingerprintDBUG.h"
+#include "FingerprintFING.h"
 #include "FingerprintFIXP.h"
 #include "FingerprintFloat.h"
 #include "FingerprintFPRT.h"
@@ -71,6 +72,7 @@ bool FingerprintStrategy::load(uint64_t fingerprint){
 			case 0x424F4F4C: fing = new FingerprintBOOL(runner); break;
 			case 0x43504C49: fing = new FingerprintCPLI(runner); break;
 			case 0x44425547: fing = new FingerprintDBUG(runner); break;
+			case 0x46494e47: fing = new FingerprintFING(runner); break;
 			case 0x46495850: fing = new FingerprintFIXP(runner); break;
 			case 0x46504450: fing = new FingerprintFloat<double>(runner); break;
 			case 0x46505254: fing = new FingerprintFPRT(runner); break;
@@ -101,7 +103,7 @@ bool FingerprintStrategy::load(uint64_t fingerprint){
 		available[fingerprint] = fing;
 		loaded.push_back(fingerprint);
 		for(auto i : fing->instructions()){
-			runner.setSemantic(i, std::bind(&FingerprintStrategy::execute, this, fing, i));
+			runner.pushSemantic(i, std::bind(&FingerprintStrategy::execute, this, fing, i));
 		}
 		fing->activate();
 		//std::cout << "Loaded 0x" << std::hex << fingerprint << std::dec << std::endl;

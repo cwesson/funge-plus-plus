@@ -37,8 +37,9 @@ class FungeRunner {
 		StackStack& getStack();
 		InstructionPointer& getIP();
 
-		void setSemantic(inst_t i, std::function<bool()> func);
-		void popSemantic(inst_t i);
+		void pushSemantic(inst_t i, semantic_t func);
+		semantic_t popSemantic(inst_t i);
+		semantic_t getSemantic(inst_t i);
 	
 	private:
 		FungeUniverse& universe;

@@ -8,7 +8,6 @@
 
 #include "FungeState.h"
 #include "FungeStrategy.h"
-#include <functional>
 #include <map>
 #include <stack>
 
@@ -22,15 +21,16 @@ class FungeStateNormal : public FungeState {
 		
 		virtual bool execute(inst_t i) override;
 
-		void setSemantic(inst_t i, std::function<bool()> func);
-		void popSemantic(inst_t i);
+		void pushSemantic(inst_t i, semantic_t func);
+		semantic_t popSemantic(inst_t i);
+		semantic_t getSemantic(inst_t i);
 		
 		FungeStateNormal& operator=(const FungeStateNormal&) = delete;
 		FungeStateNormal(const FungeStateNormal& orig) = delete;
 	
 	protected:
 		std::vector<FungeStrategy*> strategies;
-		std::map<inst_t, std::stack<std::function<bool()>>> semantics;
+		std::map<inst_t, std::stack<semantic_t>> semantics;
 		
 		bool load(FungeStrategy* strategy);
 };

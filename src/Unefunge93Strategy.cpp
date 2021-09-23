@@ -16,45 +16,45 @@ namespace Funge {
 Unefunge93Strategy::Unefunge93Strategy(FungeRunner& r) :
 	FungeStrategy(r)
 {
-	r.setSemantic('0', std::bind(&Unefunge93Strategy::instructionPush, this, 0));
-	r.setSemantic('1', std::bind(&Unefunge93Strategy::instructionPush, this, 1));
-	r.setSemantic('2', std::bind(&Unefunge93Strategy::instructionPush, this, 2));
-	r.setSemantic('3', std::bind(&Unefunge93Strategy::instructionPush, this, 3));
-	r.setSemantic('4', std::bind(&Unefunge93Strategy::instructionPush, this, 4));
-	r.setSemantic('5', std::bind(&Unefunge93Strategy::instructionPush, this, 5));
-	r.setSemantic('6', std::bind(&Unefunge93Strategy::instructionPush, this, 6));
-	r.setSemantic('7', std::bind(&Unefunge93Strategy::instructionPush, this, 7));
-	r.setSemantic('8', std::bind(&Unefunge93Strategy::instructionPush, this, 8));
-	r.setSemantic('9', std::bind(&Unefunge93Strategy::instructionPush, this, 9));
+	r.pushSemantic('0', std::bind(&Unefunge93Strategy::instructionPush, this, 0));
+	r.pushSemantic('1', std::bind(&Unefunge93Strategy::instructionPush, this, 1));
+	r.pushSemantic('2', std::bind(&Unefunge93Strategy::instructionPush, this, 2));
+	r.pushSemantic('3', std::bind(&Unefunge93Strategy::instructionPush, this, 3));
+	r.pushSemantic('4', std::bind(&Unefunge93Strategy::instructionPush, this, 4));
+	r.pushSemantic('5', std::bind(&Unefunge93Strategy::instructionPush, this, 5));
+	r.pushSemantic('6', std::bind(&Unefunge93Strategy::instructionPush, this, 6));
+	r.pushSemantic('7', std::bind(&Unefunge93Strategy::instructionPush, this, 7));
+	r.pushSemantic('8', std::bind(&Unefunge93Strategy::instructionPush, this, 8));
+	r.pushSemantic('9', std::bind(&Unefunge93Strategy::instructionPush, this, 9));
 	// Flow Control
-	r.setSemantic('<', std::bind(&Unefunge93Strategy::instructionWest, this));
-	r.setSemantic('>', std::bind(&Unefunge93Strategy::instructionEast, this));
-	r.setSemantic('@', std::bind(&Unefunge93Strategy::instructionStop, this));
-	r.setSemantic('#', std::bind(&Unefunge93Strategy::instructionTrampoline, this));
-	r.setSemantic('_', std::bind(&Unefunge93Strategy::instructionIf, this));
-	r.setSemantic('?', std::bind(&Unefunge93Strategy::instructionGoAway, this));
+	r.pushSemantic('<', std::bind(&Unefunge93Strategy::instructionWest, this));
+	r.pushSemantic('>', std::bind(&Unefunge93Strategy::instructionEast, this));
+	r.pushSemantic('@', std::bind(&Unefunge93Strategy::instructionStop, this));
+	r.pushSemantic('#', std::bind(&Unefunge93Strategy::instructionTrampoline, this));
+	r.pushSemantic('_', std::bind(&Unefunge93Strategy::instructionIf, this));
+	r.pushSemantic('?', std::bind(&Unefunge93Strategy::instructionGoAway, this));
 	// Arithmetic Operators
-	r.setSemantic('!', std::bind(&Unefunge93Strategy::instructionNot, this));
-	r.setSemantic('%', std::bind(&Unefunge93Strategy::instructionRemainder, this));
-	r.setSemantic('*', std::bind(&Unefunge93Strategy::instructionMultiply, this));
-	r.setSemantic('+', std::bind(&Unefunge93Strategy::instructionAdd, this));
-	r.setSemantic('-', std::bind(&Unefunge93Strategy::instructionSubtract, this));
-	r.setSemantic('/', std::bind(&Unefunge93Strategy::instructionDivide, this));
-	r.setSemantic('`', std::bind(&Unefunge93Strategy::instructionGreater, this));
+	r.pushSemantic('!', std::bind(&Unefunge93Strategy::instructionNot, this));
+	r.pushSemantic('%', std::bind(&Unefunge93Strategy::instructionRemainder, this));
+	r.pushSemantic('*', std::bind(&Unefunge93Strategy::instructionMultiply, this));
+	r.pushSemantic('+', std::bind(&Unefunge93Strategy::instructionAdd, this));
+	r.pushSemantic('-', std::bind(&Unefunge93Strategy::instructionSubtract, this));
+	r.pushSemantic('/', std::bind(&Unefunge93Strategy::instructionDivide, this));
+	r.pushSemantic('`', std::bind(&Unefunge93Strategy::instructionGreater, this));
 	// Stack Operators
-	r.setSemantic('$', std::bind(&Unefunge93Strategy::instructionPop, this));
-	r.setSemantic(':', std::bind(&Unefunge93Strategy::instructionDuplicate, this));
-	r.setSemantic('\\', std::bind(&Unefunge93Strategy::instructionSwap, this));
+	r.pushSemantic('$', std::bind(&Unefunge93Strategy::instructionPop, this));
+	r.pushSemantic(':', std::bind(&Unefunge93Strategy::instructionDuplicate, this));
+	r.pushSemantic('\\', std::bind(&Unefunge93Strategy::instructionSwap, this));
 	// Input
-	r.setSemantic('&', std::bind(&Unefunge93Strategy::instructionNumIn, this));
-	r.setSemantic('~', std::bind(&Unefunge93Strategy::instructionCharIn, this));
-	r.setSemantic('\"', std::bind(&Unefunge93Strategy::instructionString, this));
+	r.pushSemantic('&', std::bind(&Unefunge93Strategy::instructionNumIn, this));
+	r.pushSemantic('~', std::bind(&Unefunge93Strategy::instructionCharIn, this));
+	r.pushSemantic('\"', std::bind(&Unefunge93Strategy::instructionString, this));
 	// Output
-	r.setSemantic('.', std::bind(&Unefunge93Strategy::instructionNumOut, this));
-	r.setSemantic(',', std::bind(&Unefunge93Strategy::instructionCharOut, this));
+	r.pushSemantic('.', std::bind(&Unefunge93Strategy::instructionNumOut, this));
+	r.pushSemantic(',', std::bind(&Unefunge93Strategy::instructionCharOut, this));
 	// Self-Modifying
-	r.setSemantic('g', std::bind(&Unefunge93Strategy::instructionGet, this));
-	r.setSemantic('p', std::bind(&Unefunge93Strategy::instructionPut, this));
+	r.pushSemantic('g', std::bind(&Unefunge93Strategy::instructionGet, this));
+	r.pushSemantic('p', std::bind(&Unefunge93Strategy::instructionPut, this));
 }
 
 bool Unefunge93Strategy::instructionPush(int n){

@@ -14,9 +14,9 @@ namespace Funge {
 Trefunge98Strategy::Trefunge98Strategy(FungeRunner& r) :
 	FungeStrategy(r)
 {
-	r.setSemantic('h', std::bind(&Trefunge98Strategy::instructionHigh, this));
-	r.setSemantic('l', std::bind(&Trefunge98Strategy::instructionLow, this));
-	r.setSemantic('m', std::bind(&Trefunge98Strategy::instructionIf, this));
+	r.pushSemantic('h', std::bind(&Trefunge98Strategy::instructionHigh, this));
+	r.pushSemantic('l', std::bind(&Trefunge98Strategy::instructionLow, this));
+	r.pushSemantic('m', std::bind(&Trefunge98Strategy::instructionIf, this));
 }
 
 bool Trefunge98Strategy::instructionHigh(){

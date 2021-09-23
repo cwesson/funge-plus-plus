@@ -8,12 +8,15 @@
 
 #include <cstdint>
 #include <cstddef>
+#include <functional>
 
 namespace Funge {
 
 typedef int64_t dim_t;
 typedef int64_t inst_t;
 typedef int64_t stack_t;
+
+typedef std::function<bool()> semantic_t;
 
 enum EnvFlags{
 	ENV_CONCURRENT    = 0b00001,

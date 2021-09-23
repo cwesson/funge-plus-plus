@@ -13,9 +13,9 @@ namespace Funge {
 Befunge93Strategy::Befunge93Strategy(FungeRunner& r) :
 	FungeStrategy(r)
 {
-	r.setSemantic('^', std::bind(&Befunge93Strategy::instructionNorth, this));
-	r.setSemantic('v', std::bind(&Befunge93Strategy::instructionSouth, this));
-	r.setSemantic('|', std::bind(&Befunge93Strategy::instructionIf, this));
+	r.pushSemantic('^', std::bind(&Befunge93Strategy::instructionNorth, this));
+	r.pushSemantic('v', std::bind(&Befunge93Strategy::instructionSouth, this));
+	r.pushSemantic('|', std::bind(&Befunge93Strategy::instructionIf, this));
 }
 
 bool Befunge93Strategy::instructionNorth(){

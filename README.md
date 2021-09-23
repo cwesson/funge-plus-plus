@@ -95,6 +95,8 @@ specifying the `-l` command line argument.
 
 `DBUG` [Debugger Control](doc/DBUG.md).
 
+`FING` [Operate on single fingerprint semantics](http://www.rcfunge98.com/rcfunge2_manual.html#FING).
+
 `FIXP` [Fixed point math functions](http://www.rcfunge98.com/rcfunge2_manual.html#FIXP).
 
 `FPDP` [Double precision floating point](http://www.rcfunge98.com/rcfunge2_manual.html#FPDP).

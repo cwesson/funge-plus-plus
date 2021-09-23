@@ -64,29 +64,39 @@ bool FungeStateNormal::load(FungeStrategy* strategy){
 	return true;
 }
 
-void FungeStateNormal::setSemantic(inst_t i, std::function<bool()> func){
+void FungeStateNormal::pushSemantic(inst_t i, semantic_t func){
 	auto exist = semantics.find(i);
 	if(exist == semantics.cend()){
-		semantics[i] = std::stack<std::function<bool()>>();
+		semantics[i] = std::stack<semantic_t>();
 	}
 	semantics[i].push(func);
 }
 
-void FungeStateNormal::popSemantic(inst_t i){
+semantic_t FungeStateNormal::popSemantic(inst_t i){
+	semantic_t ret = nullptr;
 	auto exist = semantics.find(i);
-	if(exist != semantics.cend()){
+	if(exist != semantics.cend() && semantics[i].size() > 0){
+		ret = semantics[i].top();
 		semantics[i].pop();
 	}
+	return ret;
+}
+
+semantic_t FungeStateNormal::getSemantic(inst_t i){
+	semantic_t ret = nullptr;
+	auto exist = semantics.find(i);
+	if(exist != semantics.cend() && semantics[i].size() > 0){
+		ret = semantics[i].top();
+	}
+	return ret;
 }
 
 bool FungeStateNormal::execute(inst_t i){
 	bool done = false;
 	if(i != ' '){
 		auto found = semantics.find(i);
-		if(found != semantics.cend()){
-			if(found->second.size() > 0){
-				done = found->second.top()();
-			}
+		if(found != semantics.cend() && found->second.size() > 0){
+			done = found->second.top()();
 		}
 	}
 	return done;
