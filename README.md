@@ -1,7 +1,7 @@
 # Funge++
 Funge++ is Befunge interpreter originally written by Conlan Wesson in Java for a Programming Language Concepts course
-with minimal functionality.  It has since been converted to C++, and an effort is underway to implement all Funge-98
-instructions and support N-dimensional Funge.  The Funge++ handprint is 0x464E2B2B (`FN++`).
+with minimal functionality.  It has since been converted to C++, supports all Funge-98 instructions and N-dimensional
+Funge.  The Funge++ handprint is 0x464E2B2B (`FN++`).
 
 ## Running
 The Funge++ executable `funge` uses the first file argument to load the funge program.  The first character of the

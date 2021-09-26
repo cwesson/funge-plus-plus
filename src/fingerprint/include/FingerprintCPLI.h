@@ -13,7 +13,7 @@ namespace Funge {
 
 class FingerprintCPLI : public Fingerprint {
 	public:
-		FingerprintCPLI(FungeRunner& r);
+		explicit FingerprintCPLI(FungeRunner& r);
 		virtual ~FingerprintCPLI() = default;
 		
 		virtual bool execute(inst_t cmd) override;

@@ -18,8 +18,6 @@ class FungeState {
 		virtual ~FungeState() = default;
 		
 		virtual bool execute(inst_t i) = 0;
-		
-		FungeRunner& getRunner();
 	
 	protected:
 		FungeRunner& runner;

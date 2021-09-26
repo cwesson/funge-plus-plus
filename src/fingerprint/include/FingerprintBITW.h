@@ -12,7 +12,7 @@ namespace Funge {
 
 class FingerprintBITW : public Fingerprint {
 	public:
-		FingerprintBITW(FungeRunner& r);
+		explicit FingerprintBITW(FungeRunner& r);
 		virtual ~FingerprintBITW() = default;
 		
 		virtual bool execute(inst_t cmd) override;

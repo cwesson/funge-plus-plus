@@ -13,13 +13,13 @@ namespace Funge {
 
 class FingerprintPERL : public Fingerprint {
 	public:
-		FingerprintPERL(FungeRunner& r);
+		explicit FingerprintPERL(FungeRunner& r);
 		virtual ~FingerprintPERL() = default;
 		
 		virtual bool execute(inst_t cmd) override;
 	
 	private:
-		int perl(std::string);
+		int perl(const std::string&);
 };
 
 }

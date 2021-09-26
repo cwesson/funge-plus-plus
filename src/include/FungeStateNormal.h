@@ -15,7 +15,7 @@ namespace Funge {
 
 class FungeStateNormal : public FungeState {
 	public:
-		FungeStateNormal(FungeRunner& r);
+		explicit FungeStateNormal(FungeRunner& r);
 		FungeStateNormal(const FungeStateNormal& orig, FungeRunner& r);
 		virtual ~FungeStateNormal();
 		

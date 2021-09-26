@@ -42,7 +42,7 @@ bool FingerprintPERL::execute(inst_t cmd){
 	return true;
 }
 
-int FingerprintPERL::perl(std::string code){
+int FingerprintPERL::perl(const std::string& code){
 	std::string cmd = std::string("exit(eval{") + code + std::string("})");
 	std::stringstream sq;
 	sq << std::quoted(cmd);

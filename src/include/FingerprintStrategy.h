@@ -15,7 +15,7 @@ namespace Funge {
 
 class FingerprintStrategy : public FungeStrategy {
 	public:
-		FingerprintStrategy(FungeRunner& r);
+		explicit FingerprintStrategy(FungeRunner& r);
 		FingerprintStrategy(const FingerprintStrategy& orig, FungeRunner& r);
 		virtual ~FingerprintStrategy();
 		virtual FungeStrategy* clone(FungeRunner& r) const override;

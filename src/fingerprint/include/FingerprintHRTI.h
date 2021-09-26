@@ -14,7 +14,7 @@ namespace Funge {
 
 class FingerprintHRTI : public Fingerprint {
 	public:
-		FingerprintHRTI(FungeRunner& r);
+		explicit FingerprintHRTI(FungeRunner& r);
 		virtual ~FingerprintHRTI() = default;
 		
 		virtual bool execute(inst_t cmd) override;

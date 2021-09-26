@@ -17,8 +17,4 @@ FungeState::FungeState(FungeRunner& r) :
 	
 }
 
-FungeRunner& FungeState::getRunner(){
-	return runner;
-}
-
 }

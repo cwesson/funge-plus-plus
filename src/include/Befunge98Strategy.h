@@ -12,7 +12,7 @@ namespace Funge {
 
 class Befunge98Strategy : public FungeStrategy {
 	public:
-		Befunge98Strategy(FungeRunner& r);
+		explicit Befunge98Strategy(FungeRunner& r);
 		virtual ~Befunge98Strategy() = default;
 		
 		virtual FungeStrategy* clone(FungeRunner& r) const override;

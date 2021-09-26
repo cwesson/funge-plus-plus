@@ -185,7 +185,7 @@ bool Unefunge93Strategy::instructionSwap(){
 
 bool Unefunge93Strategy::instructionNumIn(){
 	stack_t num = 0;
-	char c = getchar();
+	int c = getchar();
 	if(c == EOF){
 		ip.reflect();
 		return true;

@@ -12,7 +12,8 @@ EXEC := bin/funge
 INCLUDES := -I src/include -I src/fingerprint/include -I third_party/bigint/include
 
 CPP := g++
-CPPARGS := $(INCLUDES) -g -Wall -Wextra -Werror -std=c++2a
+CPPARGS := $(INCLUDES) -g -Wall -Wextra -Werror -std=c++20
+LINTARGS := $(INCLUDES) --enable=all --std=c++20
 
 LD := g++
 LDARGS := -lpthread
@@ -51,7 +52,7 @@ test: build
 	@./test/smoketest.sh
 
 lint:
-	@cppcheck --enable=all $(INCLUDES) $(SRCS)
+	@cppcheck $(LINTARGS) $(SRCS)
 
 CPPUTESTLIB := test/cpputest/src/CppUTest/libCppUTest.a
 UTCPPARGS := -I src/include -I test/cpputest/include -lpthread

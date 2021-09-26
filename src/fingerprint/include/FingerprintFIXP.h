@@ -13,7 +13,7 @@ namespace Funge {
 
 class FingerprintFIXP : public Fingerprint {
 	public:
-		FingerprintFIXP(FungeRunner& r);
+		explicit FingerprintFIXP(FungeRunner& r);
 		virtual ~FingerprintFIXP() = default;
 		
 		virtual bool execute(inst_t cmd) override;

@@ -13,7 +13,7 @@ namespace Funge {
 
 class FingerprintJSTR : public Fingerprint {
 	public:
-		FingerprintJSTR(FungeRunner& r);
+		explicit FingerprintJSTR(FungeRunner& r);
 		virtual ~FingerprintJSTR() = default;
 		
 		virtual bool execute(inst_t cmd) override;

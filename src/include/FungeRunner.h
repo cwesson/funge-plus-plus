@@ -18,7 +18,7 @@ class FungeState;
 
 class FungeRunner {
 	public:
-		FungeRunner(FungeUniverse& uni);
+		explicit FungeRunner(FungeUniverse& uni);
 		FungeRunner(const FungeRunner& runner);
 		virtual ~FungeRunner();
 		

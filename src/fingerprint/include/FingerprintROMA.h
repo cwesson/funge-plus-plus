@@ -12,7 +12,7 @@ namespace Funge {
 
 class FingerprintROMA : public Fingerprint {
 	public:
-		FingerprintROMA(FungeRunner& r);
+		explicit FingerprintROMA(FungeRunner& r);
 		virtual ~FingerprintROMA() = default;
 		
 		virtual bool execute(inst_t cmd) override;
