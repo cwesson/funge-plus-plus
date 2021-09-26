@@ -21,6 +21,10 @@ class FungeDebugger {
 		static FungeDebugger* getInstance();
 		static void tick(const Field& field, const StackStack& stack, InstructionPointer& ip);
 		static void write(const Field& field, const Vector& pos, inst_t inst);
+
+		void swbreak(const Field& field, const StackStack& stack, InstructionPointer& ip);
+		void addBreakpoint(const Vector& vec);
+		void addWatchpoint(const Vector& vec);
 	
 	private:
 		enum State {
@@ -49,12 +53,12 @@ class FungeDebugger {
 		void debug(const Field& field, const StackStack& stack, InstructionPointer& ip);
 		void debugWrite(const Field& field, const Vector& pos, inst_t inst);
 		void printIP(const InstructionPointer& ip);
-		void printField(const Field& field, const Vector& center, const Vector& size);
+		void printField(const Field& field, const Vector& center, const Vector& size, const Vector& dim, const InstructionPointer& ip);
 		
 		std::set<Vector> breakpoints;
 		std::set<Vector> watchpoints;
 		std::map<size_t, Thread> threads;
-		std::mutex mutex;
+		std::recursive_mutex mutex;
 		size_t lastThread;
 };
 

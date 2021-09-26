@@ -9,8 +9,10 @@
 
 namespace Funge {
 
-FingerprintREFC::FingerprintREFC(Field& f, InstructionPointer& i, StackStack& s) :
-	Fingerprint(f, i, s, {'R', 'D'})
+std::map<stack_t, Vector> FingerprintREFC::refc_map;
+
+FingerprintREFC::FingerprintREFC(FungeRunner& r) :
+	Fingerprint(r, {'R', 'D'})
 {}
 
 bool FingerprintREFC::execute(inst_t cmd){

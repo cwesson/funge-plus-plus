@@ -12,10 +12,15 @@ namespace Funge {
 
 class Trefunge98Strategy : public FungeStrategy {
 	public:
-		Trefunge98Strategy(Field& f, InstructionPointer& i, StackStack& s, FungeState& t);
+		explicit Trefunge98Strategy(FungeRunner& r);
 		virtual ~Trefunge98Strategy() = default;
 		
-		virtual bool execute(inst_t cmd) override;
+		virtual FungeStrategy* clone(FungeRunner& r) const override;
+
+	private:
+		bool instructionHigh();
+		bool instructionLow();
+		bool instructionIf();
 };
 
 }

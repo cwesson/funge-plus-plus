@@ -12,7 +12,7 @@ namespace Funge {
 
 class FingerprintORTH : public Fingerprint {
 	public:
-		FingerprintORTH(Field& f, InstructionPointer& i, StackStack& s);
+		explicit FingerprintORTH(FungeRunner& r);
 		virtual ~FingerprintORTH() = default;
 		
 		virtual bool execute(inst_t cmd) override;

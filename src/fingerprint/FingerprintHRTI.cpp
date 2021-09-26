@@ -9,8 +9,8 @@
 
 namespace Funge {
 
-FingerprintHRTI::FingerprintHRTI(Field& f, InstructionPointer& i, StackStack& s) :
-	Fingerprint(f, i, s, {'E', 'G', 'M', 'S', 'T'})
+FingerprintHRTI::FingerprintHRTI(FungeRunner& r) :
+	Fingerprint(r, {'E', 'G', 'M', 'S', 'T'})
 {}
 
 bool FingerprintHRTI::execute(inst_t cmd){
@@ -26,12 +26,12 @@ bool FingerprintHRTI::execute(inst_t cmd){
 			hrti_mark = std::chrono::steady_clock::now();
 		} break;
 		case 'S':{
-			auto dur = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - hrti_mark);
+			auto dur = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch());
 			stack.top().push(dur.count() % static_cast<std::chrono::microseconds>(std::chrono::seconds(1)).count());
 		} break;
 		case 'T':{
 			if(hrti_mark == std::chrono::steady_clock::time_point()){
-				ip.reverse();
+				ip.reflect();
 			}else{
 				auto dur = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - hrti_mark);
 				stack.top().push(dur.count());

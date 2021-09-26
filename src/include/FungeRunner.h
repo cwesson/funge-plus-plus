@@ -18,8 +18,8 @@ class FungeState;
 
 class FungeRunner {
 	public:
-		FungeRunner(FungeUniverse& uni);
-		FungeRunner(FungeUniverse& uni, const FungeRunner& runner);
+		explicit FungeRunner(FungeUniverse& uni);
+		FungeRunner(const FungeRunner& runner);
 		virtual ~FungeRunner();
 		
 		bool isRunning() const;
@@ -30,8 +30,16 @@ class FungeRunner {
 		
 		void operator()();
 		void tick();
+		bool execute(inst_t i);
 		
 		FungeUniverse& getUniverse();
+		Field& getField();
+		StackStack& getStack();
+		InstructionPointer& getIP();
+
+		void pushSemantic(inst_t i, semantic_t func);
+		semantic_t popSemantic(inst_t i);
+		semantic_t getSemantic(inst_t i);
 	
 	private:
 		FungeUniverse& universe;

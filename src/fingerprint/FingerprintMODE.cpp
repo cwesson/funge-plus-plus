@@ -10,8 +10,8 @@
 
 namespace Funge {
 
-FingerprintMODE::FingerprintMODE(Field& f, InstructionPointer& i, StackStack& s) :
-	Fingerprint(f, i, s, {'H', 'I', 'Q', 'S'})
+FingerprintMODE::FingerprintMODE(FungeRunner& r) :
+	Fingerprint(r, {'H', 'I', 'Q', 'S'})
 {}
 
 bool FingerprintMODE::execute(inst_t cmd){

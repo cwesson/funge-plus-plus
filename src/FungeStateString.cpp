@@ -10,8 +10,8 @@
 
 namespace Funge {
 
-FungeStateString::FungeStateString(FungeRunner& r, StackStack& s, InstructionPointer& i) :
-	FungeState(r, s, i),
+FungeStateString::FungeStateString(FungeRunner& r) :
+	FungeState(r),
 	previous('\0')
 {
 	

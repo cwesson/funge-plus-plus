@@ -1,7 +1,7 @@
 # Funge++
-Funge++ is Befunge interpreter originally written by Conlan Wesson in Java for a Programming Laguage Concepts course
-with minimal functionality.  It has since been converted to C++, and an effort is underway to implement all Funge-98 instructions
-and support N-dimensional Funge.
+Funge++ is Befunge interpreter originally written by Conlan Wesson in Java for a Programming Language Concepts course
+with minimal functionality.  It has since been converted to C++, supports all Funge-98 instructions and N-dimensional
+Funge.  The Funge++ handprint is 0x464E2B2B (`FN++`).
 
 ## Running
 The Funge++ executable `funge` uses the first file argument to load the funge program.  The first character of the
@@ -14,8 +14,7 @@ Vertical Tabs in the file represent 4D+1 and reset X, Y, and Z to zero.  Carriag
 following a vertical tab are ignored.  This is not part of the Funge-98 specification, but provides a simple way to
 create 4-dimensional funges.
 
-Higher dimension funges can be loaded as BeQunge formatted files can be loaded as `.beq` files.  Loading a `.beq` file
-implies `-lNFUN`.
+Higher dimension funges can be loaded as BeQunge formatted `.beq` files.  Loading a `.beq` file implies `-lNFUN`.
 
 ### Arguments
 `funge [ARGS] file [YARGS]`
@@ -28,6 +27,8 @@ implies `-lNFUN`.
 `-fexecute` `-fno-execute` Enable or disable use of execute instruction `=`.
 
 `-ffilesystem` `-fno-filesystem` Enable or disable use of filesystem instructions `i` and `o`.
+
+`-finvert-hl` Invert the `h` and `l` instructions.
 
 `-ftopo=[torus|lahey]` Set the topology.
 
@@ -60,7 +61,7 @@ The dimensionality (up to 4D) is determined automatically based on the file cont
 the `-std` argument.  Higher dimensions can be determined automatically from BeQunge formatted files with or without
 the `Dimensions` directive.
 
-Standard instructions which operate on vectors (`g`, `p`, `x`, `?`), operate with vector lengths egual to the number of
+Standard instructions which operate on vectors (`g`, `p`, `x`, `?`), operate with vector lengths equal to the number of
 dimensions detected.  This enables those instructions to function in a standardized way in higher-dimension funges.  For
 example, in 4D mode, `?` will change the delta to one of 8 possible directions, while `x` can move in all possible
 directions.
@@ -70,11 +71,15 @@ C-style strings can be enabled with `-fstrings=c`.  In this mode, backslashes in
 instead, it and the following character are interpretted as an escape sequence.  This happens in one tick.  In addition
 to special characters, this allows quotes and ANSI escape codes in strings.
 
+### 64-bit
+Funge++ stack and funge-space are 64-bit values.  For that reason, FPDP numbers use a single stack cell, and LONG
+numbers are 128-bit.
+
 ## Errata
 ### High/Low
-The Funge-98 specification is inconsistent about the delta of the `h` and `l`  instructions.  Funge++ uses the
+The Funge-98 specification is inconsistent about the delta of the `h` and `l`  instructions (https://github.com/catseye/Funge-98/issues/10).  Funge++ uses the
 definition in the program flow section, that is `h` is "delta <- (0,0,1)" and `l` is "delta <- (0,0,-1)".  This makes
-it compatible with BeQunge and Rc/Funge-98.
+it compatible with BeQunge and Rc/Funge-98.  The `-finvert-hl` argument flips this behavior.
 
 ## Fingerprints
 Funge++ supports the following fingerprints.  These can either be loaded at runtime by the '(' instruction, or by
@@ -84,11 +89,29 @@ specifying the `-l` command line argument.
 
 `BITW` [Bitwise Operators](doc/BITW.md).
 
-`BOOL` [Boolean Operators](http://www.rcfunge98.com/rcfunge2_manual.html#BOOL)
+`BOOL` [Boolean Operators](http://www.rcfunge98.com/rcfunge2_manual.html#BOOL).
 
 `CPLI` [Complex Integer Extension](http://www.rcfunge98.com/rcfunge2_manual.html#CPLI).
 
+`DBUG` [Debugger Control](doc/DBUG.md).
+
+`FING` [Operate on single fingerprint semantics](http://www.rcfunge98.com/rcfunge2_manual.html#FING).
+
+`FIXP` [Fixed point math functions](http://www.rcfunge98.com/rcfunge2_manual.html#FIXP).
+
+`FPDP` [Double precision floating point](http://www.rcfunge98.com/rcfunge2_manual.html#FPDP).
+
+`FPRT` [Formatted print](http://www.rcfunge98.com/rcfunge2_manual.html#FPRT).
+
+`FPSP` [Single precision floating point](http://www.rcfunge98.com/rcfunge2_manual.html#FPSP).
+
+`FRTH` [Some common forth commands](http://www.rcfunge98.com/rcfunge2_manual.html#FRTH).
+
 `HRTI` [High Resolution Timer Interface](https://github.com/catseye/Funge-98/blob/master/library/HRTI.markdown).
+
+`JSTR` [3d string vectors](http://www.rcfunge98.com/rcfunge2_manual.html#JSTR)
+
+`LONG` [Long Integers](http://www.rcfunge98.com/rcfunge2_manual.html#LONG)
 
 `MODE` [Standard Modes](https://github.com/catseye/Funge-98/blob/master/library/MODE.markdown).
 
@@ -106,6 +129,10 @@ specifying the `-l` command line argument.
 
 `ROMA` [Roman Numerals](https://github.com/catseye/Funge-98/blob/master/library/ROMA.markdown).
 
+`STRN` [String functions](http://www.rcfunge98.com/rcfunge2_manual.html#STRN)
+
+`SUBR` [Subroutine extension](http://www.rcfunge98.com/rcfunge2_manual.html#SUBR)
+
 `TERM` [Terminal extension](http://www.rcfunge98.com/rcfunge2_manual.html#TERM).
 
 `TOYS` [Standard Toys](https://github.com/catseye/Funge-98/blob/master/library/TOYS.markdown).
@@ -114,8 +141,9 @@ specifying the `-l` command line argument.
 The Funge++ debugger, known as defunge, can be run on any Befunge program by specifying the `-g` command line argument.
 
 ### Commands
-Defunge supports the follow commands.  Vector arguments to commands are a comma separated list of coordinates inside
-parenthesis, starting with the X dimension: `(x, y, z)`.  As manya dimensions as necessary are allowed.
+Defunge supports the follow commands.  All arguments are optional, but must be given in the order shown.  Vector
+arguments to commands are a comma separated list of coordinates inside parenthesis, starting with the X dimension:
+`(x, y, z)`.  As many dimensions as necessary are allowed.
 
 *run*
 Run the IP being debugged.
@@ -133,11 +161,11 @@ print the entire stack stack.
 *read v*
 Print the cell at vector *v*.
 
-*get v*
-Print field around the cell at vector *v* in the X and Y directions.
+*get v s d*
+Print field vector *s* cells around the cell at vector *v* in the dimensions specified by vector *d*.
 
-*list n*
-Display the field *n* cells in the X and Y directions from the current IP.
+*list s d*
+Print the field vector *s* cells around the current IP in the dimensions specified by vector *d*.
 
 *break v*
 Add a breakpoint on the cell at vector *v*.

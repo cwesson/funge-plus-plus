@@ -8,8 +8,8 @@
 
 namespace Funge {
 
-FingerprintBITW::FingerprintBITW(Field& f, InstructionPointer& i, StackStack& s) :
-	Fingerprint(f, i, s, {'A', 'L', 'N', 'O', 'R', 'X'})
+FingerprintBITW::FingerprintBITW(FungeRunner& r) :
+	Fingerprint(r, {'A', 'L', 'N', 'O', 'R', 'X'})
 {}
 
 bool FingerprintBITW::execute(inst_t cmd){

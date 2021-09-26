@@ -12,8 +12,8 @@
 
 namespace Funge {
 
-FingerprintTOYS::FingerprintTOYS(Field& f, InstructionPointer& i, StackStack& s) :
-	Fingerprint(f, i, s, {
+FingerprintTOYS::FingerprintTOYS(FungeRunner& r) :
+	Fingerprint(r, {
 			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
 			'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
 	}),
@@ -169,7 +169,7 @@ bool FingerprintTOYS::execute(inst_t cmd){
 			if(funge_config.dimensions > n){
 				ip.setDelta(v);
 			}else{
-				ip.reverse();
+				ip.reflect();
 			}
 		} break;
 		case 'U':{
@@ -218,11 +218,11 @@ bool FingerprintTOYS::execute(inst_t cmd){
 			if(cell < value){
 				stack.top().push(value);
 				pushVector(stack.top(), v);
-				ip.reverse();
+				ip.reflect();
 				ip.next();
-				ip.reverse();
+				ip.reflect();
 			}else if(cell > value){
-				ip.reverse();
+				ip.reflect();
 			}
 		} break;
 		case 'X':{
@@ -236,7 +236,7 @@ bool FingerprintTOYS::execute(inst_t cmd){
 				inc.set(1, inc.get(1)+1);
 				ip.setPos(inc);
 			}else{
-				ip.reverse();
+				ip.reflect();
 			}
 		} break;
 		case 'Z':{
@@ -245,7 +245,7 @@ bool FingerprintTOYS::execute(inst_t cmd){
 				inc.set(2, inc.get(2)+1);
 				ip.setPos(inc);
 			}else{
-				ip.reverse();
+				ip.reflect();
 			}
 		} break;
 		default:

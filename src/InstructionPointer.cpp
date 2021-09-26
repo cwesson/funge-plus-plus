@@ -97,7 +97,7 @@ void InstructionPointer::setStorage(const Vector& v){
 	storage = v;
 }
 
-void InstructionPointer::reverse(){
+void InstructionPointer::reflect(){
 	delta.reverse();
 }
 

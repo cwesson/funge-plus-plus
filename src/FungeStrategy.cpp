@@ -5,27 +5,23 @@
  */
 
 #include "FungeStrategy.h"
+#include "FungeRunner.h"
 
 namespace Funge {
 
-FungeStrategy::FungeStrategy(Field& f, InstructionPointer& i, StackStack& s, FungeState& t, std::initializer_list<inst_t> in) :
-	field(f),
-	ip(i),
-	stack(s),
-	state(t),
+FungeStrategy::FungeStrategy(FungeRunner& r) :
+	runner(r),
+	field(r.getField()),
+	ip(r.getIP()),
+	stack(r.getStack()),
 	rd(),
-	gen(rd()),
-	dis(),
-	inst(in)
+	gen(rd())
 {
 	
 }
 
-const std::vector<inst_t>& FungeStrategy::instructions() const{
-	return inst;
-}
-
-stack_t FungeStrategy::random(){
+stack_t FungeStrategy::random(stack_t min, stack_t max){
+	std::uniform_int_distribution<> dis(min, max);
 	return dis(gen);
 }
 

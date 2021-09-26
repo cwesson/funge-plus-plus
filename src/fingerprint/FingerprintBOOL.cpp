@@ -8,8 +8,8 @@
 
 namespace Funge {
 
-FingerprintBOOL::FingerprintBOOL(Field& f, InstructionPointer& i, StackStack& s) :
-	Fingerprint(f, i, s, {'A', 'L', 'N', 'O', 'R', 'X'})
+FingerprintBOOL::FingerprintBOOL(FungeRunner& r) :
+	Fingerprint(r, {'A', 'L', 'N', 'O', 'R', 'X'})
 {}
 
 bool FingerprintBOOL::execute(inst_t cmd){
@@ -17,21 +17,21 @@ bool FingerprintBOOL::execute(inst_t cmd){
 		case 'A':{
 			stack_t a = stack.top().pop();
 			stack_t b = stack.top().pop();
-			stack.top().push(b && a);
+			stack.top().push(b & a);
 		} break;
 		case 'N':{
 			stack_t a = stack.top().pop();
-			stack.top().push(!a);
+			stack.top().push(~a);
 		} break;
 		case 'O':{
 			stack_t a = stack.top().pop();
 			stack_t b = stack.top().pop();
-			stack.top().push(b || a);
+			stack.top().push(b | a);
 		} break;
 		case 'X':{
 			stack_t a = stack.top().pop();
 			stack_t b = stack.top().pop();
-			stack.top().push((!b) != (!a));
+			stack.top().push(b ^ a);
 		} break;
 		default:
 			return false;

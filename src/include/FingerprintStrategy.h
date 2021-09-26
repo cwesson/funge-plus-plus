@@ -15,17 +15,19 @@ namespace Funge {
 
 class FingerprintStrategy : public FungeStrategy {
 	public:
-		FingerprintStrategy(Field& f, InstructionPointer& i, StackStack& s, FungeState& t);
+		explicit FingerprintStrategy(FungeRunner& r);
+		FingerprintStrategy(const FingerprintStrategy& orig, FungeRunner& r);
 		virtual ~FingerprintStrategy();
-		
-		virtual bool execute(inst_t cmd) override;
+		virtual FungeStrategy* clone(FungeRunner& r) const override;
 		
 		bool load(uint64_t fingerprint);
 		bool unload(uint64_t fingerprint);
 	
 	protected:
+		bool execute(Fingerprint* fing, inst_t i);
+
 		std::map<uint64_t, Fingerprint*> available;
-		std::map<inst_t, std::stack<Fingerprint*>> loaded;
+		std::vector<uint64_t> loaded;
 };
 
 }

@@ -5,34 +5,49 @@
  */
 
 #include "Trefunge98Strategy.h"
+#include "FungeRunner.h"
+#include "FungeConfig.h"
 
 namespace Funge {
 
 
-Trefunge98Strategy::Trefunge98Strategy(Field& f, InstructionPointer& i, StackStack& s, FungeState& t) :
-	FungeStrategy(f, i, s, t, {'h', 'l', 'm'})
+Trefunge98Strategy::Trefunge98Strategy(FungeRunner& r) :
+	FungeStrategy(r)
 {
-	
+	r.pushSemantic('h', std::bind(&Trefunge98Strategy::instructionHigh, this));
+	r.pushSemantic('l', std::bind(&Trefunge98Strategy::instructionLow, this));
+	r.pushSemantic('m', std::bind(&Trefunge98Strategy::instructionIf, this));
 }
 
-bool Trefunge98Strategy::execute(inst_t cmd){
-	switch(cmd){
-		case 'h':
-			ip.setDelta(Vector{0, 0, 1}); break;
-		case 'l':
-			ip.setDelta(Vector{0, 0, -1}); break;
-		case 'm':
-			if(stack.top().pop() == 0){
-				ip.setDelta(Vector{0, 0, 1});
-			}else{
-				ip.setDelta(Vector{0, 0, -1});
-			}
-			break;
-		
-		default:
-			return false;
+bool Trefunge98Strategy::instructionHigh(){
+	if(!funge_config.inverthl){
+		ip.setDelta(Vector{0, 0, 1});
+	}else{
+		ip.setDelta(Vector{0, 0, -1});
 	}
 	return true;
+}
+
+bool Trefunge98Strategy::instructionLow(){
+	if(!funge_config.inverthl){
+		ip.setDelta(Vector{0, 0, -1});
+	}else{
+		ip.setDelta(Vector{0, 0, 1});
+	}
+	return true;
+}
+
+bool Trefunge98Strategy::instructionIf(){
+	if(stack.top().pop() == 0){
+		ip.setDelta(Vector{0, 0, 1});
+	}else{
+		ip.setDelta(Vector{0, 0, -1});
+	}
+	return true;
+}
+
+FungeStrategy* Trefunge98Strategy::clone(FungeRunner& r) const{
+	return new Trefunge98Strategy(r);
 }
 
 }

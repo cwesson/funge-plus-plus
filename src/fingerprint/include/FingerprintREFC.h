@@ -14,13 +14,13 @@ namespace Funge {
 
 class FingerprintREFC : public Fingerprint {
 	public:
-		FingerprintREFC(Field& f, InstructionPointer& i, StackStack& s);
+		explicit FingerprintREFC(FungeRunner& r);
 		virtual ~FingerprintREFC() = default;
 		
 		virtual bool execute(inst_t cmd) override;
 	
 	protected:
-		std::map<stack_t, Vector> refc_map;
+		static std::map<stack_t, Vector> refc_map;
 };
 
 }

@@ -21,8 +21,8 @@ function test_simple() {
     else
         expect=$code
     fi
-    assert_equal $1 $code $expect
-    assert_equal $1 "$res" "$2"
+    assert_equal "$1 exit code" $code $expect
+    assert_equal "$1 output" "$res" "$2"
 }
 
 function test_befunge() {
@@ -34,8 +34,8 @@ function test_befunge() {
     else
         expect=$code
     fi
-    assert_equal $1 $code $expect
-    assert_equal $1 "$res" "$2"
+    assert_equal "$1 exit code" $code $expect
+    assert_equal "$1 output" "$res" "$2"
 }
 
 function test_diff() {
@@ -100,16 +100,23 @@ test_simple test/example3d.beq "Hello World"
 test_simple test/example5d.beq "Hello World"
 test_simple test/hello3d.beq "Hello World!"
 # Fingerprint Tests
-test_simple test/test_roma.b98 "1000 500 100 50 10 5 1 "
 test_simple test/test_bool.b98 "1 2 "
-test_simple test/test_nfun.b98 "Funge++ in the Forth Dimension!"
-test_simple test/test_television.b98 "9 8 7 6 5 4 3 2 1 0 "
-test_simple test/test_tumbler.b98 "0 "
-test_simple test/test_fishhook.b98 "1 2 3 4 5 6 "
 test_simple test/test_boulder.b98 "1 2 3 4 5 6 "
 test_simple test/test_bracelet.b98 "1 2 3 1 2 3 "
 test_simple test/test_chicane.b98 "6 5 4 3 2 1 "
+test_simple test/test_fishhook.b98 "1 2 3 4 5 6 "
+test_simple test/test_frth.b98 "14 6 7 8 9 10 11 12 13 15 13 6 7 8 9 10 11 12 13 14 15 "
+test_simple test/test_nfun.b98 "Funge++ in the Forth Dimension!"
 test_simple test/test_perl.b98 "78 243"
+test_simple test/test_roma.b98 "1000 500 100 50 10 5 1 "
+test_simple test/test_romap.b98 "MMCDXXI MLXVI MDCCLXXVI "
+test_simple test/test_television.b98 "9 8 7 6 5 4 3 2 1 0 "
+test_simple test/test_tumbler.b98 "0 "
+test_simple test/test_subr.b98 "7 6 5 4 3 2 1 362880 "
+test_simple test/test_fing.b98 "1 5 10 100 100 "
+# Edge Cases
+test_simple test/kk.b98 "!12 "
+test_simple test/k_quote.b98 "2 "
 # Mycology Tests
 test_simple test/Mycology/sanity.bf "0 1 2 3 4 5 6 7 8 9 "
 test_mycology mycology.b98 15

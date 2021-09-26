@@ -13,7 +13,7 @@ namespace Funge {
 
 class FingerprintTERM : public Fingerprint {
 	public:
-		FingerprintTERM(Field& f, InstructionPointer& i, StackStack& s);
+		explicit FingerprintTERM(FungeRunner& r);
 		virtual ~FingerprintTERM() = default;
 		
 		virtual bool execute(inst_t cmd) override;

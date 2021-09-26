@@ -6,26 +6,24 @@
 
 #pragma once
 
-#include "Field.h"
-#include "InstructionPointer.h"
-#include "StackStack.h"
+#include "FungeRunner.h"
 #include "funge_types.h"
 
 namespace Funge {
 
 class Fingerprint {
 	public:
-		Fingerprint(Field& f, InstructionPointer& i, StackStack& s, std::initializer_list<inst_t> in) :
-			field(f), ip(i), stack(s), inst(in) {}
+		Fingerprint(FungeRunner& r, std::initializer_list<inst_t> in);
 		virtual ~Fingerprint() = default;
 		
 		virtual bool execute(inst_t cmd) = 0;
+
+		virtual void activate(){}
 		
-		const std::vector<inst_t>& instructions() const{
-			return inst;
-		}
+		const std::vector<inst_t>& instructions() const;
 	
 	protected:
+		FungeRunner& runner;
 		Field& field;
 		InstructionPointer& ip;
 		StackStack& stack;

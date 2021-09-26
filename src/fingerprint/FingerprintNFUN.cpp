@@ -9,8 +9,8 @@
 
 namespace Funge {
 
-FingerprintNFUN::FingerprintNFUN(Field& f, InstructionPointer& i, StackStack& s) :
-	Fingerprint(f, i, s,
+FingerprintNFUN::FingerprintNFUN(FungeRunner& r) :
+	Fingerprint(r,
 			{'A', 'B', 'H', 'I', 'L', 'M', 'Q', 'T', 'U', 'V', 'X', 'Y', 'Z'})
 {}
 

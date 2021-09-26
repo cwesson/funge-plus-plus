@@ -8,8 +8,8 @@
 
 namespace Funge {
 
-FingerprintTERM::FingerprintTERM(Field& f, InstructionPointer& i, StackStack& s) :
-	Fingerprint(f, i, s, {'C', 'D', 'G', 'H', 'L', 'S', 'U'})
+FingerprintTERM::FingerprintTERM(FungeRunner& r) :
+	Fingerprint(r, {'C', 'D', 'G', 'H', 'L', 'S', 'U'})
 {}
 
 bool FingerprintTERM::execute(inst_t cmd){

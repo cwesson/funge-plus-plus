@@ -4,3 +4,6 @@
 [submodule "ut/Mycology"]
 	path = test/Mycology
 	url = https://github.com/Deewiant/Mycology.git
+[submodule "third_party/bigint"]
+	path = third_party/bigint
+	url = https://github.com/cwesson/bigint.git

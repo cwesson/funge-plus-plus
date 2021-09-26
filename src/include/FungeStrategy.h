@@ -9,33 +9,31 @@
 #include "Field.h"
 #include "InstructionPointer.h"
 #include "StackStack.h"
-#include "FungeState.h"
+#include <functional>
 #include <random>
 
 namespace Funge {
 
+class FungeRunner;
+
 class FungeStrategy {
 	public:
-		FungeStrategy(Field& f, InstructionPointer& i, StackStack& s, FungeState& t, std::initializer_list<inst_t> in);
+		FungeStrategy(FungeRunner& r);
 		virtual ~FungeStrategy() = default;
 		
-		virtual bool execute(inst_t cmd) = 0;
-		
-		const std::vector<inst_t>& instructions() const;
+		virtual FungeStrategy* clone(FungeRunner& r) const = 0;
 	
 	protected:
+		FungeRunner& runner;
 		Field& field;
 		InstructionPointer& ip;
 		StackStack& stack;
-		FungeState& state;
 		
-		stack_t random();
+		stack_t random(stack_t min, stack_t max);
 	
 	private:
-		std::random_device rd;
+		std::default_random_engine rd;
 		std::mt19937 gen;
-		std::uniform_int_distribution<stack_t> dis;
-		std::vector<inst_t> inst;
 };
 
 }

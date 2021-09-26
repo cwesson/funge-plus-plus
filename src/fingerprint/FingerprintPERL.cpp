@@ -11,8 +11,8 @@
 
 namespace Funge {
 
-FingerprintPERL::FingerprintPERL(Field& f, InstructionPointer& i, StackStack& s) :
-	Fingerprint(f, i, s, {'E', 'I', 'S'})
+FingerprintPERL::FingerprintPERL(FungeRunner& r) :
+	Fingerprint(r, {'E', 'I', 'S'})
 {}
 
 bool FingerprintPERL::execute(inst_t cmd){
@@ -22,7 +22,7 @@ bool FingerprintPERL::execute(inst_t cmd){
 				int e = perl(popString(stack.top()));
 				pushString(stack.top(), std::to_string(e));
 			}else{
-				ip.reverse();
+				ip.reflect();
 			}
 		} break;
 		case 'I':{
@@ -30,7 +30,7 @@ bool FingerprintPERL::execute(inst_t cmd){
 				int e = perl(popString(stack.top()));
 				stack.top().push(e);
 			}else{
-				ip.reverse();
+				ip.reflect();
 			}
 		} break;
 		case 'S':{
@@ -42,7 +42,7 @@ bool FingerprintPERL::execute(inst_t cmd){
 	return true;
 }
 
-int FingerprintPERL::perl(std::string code){
+int FingerprintPERL::perl(const std::string& code){
 	std::string cmd = std::string("exit(eval{") + code + std::string("})");
 	std::stringstream sq;
 	sq << std::quoted(cmd);

@@ -40,7 +40,7 @@ FungeUniverse::~FungeUniverse(){
 }
 
 void FungeUniverse::cloneRunner(FungeRunner& runner){
-	addRunner(new FungeRunner(*this, runner));
+	addRunner(new FungeRunner(runner));
 }
 
 void FungeUniverse::addRunner(FungeRunner* runner){

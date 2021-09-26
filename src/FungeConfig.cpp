@@ -27,6 +27,7 @@ struct FungeConfig funge_config = {
 	.invertmode = false,
 	.queuemode = false,
 	.switchmode = false,
+	.inverthl = false,
 };
 
 }

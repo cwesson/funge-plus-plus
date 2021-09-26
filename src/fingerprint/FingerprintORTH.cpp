@@ -9,8 +9,8 @@
 
 namespace Funge {
 
-FingerprintORTH::FingerprintORTH(Field& f, InstructionPointer& i, StackStack& s) :
-	Fingerprint(f, i, s, {'A', 'E', 'G', 'O', 'P', 'S', 'V', 'W', 'X', 'Y', 'Z'})
+FingerprintORTH::FingerprintORTH(FungeRunner& r) :
+	Fingerprint(r, {'A', 'E', 'G', 'O', 'P', 'S', 'V', 'W', 'X', 'Y', 'Z'})
 {}
 
 bool FingerprintORTH::execute(inst_t cmd){
