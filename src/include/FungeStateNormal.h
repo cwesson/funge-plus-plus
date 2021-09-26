@@ -8,6 +8,7 @@
 
 #include "FungeState.h"
 #include "FungeStrategy.h"
+#include "FungeSemantic.h"
 #include <map>
 #include <stack>
 
