@@ -16,7 +16,7 @@ CPPARGS := $(INCLUDES) -g -Wall -Wextra -Werror -std=c++2a
 LINTARGS := $(INCLUDES) --enable=all --std=c++20
 
 LD := g++
-LDARGS := -lpthread
+LDARGS := -pthread
 
 .PHONY: all clean realclean build funge test
 
