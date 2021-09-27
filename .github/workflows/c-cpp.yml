@@ -13,3 +13,7 @@ jobs:
         submodules: recursive
     - name: make
       run: make
+    - uses: actions/upload-artifact@v2
+      with:
+        name: mycology-log
+        path: mycology.log
