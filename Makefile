@@ -12,7 +12,7 @@ EXEC := bin/funge
 INCLUDES := -I src/include -I src/fingerprint/include -I third_party/bigint/include
 
 CPP := g++
-CPPARGS := $(INCLUDES) -g -Wall -Wextra -Werror -std=c++20
+CPPARGS := $(INCLUDES) -g -Wall -Wextra -Werror -std=c++2a
 LINTARGS := $(INCLUDES) --enable=all --std=c++20
 
 LD := g++
