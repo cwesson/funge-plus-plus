@@ -38,6 +38,19 @@ function test_befunge() {
     assert_equal "$1 output" "$res" "$2"
 }
 
+function test_fish() {
+    echo TEST $1
+    res=`timeout 10 ./bin/funge -std=fish $1`
+    code=$?
+    if [ -z "$3" ]; then
+        expect=0
+    else
+        expect=$code
+    fi
+    assert_equal "$1 exit code" $code $expect
+    assert_equal "$1 output" "$res" "$2"
+}
+
 function test_diff() {
     echo TEST $@
     diff $@
@@ -117,6 +130,13 @@ test_simple test/test_fing.b98 "1 5 10 100 100 "
 # Edge Cases
 test_simple test/kk.b98 "!12 "
 test_simple test/k_quote.b98 "2 "
+# Other Standards
+test_fish test/test_fish.fish "1234"
+test_fish test/test_stack.fish "12543"
+test_fish test/test_shift.fish "32141432"
+test_fish test/test_string.fish "hello, world"
+test_fish test/test_fact.fish "3628800"
+test_fish test/test_sqrt.fish "8"
 # Mycology Tests
 test_simple test/Mycology/sanity.bf "0 1 2 3 4 5 6 7 8 9 "
 test_mycology mycology.b98 15

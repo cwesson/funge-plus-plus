@@ -74,7 +74,8 @@ FungeState& FungeRunner::getNormalState(){
 	return normalState;
 }
 
-FungeState& FungeRunner::getStringState(){
+FungeState& FungeRunner::getStringState(inst_t i){
+	stringState.setEnd(i);
 	return stringState;
 }
 

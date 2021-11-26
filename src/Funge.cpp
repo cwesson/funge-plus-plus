@@ -24,24 +24,27 @@ int main(int argc, char **argv, char **envp){
 			char* arg = std::strtok(NULL, "=");
 			if(strcmp(arg, "une93") == 0){
 				Funge::funge_config.dimensions = 1;
-				Funge::funge_config.standard = 93;
+				Funge::funge_config.standard = Funge::FUNGE_93;
 			}else if(strcmp(arg, "une98") == 0){
 				Funge::funge_config.dimensions = 1;
-				Funge::funge_config.standard = 98;
+				Funge::funge_config.standard = Funge::FUNGE_98;
 			}else if(strcmp(arg, "be93") == 0){
 				Funge::funge_config.dimensions = 2;
-				Funge::funge_config.standard = 93;
+				Funge::funge_config.standard = Funge::FUNGE_93;
 			}else if(strcmp(arg, "be98") == 0){
 				Funge::funge_config.dimensions = 2;
-				Funge::funge_config.standard = 98;
+				Funge::funge_config.standard = Funge::FUNGE_98;
 			}else if(strcmp(arg, "tre98") == 0){
 				Funge::funge_config.dimensions = 3;
-				Funge::funge_config.standard = 98;
+				Funge::funge_config.standard = Funge::FUNGE_98;
+			}else if(strcmp(arg, "fish") == 0){
+				Funge::funge_config.dimensions = 2;
+				Funge::funge_config.standard = Funge::FUNGE_FISH;
 			}else{
 				std::cerr << "Unsupported standard: " << arg << std::endl;
 				return EINVAL;
 			}
-			if(Funge::funge_config.standard == 93){
+			if(Funge::funge_config.standard == Funge::FUNGE_93 || Funge::funge_config.standard == Funge::FUNGE_FISH){
 				Funge::funge_config.topo = Funge::TOPO_TORUS;
 				Funge::funge_config.strings = Funge::STRING_MULTISPACE;
 				Funge::funge_config.cells = Funge::CELL_CHAR;

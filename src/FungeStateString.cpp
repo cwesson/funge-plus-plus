@@ -12,6 +12,7 @@ namespace Funge {
 
 FungeStateString::FungeStateString(FungeRunner& r) :
 	FungeState(r),
+	end('\"'),
 	previous('\0')
 {
 	
@@ -55,7 +56,7 @@ void FungeStateString::escape(inst_t i){
 }
 
 bool FungeStateString::execute(inst_t i){
-	if(i == '\"'){
+	if(i == end){
 		previous = '\0';
 		runner.setState(runner.getNormalState());
 	}else{
@@ -84,6 +85,10 @@ bool FungeStateString::execute(inst_t i){
 		}
 	}
 	return true;
+}
+
+void FungeStateString::setEnd(inst_t i){
+	end = i;
 }
 
 }

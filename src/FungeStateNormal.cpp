@@ -11,6 +11,7 @@
 #include "Befunge93Strategy.h"
 #include "Befunge98Strategy.h"
 #include "Trefunge98Strategy.h"
+#include "FishStrategy.h"
 
 namespace Funge {
 
@@ -19,25 +20,29 @@ FungeStateNormal::FungeStateNormal(FungeRunner& r) :
 	strategies(),
 	semantics()
 {
-	if(funge_config.dimensions >= 1){
-		if(funge_config.standard >= 93){
-			load(new Unefunge93Strategy(runner));
+	if(funge_config.standard == Funge::FUNGE_FISH){
+		load(new FishStrategy(runner));
+	}else{
+		if(funge_config.dimensions >= 1){
+			if(funge_config.standard >= Funge::FUNGE_93){
+				load(new Unefunge93Strategy(runner));
+			}
+			if(funge_config.standard >= Funge::FUNGE_98){
+				load(new Unefunge98Strategy(runner));
+			}
 		}
-		if(funge_config.standard >= 98){
-			load(new Unefunge98Strategy(runner));
+		if(funge_config.dimensions >= 2){
+			if(funge_config.standard >= Funge::FUNGE_93){
+				load(new Befunge93Strategy(runner));
+			}
+			if(funge_config.standard >= Funge::FUNGE_98){
+				load(new Befunge98Strategy(runner));
+			}
 		}
-	}
-	if(funge_config.dimensions >= 2){
-		if(funge_config.standard >= 93){
-			load(new Befunge93Strategy(runner));
-		}
-		if(funge_config.standard >= 98){
-			load(new Befunge98Strategy(runner));
-		}
-	}
-	if(funge_config.dimensions >= 3){
-		if(funge_config.standard >= 98){
-			load(new Trefunge98Strategy(runner));
+		if(funge_config.dimensions >= 3){
+			if(funge_config.standard >= Funge::FUNGE_98){
+				load(new Trefunge98Strategy(runner));
+			}
 		}
 	}
 }

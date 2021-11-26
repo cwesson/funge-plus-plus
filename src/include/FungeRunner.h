@@ -26,7 +26,7 @@ class FungeRunner {
 		
 		void setState(FungeState& s);
 		FungeState& getNormalState();
-		FungeState& getStringState();
+		FungeState& getStringState(inst_t i='\"');
 		
 		void operator()();
 		void tick();

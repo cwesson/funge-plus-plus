@@ -12,6 +12,12 @@
 
 namespace Funge {
 
+enum FungeStandard {
+	FUNGE_93 = 93,
+	FUNGE_98 = 98,
+	FUNGE_FISH = -1,
+};
+
 enum FungeTopo {
 	TOPO_TORUS,
 	TOPO_LAHEY,
@@ -38,7 +44,7 @@ struct FungeConfig {
 	std::vector<std::string> env;
 	std::vector<uint64_t> fingerprints;
 	size_t dimensions;
-	unsigned int standard;
+	FungeStandard standard;
 	FungeTopo topo;
 	FungeString strings;
 	FungeCell cells;
