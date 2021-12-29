@@ -143,7 +143,7 @@ bool Unefunge98Strategy::instructionIterate(){
 
 bool Unefunge98Strategy::instructionQuit(){
 	int r = stack.top().pop();
-	exit(r);
+	runner.getUniverse().killAll(r);
 	// Unreachable
 	return true;
 }

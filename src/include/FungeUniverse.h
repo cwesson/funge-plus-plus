@@ -23,7 +23,8 @@ class FungeUniverse {
 		FungeUniverse(const FungeUniverse& old) = delete;
 		virtual ~FungeUniverse();
 		
-		void waitAll();
+		int waitAll();
+		void killAll(int ret);
 		
 		Field& getField();
 		
@@ -50,11 +51,12 @@ class FungeUniverse {
 		bool invertHL();
 	
 	private:
+		int exitcode;
 		struct FungeConfig config;
 		FungeDebugger debug;
 		Field field;
 		std::queue<std::thread*> threads;
-		std::queue<FungeRunner*> runners;
+		std::list<FungeRunner*> runners;
 		std::mutex mutex;
 		
 		void addRunner(FungeRunner* runner);

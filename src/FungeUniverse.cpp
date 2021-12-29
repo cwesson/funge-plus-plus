@@ -11,6 +11,7 @@
 namespace Funge {
 
 FungeUniverse::FungeUniverse(std::istream& file, Field::FileFormat fmt, const struct FungeConfig* cfg):
+	exitcode(0),
 	config(*cfg),
 	debug(),
 	field(file, fmt, cfg->dimensions, *this),
@@ -30,7 +31,7 @@ FungeUniverse::~FungeUniverse(){
 	while(runners.size() > 0){
 		FungeRunner* runner = runners.front();
 		delete runner;
-		runners.pop();
+		runners.pop_front();
 	}
 }
 
@@ -44,10 +45,10 @@ void FungeUniverse::addRunner(FungeRunner* runner){
 		std::thread* thread = new std::thread(std::ref(*runner));
 		threads.push(thread);
 	}
-	runners.push(runner);
+	runners.push_back(runner);
 }
 
-void FungeUniverse::waitAll(){
+int FungeUniverse::waitAll(){
 	if(config.threads == THREAD_NATIVE){
 		mutex.lock();
 		while(threads.size() > 0){
@@ -65,17 +66,28 @@ void FungeUniverse::waitAll(){
 		while(runners.size() > 0){
 			mutex.lock();
 			FungeRunner* thread = runners.front();
-			runners.pop();
 			mutex.unlock();
-			thread->tick();
+			if(thread->isRunning()){
+				thread->tick();
+			}
+			runners.pop_front();
 			if(thread->isRunning()){
 				mutex.lock();
-				runners.push(thread);
+				runners.push_back(thread);
 				mutex.unlock();
 			}else{
 				delete thread;
 			}
 		}
+	}
+	return exitcode;
+}
+
+void FungeUniverse::killAll(int ret){
+	std::lock_guard<std::mutex> guard(mutex);
+	exitcode = ret;
+	for(auto runner : runners){
+		runner->getIP().stop();
 	}
 }
 

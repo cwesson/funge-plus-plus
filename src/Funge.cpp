@@ -4,14 +4,15 @@
  * @author Conlan Wesson
  */
 
-#include <fstream>
-#include <iostream>
 #include "Field.h"
 #include "FungeConfig.h"
 #include "FungeRunner.h"
 #include "FungeUniverse.h"
 #include "Vector.h"
 #include <cstring>
+#include <fstream>
+#include <future>
+#include <iostream>
 
 int main(int argc, char **argv, char **envp){
 	Funge::FungeConfig funge_config;
@@ -147,7 +148,7 @@ int main(int argc, char **argv, char **envp){
 	funge_config.name = basename(filepath.c_str());
 	
 	Funge::FungeUniverse universe(file, fmt, &funge_config);
-	universe.waitAll();
-	
-	return 0;
+	auto ret = std::async(std::launch::async, &Funge::FungeUniverse::waitAll, &universe);
+	ret.wait();
+	return ret.get();
 }
