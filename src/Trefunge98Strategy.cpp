@@ -20,7 +20,7 @@ Trefunge98Strategy::Trefunge98Strategy(FungeRunner& r) :
 }
 
 bool Trefunge98Strategy::instructionHigh(){
-	if(!funge_config.inverthl){
+	if(!runner.getUniverse().invertHL()){
 		ip.setDelta(Vector{0, 0, 1});
 	}else{
 		ip.setDelta(Vector{0, 0, -1});
@@ -29,7 +29,7 @@ bool Trefunge98Strategy::instructionHigh(){
 }
 
 bool Trefunge98Strategy::instructionLow(){
-	if(!funge_config.inverthl){
+	if(!runner.getUniverse().invertHL()){
 		ip.setDelta(Vector{0, 0, -1});
 	}else{
 		ip.setDelta(Vector{0, 0, 1});

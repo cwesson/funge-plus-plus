@@ -5,7 +5,6 @@
  */
 
 #include "Unefunge93Strategy.h"
-#include "FungeConfig.h"
 #include "FungeRunner.h"
 #include "FungeUtilities.h"
 #include <iostream>
@@ -92,7 +91,7 @@ bool Unefunge93Strategy::instructionIf(){
 }
 
 bool Unefunge93Strategy::instructionGoAway(){
-	size_t d = funge_config.dimensions*2;
+	size_t d = runner.getUniverse().dimensions()*2;
 	int r = random(0, d-1);
 	Vector v;
 	if(r & 1){
@@ -250,14 +249,14 @@ bool Unefunge93Strategy::instructionNumOut(){
 
 bool Unefunge93Strategy::instructionGet(){
 	const Vector& storage = ip.getStorage();
-	Vector v = popVector(stack.top());
+	Vector v = popVector(runner);
 	stack.top().push(static_cast<stack_t>(field.get(v+storage)));
 	return true;
 }
 
 bool Unefunge93Strategy::instructionPut(){
 	const Vector& storage = ip.getStorage();
-	Vector v = popVector(stack.top());
+	Vector v = popVector(runner);
 	field.set(v+storage, stack.top().pop());
 	return true;
 }

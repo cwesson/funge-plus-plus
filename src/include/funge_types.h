@@ -35,4 +35,25 @@ enum FileFlags {
 	FILE_OUT_TEXT  = 0b1,
 };
 
+enum FungeTopo {
+	TOPO_TORUS,
+	TOPO_LAHEY,
+};
+
+enum FungeString {
+	STRING_MULTISPACE,
+	STRING_SGML,
+	STRING_C,
+};
+
+enum FungeCell {
+	CELL_CHAR = sizeof(char),
+	CELL_INT  = sizeof(inst_t),
+};
+
+enum FungeThread {
+	THREAD_NATIVE,
+	THREAD_FUNGE,
+};
+
 }

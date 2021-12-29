@@ -8,8 +8,20 @@
 
 namespace Funge {
 
-StackStack::StackStack(){
-	stack.push_back(Stack());
+StackStack::StackStack(FungeRunner& r) :
+	runner(r),
+	stack()
+{
+	stack.push_back(Stack(*this));
+}
+
+StackStack::StackStack(const StackStack& orig, FungeRunner& r) :
+	runner(r),
+	stack()
+{
+	for(size_t i = 0; i < orig.size(); ++i){
+		stack.push_back(Stack(orig.at(i), *this));
+	}
 }
 
 Stack& StackStack::top(){
@@ -41,11 +53,15 @@ void StackStack::pop(){
 }
 
 void StackStack::push(){
-	stack.push_back(Stack());
+	stack.push_back(Stack(*this));
 }
 
 size_t StackStack::size() const{
 	return stack.size();
+}
+
+FungeRunner& StackStack::getRunner(){
+	return runner;
 }
 
 }

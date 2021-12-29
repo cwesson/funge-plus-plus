@@ -6,7 +6,6 @@
 
 #include "FungeStateString.h"
 #include "FungeRunner.h"
-#include "FungeConfig.h"
 
 namespace Funge {
 
@@ -59,7 +58,7 @@ bool FungeStateString::execute(inst_t i){
 		previous = '\0';
 		runner.setState(runner.getNormalState());
 	}else{
-		switch(funge_config.strings){
+		switch(runner.getUniverse().stringStyle()){
 			case STRING_MULTISPACE:
 				stack.top().push(static_cast<stack_t>(i));
 				break;

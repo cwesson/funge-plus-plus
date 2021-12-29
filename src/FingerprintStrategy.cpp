@@ -38,7 +38,7 @@ FingerprintStrategy::FingerprintStrategy(FungeRunner& r) :
 	FungeStrategy(r),
 	loaded()
 {
-	for(auto fing : funge_config.fingerprints){
+	for(auto fing : runner.getUniverse().fingerprints()){
 		load(fing);
 	}
 }

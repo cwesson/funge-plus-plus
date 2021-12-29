@@ -10,10 +10,13 @@
 #include "Stack.h"
 
 namespace Funge {
+class FungeRunner;
 
 class StackStack {
 	public:
-		StackStack();
+		StackStack(FungeRunner& r);
+		StackStack(const StackStack& orig) = delete;
+		StackStack(const StackStack& orig, FungeRunner& r);
 		
 		Stack& top();
 		Stack& second();
@@ -27,8 +30,11 @@ class StackStack {
 		void push();
 		
 		size_t size() const;
+
+		FungeRunner& getRunner();
 		
 	private:
+		FungeRunner& runner;
 		std::vector<Stack> stack;
 };
 

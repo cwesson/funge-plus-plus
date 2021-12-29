@@ -10,19 +10,14 @@
 
 namespace Funge {
 
-FungeUniverse::FungeUniverse(std::istream& file, size_t dim, Field::FileFormat fmt):
-	field(file, dim, fmt),
+FungeUniverse::FungeUniverse(std::istream& file, Field::FileFormat fmt, const struct FungeConfig* cfg):
+	config(*cfg),
+	debug(),
+	field(file, fmt, cfg->dimensions, *this),
 	runners(),
 	mutex()
 {
 	addRunner(new FungeRunner(*this));
-}
-
-FungeUniverse::FungeUniverse(const FungeUniverse& old):
-	field(old.field),
-	runners(),
-	mutex()
-{
 }
 
 FungeUniverse::~FungeUniverse(){
@@ -45,7 +40,7 @@ void FungeUniverse::cloneRunner(FungeRunner& runner){
 
 void FungeUniverse::addRunner(FungeRunner* runner){
 	std::lock_guard<std::mutex> guard(mutex);
-	if(funge_config.threads == THREAD_NATIVE){
+	if(config.threads == THREAD_NATIVE){
 		std::thread* thread = new std::thread(std::ref(*runner));
 		threads.push(thread);
 	}
@@ -53,7 +48,7 @@ void FungeUniverse::addRunner(FungeRunner* runner){
 }
 
 void FungeUniverse::waitAll(){
-	if(funge_config.threads == THREAD_NATIVE){
+	if(config.threads == THREAD_NATIVE){
 		mutex.lock();
 		while(threads.size() > 0){
 			std::thread* thread = threads.front();
@@ -86,6 +81,85 @@ void FungeUniverse::waitAll(){
 
 Field& FungeUniverse::getField(){
 	return field;
+}
+
+FungeDebugger& FungeUniverse::getDebugger(){
+	return debug;
+}
+
+const std::string& FungeUniverse::getName(){
+	return config.name;
+}
+
+const std::vector<std::string>& FungeUniverse::arguments(){
+	return config.args;
+}
+
+const std::vector<std::string>& FungeUniverse::environment(){
+	return config.env;
+}
+
+const std::vector<uint64_t>& FungeUniverse::fingerprints(){
+	return config.fingerprints;
+}
+
+size_t FungeUniverse::dimensions(size_t d){
+	if(d > 0){
+		config.dimensions = d;
+	}
+	return config.dimensions;
+}
+
+unsigned int FungeUniverse::standard(){
+	return config.standard;
+}
+
+FungeTopo FungeUniverse::topology(){
+	return config.topo;
+}
+
+FungeString FungeUniverse::stringStyle(){
+	return config.strings;
+}
+
+FungeCell FungeUniverse::cellSize(){
+	return config.cells;
+}
+
+void FungeUniverse::setMode(FungeMode m){
+	config.mode |= m;
+}
+
+void FungeUniverse::clearMode(FungeMode m){
+	config.mode &= ~m;
+}
+
+void FungeUniverse::toggleMode(FungeMode m){
+	config.mode ^= m;
+}
+
+bool FungeUniverse::isMode(FungeMode m){
+	return !!(config.mode & m);
+}
+
+bool FungeUniverse::allowConcurrent(){
+	return config.concurrent;
+}
+
+bool FungeUniverse::allowExecute(){
+	return config.execute;
+}
+
+bool FungeUniverse::allowFilesystem(){
+	return config.filesystem;
+}
+
+bool FungeUniverse::allowFingerprints(){
+	return config.fingerprint;
+}
+
+bool FungeUniverse::invertHL(){
+	return config.inverthl;
 }
 
 }

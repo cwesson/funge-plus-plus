@@ -6,12 +6,13 @@
 
 #pragma once
 
+#include "FungeRunner.h"
 #include "Stack.h"
 #include "Vector.h"
 
 namespace Funge {
-	size_t pushVector(Stack& stack, const Vector& vector);
-	Vector popVector(Stack& stack);
+	size_t pushVector(FungeRunner& runner, const Vector& vector, Stack* stack=nullptr);
+	Vector popVector(FungeRunner& runner, Stack* stack=nullptr);
 	
 	size_t pushString(Stack& stack, const std::string& str);
 	std::string popString(Stack& stack);

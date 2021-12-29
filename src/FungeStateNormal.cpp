@@ -19,24 +19,25 @@ FungeStateNormal::FungeStateNormal(FungeRunner& r) :
 	strategies(),
 	semantics()
 {
-	if(funge_config.dimensions >= 1){
-		if(funge_config.standard >= 93){
+	FungeUniverse& uni = runner.getUniverse();
+	if(uni.dimensions() >= 1){
+		if(uni.standard() >= 93){
 			load(new Unefunge93Strategy(runner));
 		}
-		if(funge_config.standard >= 98){
+		if(uni.standard() >= 98){
 			load(new Unefunge98Strategy(runner));
 		}
 	}
-	if(funge_config.dimensions >= 2){
-		if(funge_config.standard >= 93){
+	if(uni.dimensions() >= 2){
+		if(uni.standard() >= 93){
 			load(new Befunge93Strategy(runner));
 		}
-		if(funge_config.standard >= 98){
+		if(uni.standard() >= 98){
 			load(new Befunge98Strategy(runner));
 		}
 	}
-	if(funge_config.dimensions >= 3){
-		if(funge_config.standard >= 98){
+	if(uni.dimensions() >= 3){
+		if(uni.standard() >= 98){
 			load(new Trefunge98Strategy(runner));
 		}
 	}

@@ -3,8 +3,8 @@
 # @author Conlan Wesson
 ##
 
-SRCS := third_party/bigint/bigint.cpp $(shell find src/ -name \*.cpp)
-OBJS := $(subst third_party/,bin/,$(subst src/,bin/,$(subst .cpp,.o,$(SRCS))))
+SRCS := third_party/bigint/src/bigint.cpp $(shell find src/ -name \*.cpp)
+OBJS := $(addsuffix .o,$(addprefix bin/,$(basename $(SRCS))))
 DEPS := $(OBJS:%.o=%.d)
 
 EXEC := bin/funge
@@ -18,7 +18,7 @@ LINTARGS := $(INCLUDES) --enable=all --std=c++20
 LD := g++
 LDARGS := -pthread
 
-.PHONY: all clean realclean build funge test
+.PHONY: all clean realclean build funge test lint
 
 GCOV ?= 0
 ifneq ($(GCOV),0)
@@ -36,7 +36,7 @@ $(EXEC): $(OBJS)
 	@echo "LD  " $(subst bin/,,$@)
 	@$(LD) $(LDARGS) -o $@ $(OBJS)
 
-bin/%.o: src/%.cpp
+bin/%.o: %.cpp
 	@mkdir -p $(dir $@)
 	@echo "CPP " $(subst src/,,$<)
 	@$(CPP) $(CPPARGS) -MMD -o $@ -c $<

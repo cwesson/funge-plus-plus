@@ -11,10 +11,13 @@
 #include "funge_types.h"
 
 namespace Funge {
+class StackStack;
 
 class Stack {
 	public:
-		Stack();
+		Stack(StackStack& s);
+		//Stack(const Stack& orig) = delete;
+		Stack(const Stack& orig, StackStack& s);
 		
 		stack_t pop();
 		stack_t peek() const;
@@ -27,6 +30,7 @@ class Stack {
 		stack_t operator[](size_t p) const;
 	
 	private:
+		StackStack& ss;
 		std::list<stack_t> stack;
 };
 

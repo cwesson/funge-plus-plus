@@ -12,7 +12,7 @@ namespace Funge {
 FungeRunner::FungeRunner(FungeUniverse& uni) :
 	universe(uni),
 	field(uni.getField()),
-	stack(),
+	stack(*this),
 	ip(uni.getField()),
 	normalState(*this),
 	stringState(*this),
@@ -23,7 +23,7 @@ FungeRunner::FungeRunner(FungeUniverse& uni) :
 FungeRunner::FungeRunner(const FungeRunner& runner) :
 	universe(runner.universe),
 	field(runner.field),
-	stack(runner.stack),
+	stack(runner.stack, *this),
 	ip(runner.ip),
 	normalState(runner.normalState, *this),
 	stringState(*this),
@@ -51,7 +51,7 @@ void FungeRunner::operator()(){
 void FungeRunner::tick(){
 	bool done = false;
 	while(!done && !ip.isStopped()){
-		FungeDebugger::tick(field, stack, ip);
+		getUniverse().getDebugger().tick(*this);
 		inst_t i = ip.get();
 		done = execute(i);
 		if(!done && i != ' '){
@@ -92,6 +92,10 @@ StackStack& FungeRunner::getStack(){
 
 InstructionPointer& FungeRunner::getIP(){
 	return ip;
+}
+
+bool FungeRunner::isMode(FungeMode m){
+	return universe.isMode(m);
 }
 
 void FungeRunner::pushSemantic(inst_t i, semantic_t func){

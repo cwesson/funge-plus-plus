@@ -21,13 +21,13 @@ bool FingerprintSUBR::execute(inst_t cmd){
 		} break;
 		case 'C':{
 			stack_t n = stack.top().pop();
-			Vector va = popVector(stack.top());
+			Vector va = popVector(runner);
 			stack_t pops[n];
 			for(stack_t i = 0; i < n; ++i){
 				pops[i] = stack.top().pop();
 			}
-			pushVector(stack.top(), ip.getPos());
-			pushVector(stack.top(), ip.getDelta());
+			pushVector(runner, ip.getPos());
+			pushVector(runner, ip.getDelta());
 			for(stack_t i = n; i > 0; --i){
 				stack.top().push(pops[i-1]);
 			}
@@ -38,7 +38,7 @@ bool FingerprintSUBR::execute(inst_t cmd){
 			ip.setDelta(Vector{1});
 		} break;
 		case 'J':{
-			Vector va = popVector(stack.top());
+			Vector va = popVector(runner);
 			if(offset){
 				va += ip.getPos();
 			}
@@ -54,8 +54,8 @@ bool FingerprintSUBR::execute(inst_t cmd){
 			for(stack_t i = 0; i < n; ++i){
 				pops[i] = stack.top().pop();
 			}
-			Vector vd = popVector(stack.top());
-			Vector va = popVector(stack.top());
+			Vector vd = popVector(runner);
+			Vector va = popVector(runner);
 			for(stack_t i = n; i > 0; --i){
 				stack.top().push(pops[i-1]);
 			}

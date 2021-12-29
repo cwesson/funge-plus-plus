@@ -5,7 +5,7 @@
  */
 
 #include "FingerprintMODE.h"
-#include "FungeConfig.h"
+#include "FungeUniverse.h"
 #include <cmath>
 
 namespace Funge {
@@ -17,16 +17,16 @@ FingerprintMODE::FingerprintMODE(FungeRunner& r) :
 bool FingerprintMODE::execute(inst_t cmd){
 	switch(cmd){
 		case 'H':{
-			funge_config.hovermode = !funge_config.hovermode;
+			runner.getUniverse().toggleMode(FUNGE_MODE_HOVER);
 		} break;
 		case 'I':{
-			funge_config.invertmode = !funge_config.invertmode;
+			runner.getUniverse().toggleMode(FUNGE_MODE_INVERT);
 		} break;
 		case 'Q':{
-			funge_config.queuemode = !funge_config.queuemode;
+			runner.getUniverse().toggleMode(FUNGE_MODE_QUEUE);
 		} break;
 		case 'S':{
-			funge_config.switchmode = !funge_config.switchmode;
+			runner.getUniverse().toggleMode(FUNGE_MODE_SWITCH);
 		} break;
 		default:
 			return false;

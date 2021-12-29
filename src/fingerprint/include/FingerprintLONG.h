@@ -7,7 +7,7 @@
 #pragma once
 
 #include "Fingerprint.h"
-#include "bigint.h"
+#include "tmp/bigint.h"
 
 namespace Funge {
 

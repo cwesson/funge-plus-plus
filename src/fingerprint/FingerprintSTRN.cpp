@@ -40,7 +40,7 @@ bool FingerprintSTRN::execute(inst_t cmd){
 			}
 		} break;
 		case 'G':{
-			Vector va = popVector(stack.top());
+			Vector va = popVector(runner);
 			va += ip.getStorage();
 			std::string str;
 			for( ; field.get(va); va += Vector{1}){
@@ -82,7 +82,7 @@ bool FingerprintSTRN::execute(inst_t cmd){
 			stack.top().push(str.length());
 		} break;
 		case 'P':{
-			Vector va = popVector(stack.top());
+			Vector va = popVector(runner);
 			va += ip.getStorage();
 			std::string str = popString(stack.top());
 			for(char c : str){

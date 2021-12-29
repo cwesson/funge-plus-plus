@@ -6,7 +6,6 @@
 
 #include "Befunge98Strategy.h"
 #include "FungeRunner.h"
-#include "FungeConfig.h"
 
 namespace Funge {
 
@@ -21,7 +20,7 @@ Befunge98Strategy::Befunge98Strategy(FungeRunner& r) :
 
 bool Befunge98Strategy::instructionLeft(){
 	ip.left();
-	if(funge_config.switchmode){
+	if(runner.isMode(FUNGE_MODE_SWITCH)){
 		ip.set(']');
 	}
 	return true;
@@ -29,7 +28,7 @@ bool Befunge98Strategy::instructionLeft(){
 
 bool Befunge98Strategy::instructionRight(){
 	ip.right();
-	if(funge_config.switchmode){
+	if(runner.isMode(FUNGE_MODE_SWITCH)){
 		ip.set('[');
 	}
 	return true;

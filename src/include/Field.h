@@ -12,6 +12,7 @@
 #include "funge_types.h"
 
 namespace Funge {
+class FungeUniverse;
 
 class Field {
 	public:
@@ -20,8 +21,8 @@ class Field {
 			FORMAT_BEQ,
 		};
 		
-		Field();
-		explicit Field(std::istream& file, size_t dim, FileFormat fmt);
+		Field() = delete;
+		explicit Field(std::istream& file, FileFormat fmt, size_t dim, FungeUniverse& uni);
 		
 		void set(const Vector& p, inst_t v);
 		inst_t get(const Vector& p) const;
@@ -30,14 +31,19 @@ class Field {
 		void dump(const Vector& start, const Vector& delta, std::ostream& file, bool binary=false);
 		void parseBeq(std::istream& file);
 		
+		FungeTopo topology() const;
+		size_t dimensions() const;
 		dim_t min(size_t d) const;
 		dim_t max(size_t d) const;
+
+		FungeUniverse& getUniverse();
 		
 		inst_t operator[](const Vector& v) const;
 		
 		friend std::ostream& operator<<(std::ostream& os, const Field& rhs);
 	
 	private:
+		FungeUniverse& universe;
 		std::map<const Vector, inst_t> field;
 		std::vector<dim_t> maxs;
 		std::vector<dim_t> mins;

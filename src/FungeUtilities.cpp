@@ -6,22 +6,29 @@
 
 #include "FungeUtilities.h"
 #include "FungeConfig.h"
+#include "Stack.h"
 
 namespace Funge {
 
-size_t pushVector(Stack& stack, const Vector& vector){
-	size_t s = funge_config.dimensions;
+size_t pushVector(FungeRunner& runner, const Vector& vector, Stack* stack){
+	if(stack == nullptr){
+		stack = &runner.getStack().top();
+	}
+	size_t s = runner.getUniverse().dimensions();
 	for(size_t i = 0; i < s; ++i){
-		stack.push(vector[i]);
+		stack->push(vector[i]);
 	}
 	return s;
 }
 
-Vector popVector(Stack& stack){
+Vector popVector(FungeRunner& runner, Stack* stack){
+	if(stack == nullptr){
+		stack = &runner.getStack().top();
+	}
 	Vector v;
-	size_t s = funge_config.dimensions;
+	size_t s = runner.getUniverse().dimensions();
 	for(size_t i = s; i > 0; --i){
-		v.set(i-1, stack.pop());
+		v.set(i-1, stack->pop());
 	}
 	return v;
 }

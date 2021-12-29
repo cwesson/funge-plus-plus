@@ -15,14 +15,16 @@
 #include <list>
 
 namespace Funge {
+class FungeRunner;
 
 class FungeDebugger {
 	public:
-		static FungeDebugger* getInstance();
-		static void tick(const Field& field, const StackStack& stack, InstructionPointer& ip);
-		static void write(const Field& field, const Vector& pos, inst_t inst);
+		FungeDebugger();
+		~FungeDebugger() = default;
 
-		void swbreak(const Field& field, const StackStack& stack, InstructionPointer& ip);
+		void tick(FungeRunner& runner);
+		void write(Field& field, const Vector& pos, inst_t inst);
+		void swbreak(FungeRunner& runner);
 		void addBreakpoint(const Vector& vec);
 		void addWatchpoint(const Vector& vec);
 	
@@ -39,21 +41,18 @@ class FungeDebugger {
 		};
 		
 		struct Thread {
+			FungeRunner* runner;
 			InstructionPointer* ip;
 			const StackStack* stack;
 			std::list<Vector> backtrace;
 			State state;
 		};
 		
-		static FungeDebugger* instance;
-		
-		FungeDebugger();
-		~FungeDebugger();
-		
-		void debug(const Field& field, const StackStack& stack, InstructionPointer& ip);
+		void intro(FungeRunner& runner);
+		void debug(FungeRunner* runner);
 		void debugWrite(const Field& field, const Vector& pos, inst_t inst);
-		void printIP(const InstructionPointer& ip);
-		void printField(const Field& field, const Vector& center, const Vector& size, const Vector& dim, const InstructionPointer& ip);
+		void printIP(const InstructionPointer* ip);
+		void printField(const Field& field, const Vector& center, const Vector& size, const Vector& dim, const InstructionPointer* ip);
 		
 		std::set<Vector> breakpoints;
 		std::set<Vector> watchpoints;

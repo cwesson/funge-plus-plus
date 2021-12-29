@@ -5,7 +5,7 @@
  */
 
 #include "InstructionPointer.h"
-#include "FungeConfig.h"
+#include "FungeUniverse.h"
 
 namespace Funge {
 
@@ -42,7 +42,7 @@ void InstructionPointer::set(inst_t i){
 }
 
 bool InstructionPointer::inField(){
-	for(size_t n = 0; n < funge_config.dimensions; ++n){
+	for(size_t n = 0; n < field.dimensions(); ++n){
 		if(pos.get(n) < field.min(n) || pos.get(n) > field.max(n)){
 			return false;
 		}
@@ -53,7 +53,7 @@ bool InstructionPointer::inField(){
 void InstructionPointer::next(){
 	if(!stopped){
 		pos += delta;
-		if(funge_config.topo == TOPO_TORUS){
+		if(field.topology() == TOPO_TORUS){
 			if(pos.get(0) > 80){
 				pos.set(0, 0);
 			}else if(pos.get(0) < 0){
@@ -83,7 +83,7 @@ void InstructionPointer::setPos(const Vector& v){
 }
 
 void InstructionPointer::setDelta(const Vector& v){
-	if(funge_config.hovermode){
+	if(field.getUniverse().isMode(FUNGE_MODE_HOVER)){
 		size_t size = std::max(delta.size(), v.size());
 		for(size_t i = 0; i < size; ++i){
 			delta.set(i, delta.get(i) + v.get(i));

@@ -5,7 +5,6 @@
  */
 
 #include "FingerprintPERL.h"
-#include "FungeConfig.h"
 #include "FungeUtilities.h"
 #include <iomanip>
 
@@ -18,7 +17,7 @@ FingerprintPERL::FingerprintPERL(FungeRunner& r) :
 bool FingerprintPERL::execute(inst_t cmd){
 	switch(cmd){
 		case 'E':{
-			if(funge_config.execute){
+			if(runner.getUniverse().allowExecute()){
 				int e = perl(popString(stack.top()));
 				pushString(stack.top(), std::to_string(e));
 			}else{
@@ -26,7 +25,7 @@ bool FingerprintPERL::execute(inst_t cmd){
 			}
 		} break;
 		case 'I':{
-			if(funge_config.execute){
+			if(runner.getUniverse().allowExecute()){
 				int e = perl(popString(stack.top()));
 				stack.top().push(e);
 			}else{

@@ -17,8 +17,8 @@ bool FingerprintJSTR::execute(inst_t cmd){
 	switch(cmd){
 		case 'G':{
 			stack_t n = stack.top().pop();
-			Vector va = popVector(stack.top());
-			Vector vd = popVector(stack.top());
+			Vector va = popVector(runner);
+			Vector vd = popVector(runner);
 			Vector pos = va + ip.getStorage();
 			stack.top().push(0);
 			for( ; n > 0; --n){
@@ -28,8 +28,8 @@ bool FingerprintJSTR::execute(inst_t cmd){
 		} break;
 		case 'P':{
 			stack_t n = stack.top().pop();
-			Vector va = popVector(stack.top());
-			Vector vd = popVector(stack.top());
+			Vector va = popVector(runner);
+			Vector vd = popVector(runner);
 			Vector pos = va + ip.getStorage();
 			for( ; n > 0; --n){
 				field.set(pos, stack.top().pop());

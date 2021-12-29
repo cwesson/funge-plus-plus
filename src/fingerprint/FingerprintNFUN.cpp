@@ -5,7 +5,6 @@
  */
 
 #include "FingerprintNFUN.h"
-#include "FungeConfig.h"
 
 namespace Funge {
 
@@ -93,8 +92,8 @@ bool FingerprintNFUN::execute(inst_t cmd){
 		default:
 			return false;
 	}
-	if(funge_config.dimensions < dim){
-		funge_config.dimensions = dim;
+	if(runner.getUniverse().dimensions() < dim){
+		runner.getUniverse().dimensions(dim);
 	}
 	return true;
 }
