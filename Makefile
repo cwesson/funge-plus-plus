@@ -29,7 +29,7 @@ endif
 
 all: test
 
-build: ut funge
+build: funge
 
 funge: $(EXEC)
 
@@ -44,7 +44,7 @@ bin/%.o: %.cpp
 
 -include $(DEPS)
 
-test: build
+test: build ut
 	@./test/smoketest.sh
 
 lint:
@@ -69,10 +69,12 @@ UTBIN := bin/unittest
 ut: unittest
 
 unittest: $(UTBIN)
-	$(UTBIN) -c -v -ojunit
+	@$(UTBIN) -c -v -ojunit
 
 $(UTBIN): $(UTSRCS) cpputest
-	$(CPP) $(UTCPPARGS) -o $@ $(UTSRCS) $(CPPUTESTLIB)
+	@mkdir -p $(dir $@)
+	@echo "LD  " $@
+	@$(CPP) $(UTCPPARGS) -o $@ $(UTSRCS) $(CPPUTESTLIB)
 
 cpputest: $(CPPUTESTLIB)
 
