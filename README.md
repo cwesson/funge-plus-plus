@@ -167,3 +167,5 @@ Set the postion of the current IP to vector *v*.
 *universe*
 Print tthe current universe name.
 
+## Bug Reports
+See https://github.com/cwesson/funge-plus-plus/issues

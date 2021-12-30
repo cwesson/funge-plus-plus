@@ -27,7 +27,7 @@ CPPARGS += -fprofile-arcs -ftest-coverage
 LDARGS += -fprofile-arcs -ftest-coverage
 endif
 
-all: man test
+all: test
 
 build: ut funge
 
@@ -50,7 +50,8 @@ test: build
 lint:
 	@cppcheck $(LINTARGS) $(FUNGESRC)
 
-doc:
+doc: man
+	@echo "DOX "
 	@doxygen Doxyfile
 
 man: bin/funge.1

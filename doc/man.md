@@ -61,5 +61,8 @@ to load the funge program, the exit code is set to an error.  In any other case,
 **EIO**
 : Error opening file
 
+# BUGS
+See https://github.com/cwesson/funge-plus-plus/issues
+
 # COPYRIGHT
 Copyright (c) 2021 Conlan Wesson
