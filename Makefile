@@ -62,7 +62,7 @@ bin/funge.1: doc/man.md
 	@pandoc $< -s -t man -o $@
 
 CPPUTESTLIB := test/cpputest/src/CppUTest/libCppUTest.a
-UTCPPARGS := -I src/include -I test/cpputest/include -lpthread -std=c++20
+UTCPPARGS := -I src/include -I test/cpputest/include -lpthread -std=c++2a
 UTSRCS := test/ut/unittest.cpp src/Vector.cpp src/VectorRange.cpp
 UTBIN := bin/unittest
 
