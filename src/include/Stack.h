@@ -6,16 +6,16 @@
 
 #pragma once
 
+#include "funge_types.h"
 #include <cstddef>
 #include <list>
-#include "funge_types.h"
 
 namespace Funge {
 class StackStack;
 
 class Stack {
 	public:
-		Stack(StackStack& s);
+		explicit Stack(StackStack& s);
 		//Stack(const Stack& orig) = delete;
 		Stack(const Stack& orig, StackStack& s);
 		

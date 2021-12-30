@@ -6,7 +6,7 @@
 
 #include "Trefunge98Strategy.h"
 #include "FungeRunner.h"
-#include "FungeConfig.h"
+#include "FungeUniverse.h"
 
 namespace Funge {
 

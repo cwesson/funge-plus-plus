@@ -5,6 +5,7 @@
  */
 
 #include "FingerprintNFUN.h"
+#include "FungeUniverse.h"
 
 namespace Funge {
 

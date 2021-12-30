@@ -7,7 +7,7 @@
 #include "Field.h"
 #include "FungeConfig.h"
 #include "FungeRunner.h"
-#include "FungeUniverse.h"
+#include "FungeMultiverse.h"
 #include "Vector.h"
 #include <cstring>
 #include <fstream>
@@ -87,7 +87,7 @@ int main(int argc, char **argv, char **envp){
 			}else if(strcmp(arg, "c") == 0){
 				funge_config.strings = Funge::STRING_C;
 			}else{
-				std::cerr << "Unsupported topology: " << arg << std::endl;
+				std::cerr << "Unsupported strings: " << arg << std::endl;
 				return EINVAL;
 			}
 		}else if(strncmp(argv[a], "-fcells=", 8) == 0){
@@ -98,7 +98,7 @@ int main(int argc, char **argv, char **envp){
 			}else if(strcmp(arg, "int") == 0){
 				funge_config.cells = Funge::CELL_INT;
 			}else{
-				std::cerr << "Unsupported topology: " << arg << std::endl;
+				std::cerr << "Unsupported cell size: " << arg << std::endl;
 				return EINVAL;
 			}
 		}else if(strncmp(argv[a], "-fthreads=", 10) == 0){
@@ -109,7 +109,7 @@ int main(int argc, char **argv, char **envp){
 			}else if(strcmp(arg, "funge") == 0){
 				funge_config.threads = Funge::THREAD_FUNGE;
 			}else{
-				std::cerr << "Unsupported topology: " << arg << std::endl;
+				std::cerr << "Unsupported threading: " << arg << std::endl;
 				return EINVAL;
 			}
 		}else if(strncmp(argv[a], "-l", 2) == 0){
@@ -141,14 +141,18 @@ int main(int argc, char **argv, char **envp){
 		return EIO;
 	}
 	Funge::Field::FileFormat fmt = Funge::Field::FORMAT_BF;
-	if(filepath.substr(filepath.find_last_of(".") + 1) == "beq"){
+	std::string ext = filepath.substr(filepath.find_last_of(".") + 1);
+	if(ext == "beq"){
 		fmt = Funge::Field::FORMAT_BEQ;
 		funge_config.fingerprints.push_back(0x4e46554e);
+	}else if(ext == "fl"){
+		fmt = Funge::Field::FORMAT_FL;
 	}
 	funge_config.name = basename(filepath.c_str());
 	
-	Funge::FungeUniverse universe(file, fmt, &funge_config);
-	auto ret = std::async(std::launch::async, &Funge::FungeUniverse::waitAll, &universe);
+	Funge::FungeUniverse* universe = Funge::FungeMultiverse::getInstance().create(file, fmt, &funge_config);
+	universe->createRunner(Funge::Vector{0}, Funge::Vector{1});
+	auto ret = std::async(std::launch::async, &Funge::FungeUniverse::waitAll, universe);
 	ret.wait();
 	return ret.get();
 }

@@ -6,6 +6,7 @@
 
 #include "FingerprintPERL.h"
 #include "FungeUtilities.h"
+#include "FungeUniverse.h"
 #include <iomanip>
 
 namespace Funge {

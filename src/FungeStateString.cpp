@@ -6,6 +6,7 @@
 
 #include "FungeStateString.h"
 #include "FungeRunner.h"
+#include "FungeUniverse.h"
 
 namespace Funge {
 

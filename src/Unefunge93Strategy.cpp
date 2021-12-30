@@ -7,6 +7,7 @@
 #include "Unefunge93Strategy.h"
 #include "FungeRunner.h"
 #include "FungeUtilities.h"
+#include "FungeUniverse.h"
 #include <iostream>
 
 namespace Funge {

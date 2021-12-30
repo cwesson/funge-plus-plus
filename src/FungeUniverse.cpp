@@ -10,7 +10,7 @@
 
 namespace Funge {
 
-FungeUniverse::FungeUniverse(std::istream& file, Field::FileFormat fmt, const struct FungeConfig* cfg):
+FungeUniverse::FungeUniverse(std::istream& file, Field::FileFormat fmt, const FungeConfig* cfg):
 	exitcode(0),
 	config(*cfg),
 	debug(),
@@ -18,7 +18,7 @@ FungeUniverse::FungeUniverse(std::istream& file, Field::FileFormat fmt, const st
 	runners(),
 	mutex()
 {
-	addRunner(new FungeRunner(*this));
+	
 }
 
 FungeUniverse::~FungeUniverse(){
@@ -37,6 +37,10 @@ FungeUniverse::~FungeUniverse(){
 
 void FungeUniverse::cloneRunner(FungeRunner& runner){
 	addRunner(new FungeRunner(runner));
+}
+
+void FungeUniverse::createRunner(const Vector& pos, const Vector& delta){
+	addRunner(new FungeRunner(*this, pos, delta));
 }
 
 void FungeUniverse::addRunner(FungeRunner* runner){
@@ -99,19 +103,19 @@ FungeDebugger& FungeUniverse::getDebugger(){
 	return debug;
 }
 
-const std::string& FungeUniverse::getName(){
+const std::string& FungeUniverse::getName() const {
 	return config.name;
 }
 
-const std::vector<std::string>& FungeUniverse::arguments(){
+const std::vector<std::string>& FungeUniverse::arguments() const {
 	return config.args;
 }
 
-const std::vector<std::string>& FungeUniverse::environment(){
+const std::vector<std::string>& FungeUniverse::environment() const {
 	return config.env;
 }
 
-const std::vector<uint64_t>& FungeUniverse::fingerprints(){
+const std::vector<uint64_t>& FungeUniverse::fingerprints() const {
 	return config.fingerprints;
 }
 
@@ -122,19 +126,19 @@ size_t FungeUniverse::dimensions(size_t d){
 	return config.dimensions;
 }
 
-unsigned int FungeUniverse::standard(){
+unsigned int FungeUniverse::standard() const {
 	return config.standard;
 }
 
-FungeTopo FungeUniverse::topology(){
+FungeTopo FungeUniverse::topology() const {
 	return config.topo;
 }
 
-FungeString FungeUniverse::stringStyle(){
+FungeString FungeUniverse::stringStyle() const {
 	return config.strings;
 }
 
-FungeCell FungeUniverse::cellSize(){
+FungeCell FungeUniverse::cellSize() const {
 	return config.cells;
 }
 
@@ -150,27 +154,27 @@ void FungeUniverse::toggleMode(FungeMode m){
 	config.mode ^= m;
 }
 
-bool FungeUniverse::isMode(FungeMode m){
+bool FungeUniverse::isMode(FungeMode m) const {
 	return !!(config.mode & m);
 }
 
-bool FungeUniverse::allowConcurrent(){
+bool FungeUniverse::allowConcurrent() const {
 	return config.concurrent;
 }
 
-bool FungeUniverse::allowExecute(){
+bool FungeUniverse::allowExecute() const {
 	return config.execute;
 }
 
-bool FungeUniverse::allowFilesystem(){
+bool FungeUniverse::allowFilesystem() const {
 	return config.filesystem;
 }
 
-bool FungeUniverse::allowFingerprints(){
+bool FungeUniverse::allowFingerprints() const {
 	return config.fingerprint;
 }
 
-bool FungeUniverse::invertHL(){
+bool FungeUniverse::invertHL() const {
 	return config.inverthl;
 }
 

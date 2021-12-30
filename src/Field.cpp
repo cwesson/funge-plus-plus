@@ -26,6 +26,9 @@ Field::Field(std::istream& file, FileFormat fmt, size_t dim, FungeUniverse& uni)
 		case FORMAT_BEQ:
 			parseBeq(file);
 			break;
+		case FORMAT_FL:
+			parseFungeLib(file);
+			break;
 	}
 	if(dim == 0){
 		universe.dimensions(maxs.size());
@@ -145,7 +148,29 @@ void Field::parseBeq(std::istream& file){
 	}
 }
 
-void Field::dump(const Vector& start, const Vector& delta, std::ostream& file, bool binary){
+void Field::parseFungeLib(std::istream& file){
+	universe.dimensions(3);
+	Vector pos;
+	while(file.good()){
+		std::string line;
+		std::getline(file, line);
+		if(line.length() == 2 && line[0] == '='){
+			char ext = line[1];
+			if(ext >= 'A' && ext <= 'Z'){
+				pos = {0, 0, (ext - 'A')};
+				continue;
+			}
+		}
+
+		for(char i : line){
+			set(pos, i);
+			pos += Vector{1};
+		}
+		pos += Vector{0, 1};
+	}
+}
+
+void Field::dump(const Vector& start, const Vector& delta, std::ostream& file, bool binary) const {
 	Vector v(start);
 	Vector end(start+delta);
 	std::vector<char> buffer;

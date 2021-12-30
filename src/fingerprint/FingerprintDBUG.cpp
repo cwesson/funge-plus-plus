@@ -6,7 +6,7 @@
 
 #include "FingerprintDBUG.h"
 #include "FungeUtilities.h"
-#include "FungeConfig.h"
+#include "FungeUniverse.h"
 
 namespace Funge {
 

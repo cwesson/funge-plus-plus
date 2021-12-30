@@ -8,6 +8,7 @@
 #include "FungeRunner.h"
 #include "FungeUtilities.h"
 #include "FungeVersion.h"
+#include "FungeUniverse.h"
 #include <thread>
 #include <fstream>
 #include <ctime>

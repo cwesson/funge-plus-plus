@@ -11,6 +11,7 @@
 #include "Befunge93Strategy.h"
 #include "Befunge98Strategy.h"
 #include "Trefunge98Strategy.h"
+#include "FungeUniverse.h"
 
 namespace Funge {
 

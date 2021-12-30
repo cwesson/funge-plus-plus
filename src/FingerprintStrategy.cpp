@@ -5,7 +5,7 @@
  */
 
 #include "FingerprintStrategy.h"
-#include "FungeConfig.h"
+#include "FungeUniverse.h"
 #include "FingerprintBASE.h"
 #include "FingerprintBITW.h"
 #include "FingerprintBOOL.h"

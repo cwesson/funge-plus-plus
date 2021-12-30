@@ -6,6 +6,7 @@
 
 #include "FingerprintTOYS.h"
 #include "FungeUtilities.h"
+#include "FungeUniverse.h"
 #include "VectorRange.h"
 #include <cmath>
 

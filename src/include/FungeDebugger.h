@@ -6,16 +6,14 @@
 
 #pragma once
 
+#include "FungeRunner.h"
 #include "Field.h"
-#include "StackStack.h"
-#include "InstructionPointer.h"
 #include <set>
 #include <map>
 #include <mutex>
 #include <list>
 
 namespace Funge {
-class FungeRunner;
 
 class FungeDebugger {
 	public:

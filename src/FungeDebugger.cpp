@@ -6,7 +6,7 @@
 
 #include "FungeDebugger.h"
 #include "FungeConfig.h"
-#include "FungeRunner.h"
+#include "FungeUniverse.h"
 #include <iostream>
 #include <sstream>
 

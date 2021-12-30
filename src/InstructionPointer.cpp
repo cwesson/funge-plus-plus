@@ -6,42 +6,44 @@
 
 #include "InstructionPointer.h"
 #include "FungeUniverse.h"
+#include "FungeRunner.h"
+#include "Field.h"
 
 namespace Funge {
 
 size_t InstructionPointer::count = 0;
 
-InstructionPointer::InstructionPointer(Field& f) :
+InstructionPointer::InstructionPointer(FungeRunner& r) :
+	runner(r),
 	id(count++),
 	stopped(false),
 	pos({0}),
 	delta({1}),
-	storage({0}),
-	field(f)
+	storage({0})
 {
 	
 }
 
-InstructionPointer::InstructionPointer(const InstructionPointer& orig) :
+InstructionPointer::InstructionPointer(const InstructionPointer& orig, FungeRunner& r) :
+	runner(r),
 	id(count++),
 	stopped(orig.stopped),
 	pos(orig.pos),
 	delta(orig.delta),
-	storage(orig.storage),
-	field(orig.field)
+	storage(orig.storage)
 {
 	
 }
 
 inst_t InstructionPointer::get() const{
-	return field[pos];
+	return runner.getField()[pos];
 }
 
 void InstructionPointer::set(inst_t i){
-	field.set(pos, i);
+	runner.getField().set(pos, i);
 }
 
-bool InstructionPointer::inField(){
+bool InstructionPointer::inField(const Field& field) const {
 	for(size_t n = 0; n < field.dimensions(); ++n){
 		if(pos.get(n) < field.min(n) || pos.get(n) > field.max(n)){
 			return false;
@@ -53,6 +55,7 @@ bool InstructionPointer::inField(){
 void InstructionPointer::next(){
 	if(!stopped){
 		pos += delta;
+		const Field& field = runner.getField();
 		if(field.topology() == TOPO_TORUS){
 			if(pos.get(0) > 80){
 				pos.set(0, 0);
@@ -65,10 +68,10 @@ void InstructionPointer::next(){
 				pos.set(1, 24);
 			}
 		}else{
-			if(!inField()){
+			if(!inField(field)){
 				delta.reverse();
 				pos += delta;
-				while(inField()){
+				while(inField(field)){
 					pos += delta;
 				}
 				delta.reverse();
@@ -83,7 +86,7 @@ void InstructionPointer::setPos(const Vector& v){
 }
 
 void InstructionPointer::setDelta(const Vector& v){
-	if(field.getUniverse().isMode(FUNGE_MODE_HOVER)){
+	if(runner.getUniverse().isMode(FUNGE_MODE_HOVER)){
 		size_t size = std::max(delta.size(), v.size());
 		for(size_t i = 0; i < size; ++i){
 			delta.set(i, delta.get(i) + v.get(i));

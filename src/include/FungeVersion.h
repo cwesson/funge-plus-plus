@@ -10,8 +10,8 @@ namespace Funge
 {
 
 enum {
-	FUNGE_HANDPRINT = 0x464e2b2b, // "FN++"
-	FUNGE_VERSION   = 1,
+	FUNGE_HANDPRINT = 0x464e2b2b, ///< Funge++ Handprint ("FN++").
+	FUNGE_VERSION   = 1,          ///< Funge++ version number.
 };
 
 }

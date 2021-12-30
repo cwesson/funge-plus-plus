@@ -7,15 +7,17 @@
 #pragma once
 
 #include "Vector.h"
-#include "Field.h"
 #include "funge_types.h"
 
 namespace Funge {
+class FungeRunner;
+class Field;
 
 class InstructionPointer {
 	public:
-		explicit InstructionPointer(Field& f);
-		InstructionPointer(const InstructionPointer& orig);
+		explicit InstructionPointer(FungeRunner& r);
+		InstructionPointer(const InstructionPointer& orig) = delete;
+		InstructionPointer(const InstructionPointer& orig, FungeRunner& r);
 		
 		inst_t get() const;
 		void set(inst_t i);
@@ -40,14 +42,15 @@ class InstructionPointer {
 	
 	private:
 		static size_t count;
+
+		FungeRunner& runner;
 		size_t id;
 		bool stopped;
 		Vector pos;
 		Vector delta;
 		Vector storage;
-		Field& field;
 		
-		bool inField();
+		bool inField(const Field& field) const;
 };
 
 }

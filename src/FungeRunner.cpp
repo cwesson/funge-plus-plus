@@ -5,26 +5,27 @@
  */
 
 #include "FungeRunner.h"
+#include "FungeUniverse.h"
 #include "FungeDebugger.h"
 
 namespace Funge {
 
-FungeRunner::FungeRunner(FungeUniverse& uni) :
+FungeRunner::FungeRunner(FungeUniverse& uni, const Vector& pos, const Vector& delta) :
 	universe(uni),
-	field(uni.getField()),
 	stack(*this),
-	ip(uni.getField()),
+	ip(*this),
 	normalState(*this),
 	stringState(*this),
 	state(&normalState)
 {
+	ip.setPos(pos);
+	ip.setDelta(delta);
 }
 
 FungeRunner::FungeRunner(const FungeRunner& runner) :
 	universe(runner.universe),
-	field(runner.field),
 	stack(runner.stack, *this),
-	ip(runner.ip),
+	ip(runner.ip, *this),
 	normalState(runner.normalState, *this),
 	stringState(*this),
 	state(&normalState)
@@ -83,7 +84,7 @@ FungeUniverse& FungeRunner::getUniverse(){
 }
 
 Field& FungeRunner::getField(){
-	return field;
+	return universe.getField();
 }
 
 StackStack& FungeRunner::getStack(){
@@ -94,7 +95,7 @@ InstructionPointer& FungeRunner::getIP(){
 	return ip;
 }
 
-bool FungeRunner::isMode(FungeMode m){
+bool FungeRunner::isMode(FungeMode m) const {
 	return universe.isMode(m);
 }
 

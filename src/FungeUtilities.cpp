@@ -6,6 +6,7 @@
 
 #include "FungeUtilities.h"
 #include "FungeConfig.h"
+#include "FungeUniverse.h"
 #include "Stack.h"
 
 namespace Funge {

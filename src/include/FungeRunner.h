@@ -6,19 +6,19 @@
 
 #pragma once
 
-#include "Field.h"
 #include "StackStack.h"
 #include "InstructionPointer.h"
+#include "FungeState.h"
 #include "FungeStateNormal.h"
 #include "FungeStateString.h"
-#include "FungeUniverse.h"
+#include "FungeConfig.h"
 
 namespace Funge {
-class FungeState;
+class FungeUniverse;
 
 class FungeRunner {
 	public:
-		explicit FungeRunner(FungeUniverse& uni);
+		FungeRunner(FungeUniverse& uni, const Vector& pos, const Vector& delta);
 		FungeRunner(const FungeRunner& runner);
 		virtual ~FungeRunner();
 		
@@ -36,7 +36,7 @@ class FungeRunner {
 		Field& getField();
 		StackStack& getStack();
 		InstructionPointer& getIP();
-		bool isMode(FungeMode m);
+		bool isMode(FungeMode m) const;
 
 		void pushSemantic(inst_t i, semantic_t func);
 		semantic_t popSemantic(inst_t i);
@@ -44,7 +44,6 @@ class FungeRunner {
 	
 	private:
 		FungeUniverse& universe;
-		Field& field;
 		StackStack stack;
 		InstructionPointer ip;
 		
