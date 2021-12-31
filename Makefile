@@ -71,10 +71,10 @@ ut: unittest
 unittest: $(UTBIN)
 	@$(UTBIN) -c -v -ojunit
 
-$(UTBIN): $(UTSRCS) cpputest
+$(UTBIN): $(UTSRCS) $(CPPUTESTLIB)
 	@mkdir -p $(dir $@)
 	@echo "LD  " $@
-	@$(CPP) $(UTCPPARGS) -o $@ $(UTSRCS) $(CPPUTESTLIB)
+	@$(CPP) $(UTCPPARGS) -o $@ $^
 
 cpputest: $(CPPUTESTLIB)
 

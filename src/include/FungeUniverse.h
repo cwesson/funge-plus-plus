@@ -16,19 +16,57 @@
 #include <queue>
 
 namespace Funge {
-class FungeRunner;
 
+/**
+ * Funge universe.
+ */
 class FungeUniverse {
 	public:
+		/**
+		 * Copy constructor.
+		 */
 		FungeUniverse(const FungeUniverse& old) = delete;
+
+		/**
+		 * Destructor.
+		 */
 		virtual ~FungeUniverse();
-		
+
+		/**
+		 * Wait for the universe to end.
+		 * @return Exit code from the universe.
+		 */
 		int waitAll();
+
+		/**
+		 * Kill all runners in the universe.
+		 * @param ret Exit code to use.
+		 */
 		void killAll(int ret);
-		
+
+		/**
+		 * Check if the universe is running.
+		 * @return true if there are runners in the universe.
+		 */
+		bool isRunning() const;
+
+		/**
+		 * Get the field of the universe.
+		 * @return The field.
+		 */
 		Field& getField();
-		
+
+		/**
+		 * Clone an existing runner.
+		 * @param runner Runner to clone.
+		 */
 		void cloneRunner(FungeRunner& runner);
+
+		/**
+		 * Create a new runner.
+		 * @param pos Initial position.
+		 * @param delta Initial delta.
+		 */
 		void createRunner(const Vector& pos, const Vector& delta);
 
 		FungeDebugger& getDebugger();
@@ -58,7 +96,7 @@ class FungeUniverse {
 		Field field;
 		std::queue<std::thread*> threads;
 		std::list<FungeRunner*> runners;
-		std::mutex mutex;
+		mutable std::mutex mutex;
 		
 		FungeUniverse(std::istream& file, Field::FileFormat fmt, const FungeConfig* cfg);
 		void addRunner(FungeRunner* runner);

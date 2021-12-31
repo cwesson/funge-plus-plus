@@ -14,8 +14,36 @@
 #include <future>
 #include <iostream>
 
-int main(int argc, char **argv, char **envp){
-	Funge::FungeConfig funge_config;
+namespace Funge{
+
+int createUniverse(std::string filepath, const FungeConfig& config){
+	Field::FileFormat fmt = Field::FORMAT_BF;
+
+	FungeConfig cfg(config);
+
+	std::string ext = filepath.substr(filepath.find_last_of(".") + 1);
+	if(ext == "beq"){
+		fmt = Field::FORMAT_BEQ;
+		cfg.fingerprints.push_back(0x4e46554e);
+	}else if(ext == "fl"){
+		fmt = Field::FORMAT_FL;
+	}
+	cfg.name = basename(filepath.c_str());
+	
+	std::ifstream stream(filepath);
+	if(stream.fail()){
+		std::cerr << "Failed to open " << filepath << std::endl;
+		return EIO;
+	}
+
+	FungeUniverse* universe = FungeMultiverse::getInstance().create(stream, fmt, &cfg);
+	universe->createRunner(Vector{0}, Vector{1});
+
+	return 0;
+}
+
+int fungemain(int argc, char **argv, char **envp){
+	FungeConfig funge_config;
 	std::string filepath;
 	int a = 1;
 	for( ; a < argc; ++a){
@@ -44,13 +72,13 @@ int main(int argc, char **argv, char **envp){
 				return EINVAL;
 			}
 			if(funge_config.standard == 93){
-				funge_config.topo = Funge::TOPO_TORUS;
-				funge_config.strings = Funge::STRING_MULTISPACE;
-				funge_config.cells = Funge::CELL_CHAR;
+				funge_config.topo = TOPO_TORUS;
+				funge_config.strings = STRING_MULTISPACE;
+				funge_config.cells = CELL_CHAR;
 			}else{
-				funge_config.topo = Funge::TOPO_LAHEY;
-				funge_config.strings = Funge::STRING_SGML;
-				funge_config.cells = Funge::CELL_INT;
+				funge_config.topo = TOPO_LAHEY;
+				funge_config.strings = STRING_SGML;
+				funge_config.cells = CELL_INT;
 			}
 		}else if(strcmp(argv[a], "-fconcurrent") == 0){
 			funge_config.concurrent = true;
@@ -70,9 +98,9 @@ int main(int argc, char **argv, char **envp){
 			std::strtok(argv[a], "=");
 			char* arg = strtok(NULL, "=");
 			if(strcmp(arg, "torus") == 0){
-				funge_config.topo = Funge::TOPO_TORUS;
+				funge_config.topo = TOPO_TORUS;
 			}else if(strcmp(arg, "lahey") == 0){
-				funge_config.topo = Funge::TOPO_LAHEY;
+				funge_config.topo = TOPO_LAHEY;
 			}else{
 				std::cerr << "Unsupported topology: " << arg << std::endl;
 				return EINVAL;
@@ -81,11 +109,11 @@ int main(int argc, char **argv, char **envp){
 			std::strtok(argv[a], "=");
 			char* arg = std::strtok(NULL, "=");
 			if(strcmp(arg, "multispace") == 0){
-				funge_config.strings = Funge::STRING_MULTISPACE;
+				funge_config.strings = STRING_MULTISPACE;
 			}else if(strcmp(arg, "sgml") == 0){
-				funge_config.strings = Funge::STRING_SGML;
+				funge_config.strings = STRING_SGML;
 			}else if(strcmp(arg, "c") == 0){
-				funge_config.strings = Funge::STRING_C;
+				funge_config.strings = STRING_C;
 			}else{
 				std::cerr << "Unsupported strings: " << arg << std::endl;
 				return EINVAL;
@@ -94,9 +122,9 @@ int main(int argc, char **argv, char **envp){
 			std::strtok(argv[a], "=");
 			char* arg = std::strtok(NULL, "=");
 			if(strcmp(arg, "char") == 0){
-				funge_config.cells = Funge::CELL_CHAR;
+				funge_config.cells = CELL_CHAR;
 			}else if(strcmp(arg, "int") == 0){
-				funge_config.cells = Funge::CELL_INT;
+				funge_config.cells = CELL_INT;
 			}else{
 				std::cerr << "Unsupported cell size: " << arg << std::endl;
 				return EINVAL;
@@ -105,9 +133,9 @@ int main(int argc, char **argv, char **envp){
 			std::strtok(argv[a], "=");
 			char* arg = std::strtok(NULL, "=");
 			if(strcmp(arg, "native") == 0){
-				funge_config.threads = Funge::THREAD_NATIVE;
+				funge_config.threads = THREAD_NATIVE;
 			}else if(strcmp(arg, "funge") == 0){
-				funge_config.threads = Funge::THREAD_FUNGE;
+				funge_config.threads = THREAD_FUNGE;
 			}else{
 				std::cerr << "Unsupported threading: " << arg << std::endl;
 				return EINVAL;
@@ -117,7 +145,7 @@ int main(int argc, char **argv, char **envp){
 			uint64_t fingerprint = std::accumulate(fing.begin(), fing.end(), 0, [](uint64_t f, char c){return (f << 8) + c;});
 			funge_config.fingerprints.push_back(fingerprint);
 		}else if(strcmp(argv[a], "-g") == 0){
-			funge_config.mode |= Funge::FUNGE_MODE_DEBUG;
+			funge_config.mode |= FUNGE_MODE_DEBUG;
 		}
 	}
 	if(a < argc){
@@ -135,24 +163,38 @@ int main(int argc, char **argv, char **envp){
 	{
 		funge_config.env.push_back(std::string(*env));
 	}
-	
-	std::ifstream file(filepath);
-	if(file.fail()){
-		return EIO;
-	}
-	Funge::Field::FileFormat fmt = Funge::Field::FORMAT_BF;
+
 	std::string ext = filepath.substr(filepath.find_last_of(".") + 1);
-	if(ext == "beq"){
-		fmt = Funge::Field::FORMAT_BEQ;
-		funge_config.fingerprints.push_back(0x4e46554e);
-	}else if(ext == "fl"){
-		fmt = Funge::Field::FORMAT_FL;
+	std::vector<std::string> files;
+	if(ext == "fmv"){
+		std::ifstream stream(filepath);
+		if(stream.fail()){
+			std::cerr << "Failed to open " << filepath << std::endl;
+			return EIO;
+		}
+		while(stream.good()){
+			std::string filename;
+			stream >> filename;
+			files.push_back(filename);
+		}
+	}else{
+		files.push_back(filepath);
 	}
-	funge_config.name = basename(filepath.c_str());
-	
-	Funge::FungeUniverse* universe = Funge::FungeMultiverse::getInstance().create(file, fmt, &funge_config);
-	universe->createRunner(Funge::Vector{0}, Funge::Vector{1});
-	auto ret = std::async(std::launch::async, &Funge::FungeUniverse::waitAll, universe);
+
+	for(auto file : files){
+		int uni = createUniverse(file, funge_config);
+		if(uni != 0){
+			return uni;
+		}
+	}
+
+	auto ret = std::async(std::launch::async, &FungeMultiverse::waitAll, &FungeMultiverse::getInstance());
 	ret.wait();
 	return ret.get();
+}
+
+} // namespace Funge
+
+int main(int argc, char **argv, char **envp){
+	return Funge::fungemain(argc, argv, envp);
 }

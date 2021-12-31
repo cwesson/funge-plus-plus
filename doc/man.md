@@ -9,7 +9,8 @@ funge - N-dimensional Funge-98 interpreter
 **funge** [*OPTIONS*] file [*YARGS*]
 
 # DESCRIPTION
-**funge** Funge-98 interpreter with N-Dimensional Funge support and debugger written in C++. 
+**funge** Funge-98 interpreter with N-Dimensional Funge support and debugger
+written in C++. 
 
 # OPTIONS
 **-std=[un93|une98|be93|be98|tre98]**
@@ -40,17 +41,21 @@ funge - N-dimensional Funge-98 interpreter
 : Set the threading mode.
 
 **-l[fingerprint]**
-: Load fingerprint at start.  This does not push the fingerprint ID to the stack.
+: Load fingerprint at start.  This does not push the fingerprint ID to the
+stack.
 
 **-g**
 : Start in debugger mode.
 
 # YARGS
-Any arguments following the Funge file are passed to the Funge program. These arguments are available to the program using the `y` instruction.
+Any arguments following the Funge file are passed to the Funge program. These
+arguments are available to the program using the `y` instruction.
 
 # EXIT VALUES
-**funge** sets the program exit code to the value popped by the quit instruction `q` if encountered.  If **funge** fails
-to load the funge program, the exit code is set to an error.  In any other case, the exit code is zero.
+**funge** sets the program exit code to the value popped by the quit instruction
+`q` of the prime universe if encountered.  If **funge** fails to load the funge
+program, the exit code is set to an error.  In any other case, the exit code is
+zero.
 
 **0**
 : Success

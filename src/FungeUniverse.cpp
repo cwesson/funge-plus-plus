@@ -67,22 +67,24 @@ int FungeUniverse::waitAll(){
 		}
 		mutex.unlock();
 	}else{
+		mutex.lock();
 		while(runners.size() > 0){
-			mutex.lock();
 			FungeRunner* thread = runners.front();
+
 			mutex.unlock();
 			if(thread->isRunning()){
 				thread->tick();
 			}
+			mutex.lock();
+
 			runners.pop_front();
 			if(thread->isRunning()){
-				mutex.lock();
 				runners.push_back(thread);
-				mutex.unlock();
 			}else{
 				delete thread;
 			}
 		}
+		mutex.unlock();
 	}
 	return exitcode;
 }
@@ -92,6 +94,15 @@ void FungeUniverse::killAll(int ret){
 	exitcode = ret;
 	for(auto runner : runners){
 		runner->getIP().stop();
+	}
+}
+
+bool FungeUniverse::isRunning() const{
+	std::lock_guard<std::mutex> guard(mutex);
+	if(config.threads == THREAD_NATIVE){
+		return (threads.size() > 0);
+	}else{
+		return (runners.size() > 0);
 	}
 }
 
