@@ -6,6 +6,7 @@
 
 #include "FungeDebugger.h"
 #include "FungeConfig.h"
+#include "FungeMultiverse.h"
 #include "FungeUniverse.h"
 #include <iostream>
 #include <sstream>
@@ -229,7 +230,10 @@ void FungeDebugger::debug(FungeRunner* runner){
 			inst_t i = field.get(v);
 			std::cout << "Value = (" << i << ") \"" << static_cast<char>(i) << "\"" << std::endl;
 		}else if(cmd == "universe"){
-			std::cout << runner->getUniverse().getName() << std::endl;
+			FungeMultiverse& multi = FungeMultiverse::getInstance();
+			for(auto uni = multi.cbegin(); uni != multi.cend(); ++uni){
+				std::cout << uni->first << std::endl;
+			}
 		}
 		
 	}

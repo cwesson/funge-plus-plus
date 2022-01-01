@@ -1,2 +1,2 @@
-test/test_outint.bf
-test/test_outchar.bf
+test/test_int.bf
+test/test_int.bf

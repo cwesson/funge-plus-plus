@@ -36,9 +36,14 @@ class FungeUniverse {
 
 		/**
 		 * Wait for the universe to end.
-		 * @return Exit code from the universe.
 		 */
-		int wait();
+		void wait() const;
+
+		/**
+		 * Get the exit code from the universe.
+		 * @return Exit code.
+		 */
+		int get() const;
 
 		/**
 		 * Kill all runners in the universe.
@@ -104,8 +109,7 @@ class FungeUniverse {
 		std::list<FungeRunner*> runners;
 		std::binary_semaphore semaphore;
 		mutable std::mutex mutex;
-		std::mutex cv_mutex;
-		std::condition_variable cv;
+		mutable std::condition_variable cv;
 		
 		FungeUniverse(std::istream& file, Field::FileFormat fmt, const FungeConfig* cfg);
 		void addRunner(FungeRunner* runner);

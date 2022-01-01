@@ -11,7 +11,6 @@
 #include "Vector.h"
 #include <cstring>
 #include <fstream>
-#include <future>
 #include <iostream>
 
 namespace Funge{
@@ -188,9 +187,7 @@ int fungemain(int argc, char **argv, char **envp){
 		}
 	}
 
-	auto ret = std::async(std::launch::async, &FungeMultiverse::waitAll, &FungeMultiverse::getInstance());
-	ret.wait();
-	return ret.get();
+	return FungeMultiverse::getInstance().waitAll();
 }
 
 } // namespace Funge

@@ -21,14 +21,16 @@ FungeUniverse::FungeUniverse(std::istream& file, Field::FileFormat fmt, const Fu
 	runners(),
 	semaphore(0),
 	mutex(),
-	cv_mutex(),
 	cv()
 {
 	thread = new std::thread(std::ref(*this));
 }
 
 FungeUniverse::~FungeUniverse(){
-	std::lock_guard<std::mutex> guard(mutex);
+	killAll(1);
+	thread->join();
+
+	//std::lock_guard<std::mutex> guard(mutex);
 	while(threads.size() > 0){
 		std::thread* thread = threads.front();
 		thread->join();
@@ -39,6 +41,8 @@ FungeUniverse::~FungeUniverse(){
 		delete runner;
 		runners.pop_front();
 	}
+
+	delete thread;
 }
 
 void FungeUniverse::cloneRunner(FungeRunner& runner){
@@ -99,9 +103,12 @@ void FungeUniverse::operator()(){
 	}
 }
 
-int FungeUniverse::wait(){
-	std::unique_lock<std::mutex> lock(cv_mutex);
+void FungeUniverse::wait() const{
+	std::unique_lock<std::mutex> lock(mutex);
 	cv.wait(lock, [this]{return !isRunning();});
+}
+
+int FungeUniverse::get() const{
 	return exitcode;
 }
 
@@ -117,7 +124,6 @@ void FungeUniverse::killAll(int ret){
 }
 
 bool FungeUniverse::isRunning() const{
-	std::lock_guard<std::mutex> guard(mutex);
 	bool alive = (runners.size() > 0);
 	if(config.threads == THREAD_NATIVE){
 		alive = (threads.size() > 0);
