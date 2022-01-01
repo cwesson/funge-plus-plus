@@ -11,14 +11,20 @@
 namespace Funge {
 
 FungeUniverse::FungeUniverse(std::istream& file, Field::FileFormat fmt, const FungeConfig* cfg):
+	running(true),
 	exitcode(0),
 	config(*cfg),
 	debug(),
 	field(file, fmt, cfg->dimensions, *this),
+	thread(nullptr),
+	threads(),
 	runners(),
-	mutex()
+	semaphore(0),
+	mutex(),
+	cv_mutex(),
+	cv()
 {
-	
+	thread = new std::thread(std::ref(*this));
 }
 
 FungeUniverse::~FungeUniverse(){
@@ -50,42 +56,52 @@ void FungeUniverse::addRunner(FungeRunner* runner){
 		threads.push(thread);
 	}
 	runners.push_back(runner);
+	semaphore.release();
 }
 
-int FungeUniverse::waitAll(){
-	if(config.threads == THREAD_NATIVE){
-		mutex.lock();
-		while(threads.size() > 0){
-			std::thread* thread = threads.front();
-			if(thread->joinable()){
-				mutex.unlock();
-				thread->join();
-				mutex.lock();
-			}
-			threads.pop();
-			delete thread;
-		}
-		mutex.unlock();
-	}else{
-		mutex.lock();
-		while(runners.size() > 0){
-			FungeRunner* thread = runners.front();
-
-			mutex.unlock();
-			if(thread->isRunning()){
-				thread->tick();
-			}
+void FungeUniverse::operator()(){
+	while(running){
+		semaphore.acquire();
+		if(config.threads == THREAD_NATIVE){
 			mutex.lock();
-
-			runners.pop_front();
-			if(thread->isRunning()){
-				runners.push_back(thread);
-			}else{
+			while(threads.size() > 0){
+				std::thread* thread = threads.front();
+				if(thread->joinable()){
+					mutex.unlock();
+					thread->join();
+					mutex.lock();
+				}
+				threads.pop();
 				delete thread;
 			}
+			mutex.unlock();
+		}else{
+			mutex.lock();
+			while(runners.size() > 0){
+				FungeRunner* thread = runners.front();
+
+				mutex.unlock();
+				if(thread->isRunning()){
+					thread->tick();
+				}
+				mutex.lock();
+
+				runners.pop_front();
+				if(thread->isRunning()){
+					runners.push_back(thread);
+				}else{
+					delete thread;
+					cv.notify_all();
+				}
+			}
+			mutex.unlock();
 		}
-		mutex.unlock();
 	}
+}
+
+int FungeUniverse::wait(){
+	std::unique_lock<std::mutex> lock(cv_mutex);
+	cv.wait(lock, [this]{return !isRunning();});
 	return exitcode;
 }
 
@@ -95,15 +111,18 @@ void FungeUniverse::killAll(int ret){
 	for(auto runner : runners){
 		runner->getIP().stop();
 	}
+	running = false;
+	semaphore.release();
+	cv.notify_all();
 }
 
 bool FungeUniverse::isRunning() const{
 	std::lock_guard<std::mutex> guard(mutex);
+	bool alive = (runners.size() > 0);
 	if(config.threads == THREAD_NATIVE){
-		return (threads.size() > 0);
-	}else{
-		return (runners.size() > 0);
+		alive = (threads.size() > 0);
 	}
+	return running && alive;
 }
 
 Field& FungeUniverse::getField(){

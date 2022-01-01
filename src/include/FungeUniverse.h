@@ -10,8 +10,10 @@
 #include "FungeConfig.h"
 #include "FungeRunner.h"
 #include "FungeDebugger.h"
+#include <condition_variable>
 #include <mutex>
 #include <iostream>
+#include <semaphore>
 #include <thread>
 #include <queue>
 
@@ -36,7 +38,7 @@ class FungeUniverse {
 		 * Wait for the universe to end.
 		 * @return Exit code from the universe.
 		 */
-		int waitAll();
+		int wait();
 
 		/**
 		 * Kill all runners in the universe.
@@ -69,6 +71,8 @@ class FungeUniverse {
 		 */
 		void createRunner(const Vector& pos, const Vector& delta);
 
+		void operator()();
+
 		FungeDebugger& getDebugger();
 		const std::string& getName() const;
 		const std::vector<std::string>& arguments() const;
@@ -90,13 +94,18 @@ class FungeUniverse {
 		bool invertHL() const;
 	
 	private:
+		bool running;
 		int exitcode;
 		FungeConfig config;
 		FungeDebugger debug;
 		Field field;
+		std::thread* thread;
 		std::queue<std::thread*> threads;
 		std::list<FungeRunner*> runners;
+		std::binary_semaphore semaphore;
 		mutable std::mutex mutex;
+		std::mutex cv_mutex;
+		std::condition_variable cv;
 		
 		FungeUniverse(std::istream& file, Field::FileFormat fmt, const FungeConfig* cfg);
 		void addRunner(FungeRunner* runner);

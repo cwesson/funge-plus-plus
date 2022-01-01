@@ -16,7 +16,7 @@ FungeMultiverse::FungeMultiverse() :
 
 FungeMultiverse::~FungeMultiverse(){
 	for(auto uni : universes){
-		uni.second->waitAll();
+		uni.second->wait();
 		// Destroy the universe
 		delete uni.second;
 	}
@@ -46,7 +46,7 @@ int FungeMultiverse::waitAll(){
 			FungeUniverse* uni = next.second;
 			if(uni->isRunning()){
 				running = true;
-				int r = uni->waitAll();
+				int r = uni->wait();
 				// Only keep exit code from the prime universe
 				if(first){
 					ret = r;
@@ -56,6 +56,10 @@ int FungeMultiverse::waitAll(){
 		}
 		// Keep looping until all universes are dead
 	}while(running);
+
+	for(auto next : universes){
+		next.second->killAll(1);
+	}
 
 	return ret;
 }
