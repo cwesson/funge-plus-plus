@@ -60,6 +60,12 @@ int FungeMultiverse::waitAll(){
 	return ret;
 }
 
+void FungeMultiverse::killAll(int ret){
+	for(auto next : universes){
+		next.second->killAll(ret);
+	}
+}
+
 FungeUniverse* FungeMultiverse::operator[](std::string name){
 	if(universes.contains(name)){
 		return universes[name];

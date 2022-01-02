@@ -39,6 +39,12 @@ class FungeMultiverse {
 		int waitAll();
 
 		/**
+		 * Kill all universes.
+		 * @param ret Exit code to use.
+		 */
+		void killAll(int ret);
+
+		/**
 		 * Lookup universe by name.
 		 * @param name Name to lookup.
 		 * @return The universe found or nullptr.

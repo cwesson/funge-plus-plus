@@ -30,7 +30,7 @@ FungeUniverse::~FungeUniverse(){
 	killAll(1);
 	thread->join();
 
-	//std::lock_guard<std::mutex> guard(mutex);
+	std::lock_guard<std::mutex> guard(mutex);
 	while(threads.size() > 0){
 		std::thread* thread = threads.front();
 		thread->join();

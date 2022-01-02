@@ -40,23 +40,20 @@ class FungeDebugger {
 		
 		struct Thread {
 			FungeRunner* runner;
-			InstructionPointer* ip;
-			const StackStack* stack;
 			std::list<Vector> backtrace;
 			State state;
 		};
 		
 		void intro(FungeRunner& runner);
-		void debug(FungeRunner* runner);
 		void debugWrite(const Field& field, const Vector& pos, inst_t inst);
-		void printIP(const InstructionPointer* ip);
-		void printField(const Field& field, const Vector& center, const Vector& size, const Vector& dim, const InstructionPointer* ip);
-		
+
 		std::set<Vector> breakpoints;
 		std::set<Vector> watchpoints;
 		std::map<size_t, Thread> threads;
 		std::recursive_mutex mutex;
 		size_t lastThread;
+
+		friend class Defunge;
 };
 
 }
