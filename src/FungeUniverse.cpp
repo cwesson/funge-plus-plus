@@ -14,8 +14,24 @@ FungeUniverse::FungeUniverse(std::istream& file, Field::FileFormat fmt, const Fu
 	running(true),
 	exitcode(0),
 	config(*cfg),
-	debug(),
+	debug(*this),
 	field(file, fmt, cfg->dimensions, *this),
+	thread(nullptr),
+	threads(),
+	runners(),
+	semaphore(0),
+	mutex(),
+	cv()
+{
+	thread = new std::thread(std::ref(*this));
+}
+
+FungeUniverse::FungeUniverse(const FungeConfig* cfg):
+	running(true),
+	exitcode(0),
+	config(*cfg),
+	debug(*this),
+	field(cfg->dimensions, *this),
 	thread(nullptr),
 	threads(),
 	runners(),
@@ -188,6 +204,10 @@ void FungeUniverse::clearMode(FungeMode m){
 
 void FungeUniverse::toggleMode(FungeMode m){
 	config.mode ^= m;
+}
+
+stack_t FungeUniverse::getMode() const {
+	return config.mode;
 }
 
 bool FungeUniverse::isMode(FungeMode m) const {

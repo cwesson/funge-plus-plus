@@ -38,6 +38,13 @@ class Field {
 		 * @param uni Universe the Field is part of.
 		 */
 		Field(std::istream& file, FileFormat fmt, size_t dim, FungeUniverse& uni);
+
+		/**
+		 * Constructor.
+		 * @param dim Initial number of dimensions.
+		 * @param uni Universe the Field is part of.
+		 */
+		Field(size_t dim, FungeUniverse& uni);
 		
 		/**
 		 * Set the value at position p.

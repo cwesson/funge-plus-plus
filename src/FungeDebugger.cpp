@@ -13,7 +13,8 @@
 
 namespace Funge {
 
-FungeDebugger::FungeDebugger() :
+FungeDebugger::FungeDebugger(FungeUniverse& uni) :
+	universe(uni),
 	breakpoints(),
 	watchpoints(),
 	threads(),

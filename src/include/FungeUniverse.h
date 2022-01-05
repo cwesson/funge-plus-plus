@@ -91,6 +91,7 @@ class FungeUniverse {
 		void setMode(FungeMode m);
 		void clearMode(FungeMode m);
 		void toggleMode(FungeMode m);
+		stack_t getMode() const;
 		bool isMode(FungeMode m) const;
 		bool allowConcurrent() const;
 		bool allowExecute() const;
@@ -112,6 +113,7 @@ class FungeUniverse {
 		mutable std::condition_variable cv;
 		
 		FungeUniverse(std::istream& file, Field::FileFormat fmt, const FungeConfig* cfg);
+		FungeUniverse(const FungeConfig* cfg);
 		void addRunner(FungeRunner* runner);
 
 		friend class FungeMultiverse;

@@ -37,6 +37,19 @@ Field::Field(std::istream& file, FileFormat fmt, size_t dim, FungeUniverse& uni)
 	}
 }
 
+Field::Field(size_t dim, FungeUniverse& uni) :
+	universe(uni),
+	field(),
+	maxs(),
+	mins()
+{
+	if(dim == 0){
+		universe.dimensions(maxs.size());
+	}else{
+		universe.dimensions(dim);
+	}
+}
+
 Vector Field::parse(const Vector& start, std::istream& file, bool binary){
 	Vector v(start);
 	Vector max(start);

@@ -17,7 +17,7 @@ namespace Funge {
 
 class FungeDebugger {
 	public:
-		FungeDebugger();
+		FungeDebugger(FungeUniverse& uni);
 		~FungeDebugger() = default;
 
 		void tick(FungeRunner& runner);
@@ -47,6 +47,7 @@ class FungeDebugger {
 		void intro(FungeRunner& runner);
 		void debugWrite(const Field& field, const Vector& pos, inst_t inst);
 
+		FungeUniverse& universe;
 		std::set<Vector> breakpoints;
 		std::set<Vector> watchpoints;
 		std::map<size_t, Thread> threads;

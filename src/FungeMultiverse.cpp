@@ -37,6 +37,17 @@ FungeUniverse* FungeMultiverse::create(std::istream& file, Field::FileFormat fmt
 	return uni;
 }
 
+FungeUniverse* FungeMultiverse::create(FungeConfig* cfg){
+	unsigned int a = 1;
+	std::string name(cfg->name);
+	while(universes.contains(cfg->name)){
+		cfg->name = name + "." + std::to_string(a);
+	}
+	FungeUniverse* uni = new FungeUniverse(cfg);
+	universes[cfg->name] = uni;
+	return uni;
+}
+
 int FungeMultiverse::waitAll(){
 	bool running = false;
 	int ret = 0;

@@ -16,6 +16,9 @@ class FingerprintMVRS : public Fingerprint {
 		virtual ~FingerprintMVRS() = default;
 		
 		virtual bool execute(inst_t cmd) override;
+	
+	private:
+		void copySpace(const Field& fsrc, const Vector& src, const Vector& sz, Field& fdest, const Vector& dest) const;
 };
 
 }

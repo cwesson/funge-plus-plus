@@ -37,6 +37,7 @@ class FungeRunner {
 		StackStack& getStack();
 		InstructionPointer& getIP();
 		bool isMode(FungeMode m) const;
+		stack_t getMode() const;
 
 		void pushSemantic(inst_t i, semantic_t func);
 		semantic_t popSemantic(inst_t i);

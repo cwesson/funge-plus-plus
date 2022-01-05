@@ -99,6 +99,10 @@ bool FungeRunner::isMode(FungeMode m) const {
 	return universe.isMode(m);
 }
 
+stack_t FungeRunner::getMode() const {
+	return universe.getMode();
+}
+
 void FungeRunner::pushSemantic(inst_t i, semantic_t func){
 	normalState.pushSemantic(i, func);
 }

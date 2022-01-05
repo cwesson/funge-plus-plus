@@ -33,6 +33,13 @@ class FungeMultiverse {
 		FungeUniverse* create(std::istream& file, Field::FileFormat fmt, FungeConfig* cfg);
 
 		/**
+		 * Create a new universe.
+		 * @param cfg Configuration for the universe.
+		 * @return New universe.
+		 */
+		FungeUniverse* create(FungeConfig* cfg);
+
+		/**
 		 * Wait for all universes to end.
 		 * @return Exist code from the prime universe.
 		 */
