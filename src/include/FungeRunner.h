@@ -38,13 +38,14 @@ class FungeRunner {
 		InstructionPointer& getIP();
 		bool isMode(FungeMode m) const;
 		stack_t getMode() const;
+		void setUniverse(FungeUniverse& other);
 
 		void pushSemantic(inst_t i, semantic_t func);
 		semantic_t popSemantic(inst_t i);
 		semantic_t getSemantic(inst_t i);
 	
 	private:
-		FungeUniverse& universe;
+		FungeUniverse* universe;
 		StackStack stack;
 		InstructionPointer ip;
 		

@@ -69,6 +69,15 @@ bool FingerprintMVRS::execute(inst_t cmd){
 			}
 			copySpace(other->getField(), src, size, runner.getUniverse().getField(), dest);
 		} break;
+		case 'J':{
+			std::string name = popString(stack.top());
+			FungeUniverse* other = multi[name];
+			if(other == nullptr){
+				ip.reflect();
+				return true;
+			}
+			other->transferRunner(&runner);
+		}break;
 		case 'N':{
 			pushString(stack.top(), universe.getName());
 		} break;

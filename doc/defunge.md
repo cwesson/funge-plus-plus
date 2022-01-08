@@ -57,3 +57,10 @@ print the entire stack stack.
 
 **universe**, **u**
 : Print a list universe names.
+
+## Fungespace
+The **get** and **list** command display the current state of fungespace.  The center cell of the requested range is
+underlined.
+
+If terminal colors are available, the position current IP is highlight in green, the position of other IPs
+are highlighted yellow.  The position of breakpoints are highlighted red, and watchpoints blue.

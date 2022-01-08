@@ -76,6 +76,12 @@ class FungeUniverse {
 		 */
 		void createRunner(const Vector& pos, const Vector& delta);
 
+		/**
+		 * Transfer a runner from another universe
+		 * @param runner Runner to transfer.
+		 */
+		void transferRunner(FungeRunner* runner);
+
 		void operator()();
 
 		FungeDebugger& getDebugger();

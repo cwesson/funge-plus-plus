@@ -69,6 +69,13 @@ void FungeUniverse::createRunner(const Vector& pos, const Vector& delta){
 	addRunner(new FungeRunner(*this, pos, delta));
 }
 
+void FungeUniverse::transferRunner(FungeRunner* runner){
+	std::lock_guard<std::mutex> guard(mutex);
+	runner->setUniverse(*this);
+	runners.push_back(runner);
+	semaphore.release();
+}
+
 void FungeUniverse::addRunner(FungeRunner* runner){
 	std::lock_guard<std::mutex> guard(mutex);
 	if(config.threads == THREAD_NATIVE){
@@ -107,10 +114,14 @@ void FungeUniverse::operator()(){
 				mutex.lock();
 
 				runners.pop_front();
-				if(thread->isRunning()){
-					runners.push_back(thread);
+				if(&thread->getUniverse() == this){
+					if(thread->isRunning()){
+						runners.push_back(thread);
+					}else{
+						delete thread;
+						cv.notify_all();
+					}
 				}else{
-					delete thread;
 					cv.notify_all();
 				}
 			}
