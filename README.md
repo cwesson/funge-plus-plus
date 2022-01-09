@@ -87,6 +87,8 @@ specifying the `-l` command line argument.
 
 `MODU` [Modulo Arithmetic Extension](https://github.com/catseye/Funge-98/blob/master/library/MODU.markdown).
 
+`MVRS` [Multiverse extension](http://www.rcfunge98.com/rcfunge2_manual.html#MVRS).
+
 `NFUN` [N-Dimensional Funge](doc/NFUN.md).
 
 `NULL` [Null Fingerprint](https://github.com/catseye/Funge-98/blob/master/library/NULL.markdown).

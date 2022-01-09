@@ -29,6 +29,15 @@ size_t pushVector(FungeRunner& runner, const Vector& vector, Stack* stack=nullpt
 Vector popVector(FungeRunner& runner, Stack* stack=nullptr);
 
 /**
+ * Pop a Vector from a Stack.
+ * @param runner Runner requesting pop.
+ * @param size Size of vector.
+ * @param stack Stack to pop from, default is top stack.
+ * @return Vector poped.
+ */
+Vector popVector(FungeRunner& runner, size_t size, Stack* stack=nullptr);
+
+/**
  * Push a string to a Stack.
  * @param stack Stack to push to.
  * @param str String to push.

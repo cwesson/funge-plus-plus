@@ -34,6 +34,17 @@ Vector popVector(FungeRunner& runner, Stack* stack){
 	return v;
 }
 
+Vector popVector(FungeRunner& runner, size_t size, Stack* stack){
+	if(stack == nullptr){
+		stack = &runner.getStack().top();
+	}
+	Vector v;
+	for(size_t i = size; i > 0; --i){
+		v.set(i-1, stack->pop());
+	}
+	return v;
+}
+
 size_t pushString(Stack& stack, const std::string& str){
 	size_t s = str.length();
 	stack.push(0);

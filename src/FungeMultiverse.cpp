@@ -50,7 +50,7 @@ FungeUniverse* FungeMultiverse::create(FungeConfig* cfg){
 
 int FungeMultiverse::waitAll(){
 	bool running = false;
-	int ret = 0;
+	size_t count = 0;
 	do{
 		running = false;
 		for(auto next : universes){
@@ -59,10 +59,12 @@ int FungeMultiverse::waitAll(){
 				running = true;
 			}
 			uni->wait();
+			++count;
 		}
 		// Keep looping until all universes are dead
-	}while(running);
+	}while(running || count < universes.size());
 
+	int ret = 0;
 	for(auto next : universes){
 		ret = next.second->get();
 		break;

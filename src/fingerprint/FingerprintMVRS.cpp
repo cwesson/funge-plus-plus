@@ -59,7 +59,7 @@ bool FingerprintMVRS::execute(inst_t cmd){
 		} break;
 		case 'F':{
 			Vector size = popVector(runner);
-			Vector src = popVector(runner);
+			Vector src = popVector(runner, 3);
 			Vector dest = popVector(runner);
 			std::string name = popString(stack.top());
 			FungeUniverse* other = multi[name];
@@ -69,6 +69,19 @@ bool FingerprintMVRS::execute(inst_t cmd){
 			}
 			copySpace(other->getField(), src, size, runner.getUniverse().getField(), dest);
 		} break;
+		case 'G':{
+			Vector delta = popVector(runner, 3);
+			Vector pos = popVector(runner, 3);
+			std::string name = popString(stack.top());
+			FungeUniverse* other = multi[name];
+			if(other == nullptr){
+				ip.reflect();
+				return true;
+			}
+			other->transferRunner(&runner);
+			ip.setPos(pos);
+			ip.setDelta(delta);
+		}break;
 		case 'J':{
 			std::string name = popString(stack.top());
 			FungeUniverse* other = multi[name];
@@ -84,7 +97,7 @@ bool FingerprintMVRS::execute(inst_t cmd){
 		case 'P':{
 			Vector size = popVector(runner);
 			Vector src = popVector(runner);
-			Vector dest = popVector(runner);
+			Vector dest = popVector(runner, 3);
 			std::string name = popString(stack.top());
 			FungeUniverse* other = multi[name];
 			if(other == nullptr){

@@ -70,10 +70,12 @@ void FungeUniverse::createRunner(const Vector& pos, const Vector& delta){
 }
 
 void FungeUniverse::transferRunner(FungeRunner* runner){
-	std::lock_guard<std::mutex> guard(mutex);
-	runner->setUniverse(*this);
-	runners.push_back(runner);
-	semaphore.release();
+	if(&runner->getUniverse() != this){
+		std::lock_guard<std::mutex> guard(mutex);
+		runner->setUniverse(*this);
+		runners.push_back(runner);
+		semaphore.release();
+	}
 }
 
 void FungeUniverse::addRunner(FungeRunner* runner){
