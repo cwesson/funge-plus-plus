@@ -17,6 +17,44 @@
 
 namespace Funge{
 
+int createUniverse(const std::filesystem::path& filepath, FungeConfig& config);
+
+int parseFMV(const std::filesystem::path& filepath, FungeConfig& config){
+	std::string dir = filepath.parent_path();
+	std::ifstream stream(filepath);
+	if(stream.fail()){
+		std::cerr << "Failed to open " << filepath << std::endl;
+		return EIO;
+	}
+
+	while(stream.good()){
+		std::string line;
+		std::getline(stream, line);
+		auto iss = std::istringstream(line);
+
+		std::string filename;
+		iss >> filename;
+		std::filesystem::path path(filename);
+		if(path.is_relative()){
+			path.assign(dir + path.preferred_separator + filename);
+		}
+		// Get arguments for this universe
+		FungeConfig cfg(config);
+		while(iss.good()){
+			std::string arg;
+			iss >> arg;
+			cfg.args.push_back(arg);
+		}
+
+		int uni = createUniverse(path, cfg);
+		if(uni != 0){
+			return uni;
+		}
+	}
+
+	return 0;
+}
+
 int createUniverse(const std::filesystem::path& filepath, FungeConfig& config){
 	Field::FileFormat fmt = Field::FORMAT_BF;
 
@@ -26,6 +64,8 @@ int createUniverse(const std::filesystem::path& filepath, FungeConfig& config){
 		config.fingerprints.push_back(0x4e46554e);
 	}else if(ext == ".fl"){
 		fmt = Field::FORMAT_FL;
+	}else if(ext == ".fmv"){
+		return parseFMV(filepath, config);
 	}
 	config.name = filepath.filename();
 	
@@ -163,44 +203,9 @@ int fungemain(int argc, char **argv, char **envp){
 		funge_config.env.push_back(std::string(*env));
 	}
 
-	std::string ext = filepath.extension();
-	if(ext == ".fmv"){
-		std::vector<std::filesystem::path> files;
-		std::string dir = filepath.parent_path();
-		std::ifstream stream(filepath);
-		if(stream.fail()){
-			std::cerr << "Failed to open " << filepath << std::endl;
-			return EIO;
-		}
-		while(stream.good()){
-			std::string line;
-			std::getline(stream, line);
-			auto iss = std::istringstream(line);
-
-			std::string filename;
-			iss >> filename;
-			std::filesystem::path path(filename);
-			if(path.is_relative()){
-				path.assign(dir + "/" + filename);
-			}
-			// Get arguments for this universe
-			FungeConfig cfg(funge_config);
-			while(iss.good()){
-				std::string arg;
-				iss >> arg;
-				cfg.args.push_back(arg);
-			}
-
-			int uni = createUniverse(path, cfg);
-			if(uni != 0){
-				return uni;
-			}
-		}
-	}else{
-		int uni = createUniverse(filepath, funge_config);
-		if(uni != 0){
-			return uni;
-		}
+	int uni = createUniverse(filepath, funge_config);
+	if(uni != 0){
+		return uni;
 	}
 
 	return FungeMultiverse::getInstance().waitAll();

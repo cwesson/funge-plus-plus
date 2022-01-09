@@ -1,6 +1,6 @@
 % FUNGE++(1) funge v1
 % Conlan Wesson
-% December 2021
+% January 2022
 
 # NAME
 funge - N-dimensional Funge-98 interpreter
@@ -82,4 +82,4 @@ zero.
 See https://github.com/cwesson/funge-plus-plus/issues
 
 # COPYRIGHT
-Copyright (c) 2021 Conlan Wesson
+Copyright (c) 2022 Conlan Wesson
