@@ -10,10 +10,10 @@
 #include "FungeConfig.h"
 #include "FungeRunner.h"
 #include "FungeDebugger.h"
+#include "FungeSem.h"
 #include <condition_variable>
 #include <mutex>
 #include <iostream>
-#include <semaphore>
 #include <thread>
 #include <queue>
 
@@ -114,7 +114,7 @@ class FungeUniverse {
 		std::thread* thread;
 		std::queue<std::thread*> threads;
 		std::list<FungeRunner*> runners;
-		std::binary_semaphore semaphore;
+		FungeSem semaphore;
 		mutable std::mutex mutex;
 		mutable std::condition_variable cv;
 		
