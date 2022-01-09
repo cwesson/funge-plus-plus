@@ -30,7 +30,11 @@ bool FingerprintNFUN::execute(inst_t cmd){
 			dim = 6;
 		} break;
 		case 'H':{
-			ip.setDelta(Vector{0, 0, 0, 0, -1});
+			if(!runner.getUniverse().invertHL()){
+				ip.setDelta(Vector{0, 0, 0, 0, 1});
+			}else{
+				ip.setDelta(Vector{0, 0, 0, 0, -1});
+			}
 			dim = 5;
 		} break;
 		case 'I':{
@@ -42,7 +46,11 @@ bool FingerprintNFUN::execute(inst_t cmd){
 			dim = 4;
 		} break;
 		case 'L':{
-			ip.setDelta(Vector{0, 0, 0, 0, 1});
+			if(!runner.getUniverse().invertHL()){
+				ip.setDelta(Vector{0, 0, 0, 0, -1});
+			}else{
+				ip.setDelta(Vector{0, 0, 0, 0, 1});
+			}
 			dim = 5;
 		} break;
 		case 'M':{
