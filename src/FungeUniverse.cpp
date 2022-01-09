@@ -10,12 +10,12 @@
 
 namespace Funge {
 
-FungeUniverse::FungeUniverse(std::istream& file, Field::FileFormat fmt, const FungeConfig* cfg):
+FungeUniverse::FungeUniverse(std::istream& file, Field::FileFormat fmt, const FungeConfig& cfg):
 	running(true),
 	exitcode(0),
-	config(*cfg),
+	config(cfg),
 	debug(*this),
-	field(file, fmt, cfg->dimensions, *this),
+	field(file, fmt, cfg.dimensions, *this),
 	thread(nullptr),
 	threads(),
 	runners(),
@@ -26,12 +26,12 @@ FungeUniverse::FungeUniverse(std::istream& file, Field::FileFormat fmt, const Fu
 	thread = new std::thread(std::ref(*this));
 }
 
-FungeUniverse::FungeUniverse(const FungeConfig* cfg):
+FungeUniverse::FungeUniverse(const FungeConfig& cfg):
 	running(true),
 	exitcode(0),
-	config(*cfg),
+	config(cfg),
 	debug(*this),
-	field(cfg->dimensions, *this),
+	field(cfg.dimensions, *this),
 	thread(nullptr),
 	threads(),
 	runners(),

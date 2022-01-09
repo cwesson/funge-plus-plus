@@ -10,24 +10,24 @@
 #include "FungeMultiverse.h"
 #include "Vector.h"
 #include <cstring>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 
 namespace Funge{
 
-int createUniverse(std::string filepath, const FungeConfig& config){
+int createUniverse(const std::filesystem::path& filepath, FungeConfig& config){
 	Field::FileFormat fmt = Field::FORMAT_BF;
 
-	FungeConfig cfg(config);
-
-	std::string ext = filepath.substr(filepath.find_last_of(".") + 1);
-	if(ext == "beq"){
+	std::string ext = filepath.extension();
+	if(ext == ".beq"){
 		fmt = Field::FORMAT_BEQ;
-		cfg.fingerprints.push_back(0x4e46554e);
-	}else if(ext == "fl"){
+		config.fingerprints.push_back(0x4e46554e);
+	}else if(ext == ".fl"){
 		fmt = Field::FORMAT_FL;
 	}
-	cfg.name = basename(filepath.c_str());
+	config.name = filepath.filename();
 	
 	std::ifstream stream(filepath);
 	if(stream.fail()){
@@ -35,7 +35,7 @@ int createUniverse(std::string filepath, const FungeConfig& config){
 		return EIO;
 	}
 
-	FungeUniverse* universe = FungeMultiverse::getInstance().create(stream, fmt, &cfg);
+	FungeUniverse* universe = FungeMultiverse::getInstance().create(stream, fmt, config);
 	universe->createRunner(Vector{0}, Vector{1});
 
 	return 0;
@@ -43,7 +43,7 @@ int createUniverse(std::string filepath, const FungeConfig& config){
 
 int fungemain(int argc, char **argv, char **envp){
 	FungeConfig funge_config;
-	std::string filepath;
+	std::filesystem::path filepath;
 	int a = 1;
 	for( ; a < argc; ++a){
 		if(argv[a][0] != '-'){
@@ -148,10 +148,10 @@ int fungemain(int argc, char **argv, char **envp){
 		}
 	}
 	if(a < argc){
-		filepath = argv[a++];
+		filepath.assign(argv[a++]);
 		funge_config.args.push_back(filepath);
 	}
-	if(filepath == ""){
+	if(filepath.empty()){
 		std::cerr << "No input file specified.";
 		return EINVAL;
 	}
@@ -163,25 +163,41 @@ int fungemain(int argc, char **argv, char **envp){
 		funge_config.env.push_back(std::string(*env));
 	}
 
-	std::string ext = filepath.substr(filepath.find_last_of(".") + 1);
-	std::vector<std::string> files;
-	if(ext == "fmv"){
+	std::string ext = filepath.extension();
+	if(ext == ".fmv"){
+		std::vector<std::filesystem::path> files;
+		std::string dir = filepath.parent_path();
 		std::ifstream stream(filepath);
 		if(stream.fail()){
 			std::cerr << "Failed to open " << filepath << std::endl;
 			return EIO;
 		}
 		while(stream.good()){
+			std::string line;
+			std::getline(stream, line);
+			auto iss = std::istringstream(line);
+
 			std::string filename;
-			stream >> filename;
-			files.push_back(filename);
+			iss >> filename;
+			std::filesystem::path path(filename);
+			if(path.is_relative()){
+				path.assign(dir + "/" + filename);
+			}
+			// Get arguments for this universe
+			FungeConfig cfg(funge_config);
+			while(iss.good()){
+				std::string arg;
+				iss >> arg;
+				cfg.args.push_back(arg);
+			}
+
+			int uni = createUniverse(path, cfg);
+			if(uni != 0){
+				return uni;
+			}
 		}
 	}else{
-		files.push_back(filepath);
-	}
-
-	for(auto file : files){
-		int uni = createUniverse(file, funge_config);
+		int uni = createUniverse(filepath, funge_config);
 		if(uni != 0){
 			return uni;
 		}

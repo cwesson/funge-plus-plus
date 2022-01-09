@@ -47,6 +47,18 @@ stack.
 **-g**
 : Start in debugger mode.
 
+# FILE
+If the file path ends in **.beq** the file is interpretted as a BeQunge
+file.  Load a BeQunge file imples **-lNFUN**.
+
+If the file path ends in **.fl** the file is interpretted as a funge-lib
+file.
+
+If the file path ends in **.fmv** the file is interpretted as a Funge Multiverse
+file.  Each line of an FMV file consists of a path to a Funge file to load as a
+universe, followed by yargs for that universe.  The yargs specified in the FMV
+file are append to the yargs specified on the command line.
+
 # YARGS
 Any arguments following the Funge file are passed to the Funge program. These
 arguments are available to the program using the `y` instruction.

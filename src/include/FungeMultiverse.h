@@ -30,14 +30,14 @@ class FungeMultiverse {
 		 * @param cfg Configuration for the universe.
 		 * @return New universe.
 		 */
-		FungeUniverse* create(std::istream& file, Field::FileFormat fmt, FungeConfig* cfg);
+		FungeUniverse* create(std::istream& file, Field::FileFormat fmt, FungeConfig& cfg);
 
 		/**
 		 * Create a new universe.
 		 * @param cfg Configuration for the universe.
 		 * @return New universe.
 		 */
-		FungeUniverse* create(FungeConfig* cfg);
+		FungeUniverse* create(FungeConfig& cfg);
 
 		/**
 		 * Wait for all universes to end.
@@ -68,6 +68,7 @@ class FungeMultiverse {
 		size_t size() const;
 	
 	private:
+		FungeUniverse* prime;
 		std::map<std::string, FungeUniverse*> universes;
 		mutable std::mutex mutex;
 

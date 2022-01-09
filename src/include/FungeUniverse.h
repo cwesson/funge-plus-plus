@@ -118,8 +118,8 @@ class FungeUniverse {
 		mutable std::mutex mutex;
 		mutable std::condition_variable cv;
 		
-		FungeUniverse(std::istream& file, Field::FileFormat fmt, const FungeConfig* cfg);
-		FungeUniverse(const FungeConfig* cfg);
+		FungeUniverse(std::istream& file, Field::FileFormat fmt, const FungeConfig& cfg);
+		FungeUniverse(const FungeConfig& cfg);
 		void addRunner(FungeRunner* runner);
 
 		friend class FungeMultiverse;

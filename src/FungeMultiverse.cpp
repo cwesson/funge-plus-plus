@@ -9,12 +9,15 @@
 namespace Funge {
 
 FungeMultiverse::FungeMultiverse() :
-	universes()
+	prime(nullptr),
+	universes(),
+	mutex()
 {
 
 }
 
 FungeMultiverse::~FungeMultiverse(){
+	std::lock_guard<std::mutex> guard(mutex);
 	for(auto uni : universes){
 		// Destroy the universe
 		delete uni.second;
@@ -26,25 +29,33 @@ FungeMultiverse& FungeMultiverse::getInstance(){
 	return instance;
 }
 
-FungeUniverse* FungeMultiverse::create(std::istream& file, Field::FileFormat fmt, FungeConfig* cfg){
+FungeUniverse* FungeMultiverse::create(std::istream& file, Field::FileFormat fmt, FungeConfig& cfg){
+	std::lock_guard<std::mutex> guard(mutex);
 	unsigned int a = 1;
-	std::string name(cfg->name);
-	while(universes.contains(cfg->name)){
-		cfg->name = name + "." + std::to_string(a);
+	std::string name(cfg.name);
+	while(universes.contains(cfg.name)){
+		cfg.name = name + "." + std::to_string(a);
 	}
 	FungeUniverse* uni = new FungeUniverse(file, fmt, cfg);
-	universes[cfg->name] = uni;
+	universes[cfg.name] = uni;
+	if(prime == nullptr){
+		prime = uni;
+	}
 	return uni;
 }
 
-FungeUniverse* FungeMultiverse::create(FungeConfig* cfg){
+FungeUniverse* FungeMultiverse::create(FungeConfig& cfg){
+	std::lock_guard<std::mutex> guard(mutex);
 	unsigned int a = 1;
-	std::string name(cfg->name);
-	while(universes.contains(cfg->name)){
-		cfg->name = name + "." + std::to_string(a);
+	std::string name(cfg.name);
+	while(universes.contains(cfg.name)){
+		cfg.name = name + "." + std::to_string(a);
 	}
 	FungeUniverse* uni = new FungeUniverse(cfg);
-	universes[cfg->name] = uni;
+	universes[cfg.name] = uni;
+	if(prime == nullptr){
+		prime = uni;
+	}
 	return uni;
 }
 
@@ -64,13 +75,7 @@ int FungeMultiverse::waitAll(){
 		// Keep looping until all universes are dead
 	}while(running || count < universes.size());
 
-	int ret = 0;
-	for(auto next : universes){
-		ret = next.second->get();
-		break;
-	}
-
-	return ret;
+	return prime->get();
 }
 
 void FungeMultiverse::killAll(int ret){

@@ -52,7 +52,7 @@ bool FingerprintMVRS::execute(inst_t cmd){
 			config.dimensions = dim;
 			config.standard = lng;
 			config.mode = flgs;
-			multi.create(&config);
+			multi.create(config);
 		} break;
 		case 'C':{
 			stack.top().push(multi.size());
