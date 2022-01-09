@@ -17,7 +17,7 @@ namespace Funge {
 
 class FungeDebugger {
 	public:
-		FungeDebugger(FungeUniverse& uni);
+		explicit FungeDebugger(FungeUniverse& uni);
 		~FungeDebugger() = default;
 
 		void tick(FungeRunner& runner);

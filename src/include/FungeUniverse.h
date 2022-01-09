@@ -29,6 +29,8 @@ class FungeUniverse {
 		 */
 		FungeUniverse(const FungeUniverse& old) = delete;
 
+		FungeUniverse& operator=(const FungeUniverse& other) = delete;
+
 		/**
 		 * Destructor.
 		 */
@@ -119,7 +121,7 @@ class FungeUniverse {
 		mutable std::condition_variable cv;
 		
 		FungeUniverse(std::istream& file, Field::FileFormat fmt, const FungeConfig& cfg);
-		FungeUniverse(const FungeConfig& cfg);
+		explicit FungeUniverse(const FungeConfig& cfg);
 		void addRunner(FungeRunner* runner);
 
 		friend class FungeMultiverse;

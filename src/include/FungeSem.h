@@ -11,7 +11,7 @@
 
 class FungeSem {
 	public:
-		FungeSem(bool v) :
+		explicit FungeSem(int v) :
 			mutex(),
 			cv(),
 			value(v)
@@ -19,18 +19,19 @@ class FungeSem {
 		
 		void release(){
 			std::unique_lock<std::mutex> guard(mutex);
-			value = true;
+			value = 1;
 			cv.notify_all();
 		}
+		
 		void acquire(){
 			std::unique_lock<std::mutex> guard(mutex);
 			while(!value){
 				cv.wait(guard);
 			}
-			value = false;
+			value = 0;
 		}
 	private:
 		std::mutex mutex;
 		std::condition_variable cv;
-		bool value;
+		int value;
 };

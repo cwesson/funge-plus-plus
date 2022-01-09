@@ -79,7 +79,7 @@ void Defunge::debug(FungeDebugger* dbg, FungeRunner* run){
 	std::lock_guard<std::recursive_mutex> guard(mutex);
 	debugger = dbg;
 	runner = run;
-	InstructionPointer& ip = runner->getIP();
+	const InstructionPointer& ip = runner->getIP();
 
 	size_t id = ip.getID();
 	auto found = dbg->threads.find(id);
