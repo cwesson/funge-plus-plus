@@ -24,6 +24,8 @@ namespace Funge {
  */
 class FungeUniverse {
 	public:
+		FungeUniverse(std::istream& file, Field::FileFormat fmt, const FungeConfig& cfg);
+		
 		/**
 		 * Copy constructor.
 		 */
@@ -79,6 +81,14 @@ class FungeUniverse {
 		void createRunner(const Vector& pos, const Vector& delta);
 
 		/**
+		 * Create a new runner.
+		 * @param pos Initial position.
+		 * @param delta Initial delta.
+		 * @param stack StackStack for the new runner.
+		 */
+		void createRunner(const Vector& pos, const Vector& delta, StackStack& stack);
+
+		/**
 		 * Transfer a runner from another universe
 		 * @param runner Runner to transfer.
 		 */
@@ -120,7 +130,6 @@ class FungeUniverse {
 		mutable std::mutex mutex;
 		mutable std::condition_variable cv;
 		
-		FungeUniverse(std::istream& file, Field::FileFormat fmt, const FungeConfig& cfg);
 		explicit FungeUniverse(const FungeConfig& cfg);
 		void addRunner(FungeRunner* runner);
 

@@ -94,9 +94,15 @@ class StackStack {
 		 * @return Runner the StackStack belongs to.
 		 */
 		FungeRunner& getRunner();
+
+		/**
+		 * Set the runner.
+		 * @param r New runner.
+		 */
+		void setRunner(FungeRunner& r);
 		
 	private:
-		FungeRunner& runner;
+		FungeRunner* runner;
 		std::vector<Stack> stack;
 };
 

@@ -9,14 +9,14 @@
 namespace Funge {
 
 StackStack::StackStack(FungeRunner& r) :
-	runner(r),
+	runner(&r),
 	stack()
 {
 	stack.push_back(Stack(*this));
 }
 
 StackStack::StackStack(const StackStack& orig, FungeRunner& r) :
-	runner(r),
+	runner(&r),
 	stack()
 {
 	for(size_t i = 0; i < orig.size(); ++i){
@@ -61,7 +61,11 @@ size_t StackStack::size() const{
 }
 
 FungeRunner& StackStack::getRunner(){
-	return runner;
+	return *runner;
+}
+
+void StackStack::setRunner(FungeRunner& r){
+	runner = &r;
 }
 
 }

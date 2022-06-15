@@ -12,7 +12,19 @@ namespace Funge {
 
 FungeRunner::FungeRunner(FungeUniverse& uni, const Vector& pos, const Vector& delta) :
 	universe(&uni),
-	stack(*this),
+	stack(new StackStack(*this)),
+	ip(*this),
+	normalState(*this),
+	stringState(*this),
+	state(&normalState)
+{
+	ip.setPos(pos);
+	ip.setDelta(delta);
+}
+
+FungeRunner::FungeRunner(FungeUniverse& uni, const Vector& pos, const Vector& delta, StackStack& stack) :
+	universe(&uni),
+	stack(&stack),
 	ip(*this),
 	normalState(*this),
 	stringState(*this),
@@ -24,7 +36,7 @@ FungeRunner::FungeRunner(FungeUniverse& uni, const Vector& pos, const Vector& de
 
 FungeRunner::FungeRunner(const FungeRunner& runner) :
 	universe(runner.universe),
-	stack(runner.stack, *this),
+	stack(new StackStack(*runner.stack, *this)),
 	ip(runner.ip, *this),
 	normalState(runner.normalState, *this),
 	stringState(*this),
@@ -88,7 +100,7 @@ Field& FungeRunner::getField(){
 }
 
 StackStack& FungeRunner::getStack(){
-	return stack;
+	return *stack;
 }
 
 InstructionPointer& FungeRunner::getIP(){

@@ -116,6 +116,12 @@ class Field {
 		 * @return Value at position v.
 		 */
 		inst_t operator[](const Vector& v) const;
+
+		/**
+		 * Determine which planes the loaded FungeLib has.
+		 * @return List of planes.
+		 */
+		const std::vector<inst_t>& hasPlanes() const;
 		
 		/**
 		 * Output stream operator.
@@ -127,6 +133,7 @@ class Field {
 		std::map<const Vector, inst_t> field;
 		std::vector<dim_t> maxs;
 		std::vector<dim_t> mins;
+		std::vector<inst_t> planes;
 		
 		void parseBeq(std::istream& file);
 		void parseFungeLib(std::istream& file);

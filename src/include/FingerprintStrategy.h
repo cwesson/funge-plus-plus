@@ -25,6 +25,10 @@ class FingerprintStrategy : public FungeStrategy {
 	
 	protected:
 		bool execute(Fingerprint* fing, inst_t i);
+		Fingerprint* loadBuiltin(uint64_t fingerprint);
+		Fingerprint* loadFL(uint64_t fingerprint);
+
+		std::string intToStr(uint64_t i);
 
 		std::map<uint64_t, Fingerprint*> available;
 		std::vector<uint64_t> loaded;

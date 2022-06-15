@@ -19,6 +19,7 @@ class FungeUniverse;
 class FungeRunner {
 	public:
 		FungeRunner(FungeUniverse& uni, const Vector& pos, const Vector& delta);
+		FungeRunner(FungeUniverse& uni, const Vector& pos, const Vector& delta, StackStack& stack);
 		FungeRunner(const FungeRunner& runner);
 		virtual ~FungeRunner();
 		
@@ -46,7 +47,7 @@ class FungeRunner {
 	
 	private:
 		FungeUniverse* universe;
-		StackStack stack;
+		StackStack* stack;
 		InstructionPointer ip;
 		
 		FungeStateNormal normalState;

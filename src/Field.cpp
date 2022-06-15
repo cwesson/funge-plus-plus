@@ -16,7 +16,8 @@ Field::Field(std::istream& file, FileFormat fmt, size_t dim, FungeUniverse& uni)
 	universe(uni),
 	field(),
 	maxs(),
-	mins()
+	mins(),
+	planes()
 {
 	switch(fmt){
 		default:
@@ -41,7 +42,8 @@ Field::Field(size_t dim, FungeUniverse& uni) :
 	universe(uni),
 	field(),
 	maxs(),
-	mins()
+	mins(),
+	planes()
 {
 	if(dim == 0){
 		universe.dimensions(maxs.size());
@@ -171,6 +173,7 @@ void Field::parseFungeLib(std::istream& file){
 			char ext = line[1];
 			if(ext >= 'A' && ext <= 'Z'){
 				pos = {0, 0, (ext - 'A')};
+				planes.push_back(ext);
 				continue;
 			}
 		}
@@ -179,7 +182,8 @@ void Field::parseFungeLib(std::istream& file){
 			set(pos, i);
 			pos += Vector{1};
 		}
-		pos += Vector{0, 1};
+		pos += Vector{0, 1};  // ++y
+		pos.set(0, 0);        // x=0
 	}
 }
 
@@ -320,6 +324,10 @@ inst_t Field::get(const Vector& p) const{
 
 inst_t Field::operator[](const Vector& v) const{
 	return get(v);
+}
+
+const std::vector<inst_t>& Field::hasPlanes() const{
+	return planes;
 }
 
 std::ostream& operator<<(std::ostream& os, const Field& rhs){

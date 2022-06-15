@@ -67,7 +67,7 @@ int createUniverse(const std::filesystem::path& filepath, FungeConfig& config){
 	}else if(ext == ".fmv"){
 		return parseFMV(filepath, config);
 	}
-	config.name = filepath.filename();
+	config.name = filepath;
 	
 	std::ifstream stream(filepath);
 	if(stream.fail()){

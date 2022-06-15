@@ -69,6 +69,12 @@ void FungeUniverse::createRunner(const Vector& pos, const Vector& delta){
 	addRunner(new FungeRunner(*this, pos, delta));
 }
 
+void FungeUniverse::createRunner(const Vector& pos, const Vector& delta, StackStack& stack){
+	FungeRunner* runner = new FungeRunner(*this, pos, delta, stack);
+	stack.setRunner(*runner);
+	addRunner(runner);
+}
+
 void FungeUniverse::transferRunner(FungeRunner* runner){
 	if(&runner->getUniverse() != this){
 		std::lock_guard<std::mutex> guard(mutex);
