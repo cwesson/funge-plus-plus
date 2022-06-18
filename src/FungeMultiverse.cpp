@@ -29,7 +29,7 @@ FungeMultiverse& FungeMultiverse::getInstance(){
 	return instance;
 }
 
-FungeUniverse* FungeMultiverse::create(std::istream& file, Field::FileFormat fmt, FungeConfig& cfg){
+FungeUniverse* FungeMultiverse::create(std::istream& file, Field::FileFormat fmt, FungeConfig& cfg, FungeRunner* creator){
 	std::lock_guard<std::mutex> guard(mutex);
 	unsigned int a = 1;
 	std::string name(cfg.name);
@@ -37,6 +37,7 @@ FungeUniverse* FungeMultiverse::create(std::istream& file, Field::FileFormat fmt
 		cfg.name = name + "." + std::to_string(a);
 	}
 	FungeUniverse* uni = new FungeUniverse(file, fmt, cfg);
+	uni->creator = creator;
 	universes[cfg.name] = uni;
 	if(prime == nullptr){
 		prime = uni;

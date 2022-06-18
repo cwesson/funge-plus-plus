@@ -11,6 +11,7 @@
 #include "FingerprintBOOL.h"
 #include "FingerprintCPLI.h"
 #include "FingerprintDBUG.h"
+#include "FingerprintDynamic.h"
 #include "FingerprintFING.h"
 #include "FingerprintFIXP.h"
 #include "FingerprintFloat.h"
@@ -24,17 +25,14 @@
 #include "FingerprintMODU.h"
 #include "FingerprintMVRS.h"
 #include "FingerprintNFUN.h"
-#include "FingerprintNULL.h"
 #include "FingerprintORTH.h"
 #include "FingerprintPERL.h"
 #include "FingerprintREFC.h"
 #include "FingerprintSTRN.h"
 #include "FingerprintSUBR.h"
-#include "FingerprintTERM.h"
 #include "FingerprintTOYS.h"
 #include "FungeUniverse.h"
 #include <filesystem>
-#include <fstream>
 
 namespace Funge {
 
@@ -87,14 +85,17 @@ Fingerprint* FingerprintStrategy::loadBuiltin(uint64_t fingerprint){
 		case 0x4D4F4455: fing = new FingerprintMODU(runner); break;
 		case 0x4D565253: fing = new FingerprintMVRS(runner); break;
 		case 0x4E46554E: fing = new FingerprintNFUN(runner); break;
-		case 0x4E554C4C: fing = new FingerprintNULL(runner); break;
 		case 0x4F525448: fing = new FingerprintORTH(runner); break;
 		case 0x5045524C: fing = new FingerprintPERL(runner); break;
 		case 0x52454643: fing = new FingerprintREFC(runner); break;
 		case 0x5354524E: fing = new FingerprintSTRN(runner); break;
 		case 0x53554252: fing = new FingerprintSUBR(runner); break;
-		case 0x5445524D: fing = new FingerprintTERM(runner); break;
 		case 0x544f5953: fing = new FingerprintTOYS(runner); break;
+		case FingerprintDynamic::ID:
+			if(runner.getUniverse().getCreator() != nullptr){
+				fing = new FingerprintDynamic(runner, runner.getUniverse().getCreator());
+			}
+			break;
 		default: break;
 	}
 
@@ -103,22 +104,7 @@ Fingerprint* FingerprintStrategy::loadBuiltin(uint64_t fingerprint){
 
 Fingerprint* FingerprintStrategy::loadFL(uint64_t fingerprint){
 	std::string str(intToStr(fingerprint));
-	std::filesystem::path fl = std::filesystem::canonical("/proc/self/exe").parent_path();
-	fl /= "..";
-	fl /= "fing";
-	fl /= str + ".fl";
-	Fingerprint* fing = nullptr;
-	if(std::filesystem::exists(fl)){
-		std::ifstream stream(fl);
-		if(stream.fail()){
-			std::cerr << "Failed to open " << fl << std::endl;
-			return nullptr;
-		}
-		FungeConfig config;
-		config.name = fl;
-		fing = new FingerprintFungeLib(runner, stream, config);
-	}
-	return fing;
+	return FingerprintFungeLib::factory(runner, str);
 }
 
 bool FingerprintStrategy::load(uint64_t fingerprint){

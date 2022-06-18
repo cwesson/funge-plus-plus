@@ -22,14 +22,15 @@ FungeRunner::FungeRunner(FungeUniverse& uni, const Vector& pos, const Vector& de
 	ip.setDelta(delta);
 }
 
-FungeRunner::FungeRunner(FungeUniverse& uni, const Vector& pos, const Vector& delta, StackStack& stack) :
+FungeRunner::FungeRunner(FungeUniverse& uni, const Vector& pos, const Vector& delta, FungeRunner& r) :
 	universe(&uni),
-	stack(&stack),
+	stack(r.stack),
 	ip(*this),
 	normalState(*this),
 	stringState(*this),
 	state(&normalState)
 {
+	stack->setRunner(*this);
 	ip.setPos(pos);
 	ip.setDelta(delta);
 }

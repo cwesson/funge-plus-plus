@@ -12,6 +12,7 @@
 #include "FungeStateNormal.h"
 #include "FungeStateString.h"
 #include "FungeConfig.h"
+#include <memory>
 
 namespace Funge {
 class FungeUniverse;
@@ -19,7 +20,7 @@ class FungeUniverse;
 class FungeRunner {
 	public:
 		FungeRunner(FungeUniverse& uni, const Vector& pos, const Vector& delta);
-		FungeRunner(FungeUniverse& uni, const Vector& pos, const Vector& delta, StackStack& stack);
+		FungeRunner(FungeUniverse& uni, const Vector& pos, const Vector& delta, FungeRunner& r);
 		FungeRunner(const FungeRunner& runner);
 		virtual ~FungeRunner();
 		
@@ -44,10 +45,12 @@ class FungeRunner {
 		void pushSemantic(inst_t i, semantic_t func);
 		semantic_t popSemantic(inst_t i);
 		semantic_t getSemantic(inst_t i);
+
+		void shareStack(FungeRunner& other);
 	
 	private:
 		FungeUniverse* universe;
-		StackStack* stack;
+		std::shared_ptr<StackStack> stack;
 		InstructionPointer ip;
 		
 		FungeStateNormal normalState;

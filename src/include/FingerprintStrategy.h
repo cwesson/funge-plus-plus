@@ -29,6 +29,7 @@ class FingerprintStrategy : public FungeStrategy {
 		Fingerprint* loadFL(uint64_t fingerprint);
 
 		std::string intToStr(uint64_t i);
+		void activate(Fingerprint* fing);
 
 		std::map<uint64_t, Fingerprint*> available;
 		std::vector<uint64_t> loaded;

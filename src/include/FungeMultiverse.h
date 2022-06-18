@@ -28,9 +28,10 @@ class FungeMultiverse {
 		 * @param file Fungespace input file.
 		 * @param fmt Format of the input file.
 		 * @param cfg Configuration for the universe.
+		 * @param creator Creating runner.
 		 * @return New universe.
 		 */
-		FungeUniverse* create(std::istream& file, Field::FileFormat fmt, FungeConfig& cfg);
+		FungeUniverse* create(std::istream& file, Field::FileFormat fmt, FungeConfig& cfg, FungeRunner* creator=nullptr);
 
 		/**
 		 * Create a new universe.

@@ -84,15 +84,21 @@ class FungeUniverse {
 		 * Create a new runner.
 		 * @param pos Initial position.
 		 * @param delta Initial delta.
-		 * @param stack StackStack for the new runner.
+		 * @param r Runner creating the new runner.
 		 */
-		void createRunner(const Vector& pos, const Vector& delta, StackStack& stack);
+		void createRunner(const Vector& pos, const Vector& delta, FungeRunner& r);
 
 		/**
 		 * Transfer a runner from another universe
 		 * @param runner Runner to transfer.
 		 */
 		void transferRunner(FungeRunner* runner);
+
+		/**
+		 * Determine how the universe was created.
+		 * @return runner that created the universe.
+		 */
+		FungeRunner* getCreator() const;
 
 		void operator()();
 
@@ -126,6 +132,7 @@ class FungeUniverse {
 		std::thread* thread;
 		std::queue<std::thread*> threads;
 		std::list<FungeRunner*> runners;
+		FungeRunner* creator;
 		FungeSem semaphore;
 		mutable std::mutex mutex;
 		mutable std::condition_variable cv;

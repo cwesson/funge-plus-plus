@@ -19,6 +19,7 @@ FungeUniverse::FungeUniverse(std::istream& file, Field::FileFormat fmt, const Fu
 	thread(nullptr),
 	threads(),
 	runners(),
+	creator(nullptr),
 	semaphore(0),
 	mutex(),
 	cv()
@@ -35,6 +36,7 @@ FungeUniverse::FungeUniverse(const FungeConfig& cfg):
 	thread(nullptr),
 	threads(),
 	runners(),
+	creator(nullptr),
 	semaphore(0),
 	mutex(),
 	cv()
@@ -69,9 +71,8 @@ void FungeUniverse::createRunner(const Vector& pos, const Vector& delta){
 	addRunner(new FungeRunner(*this, pos, delta));
 }
 
-void FungeUniverse::createRunner(const Vector& pos, const Vector& delta, StackStack& stack){
-	FungeRunner* runner = new FungeRunner(*this, pos, delta, stack);
-	stack.setRunner(*runner);
+void FungeUniverse::createRunner(const Vector& pos, const Vector& delta, FungeRunner& r){
+	FungeRunner* runner = new FungeRunner(*this, pos, delta, r);
 	addRunner(runner);
 }
 
@@ -172,6 +173,10 @@ Field& FungeUniverse::getField(){
 
 FungeDebugger& FungeUniverse::getDebugger(){
 	return debug;
+}
+
+FungeRunner* FungeUniverse::getCreator() const{
+	return creator;
 }
 
 const std::string& FungeUniverse::getName() const {
