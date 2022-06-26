@@ -18,23 +18,23 @@ Befunge98Strategy::Befunge98Strategy(FungeRunner& r) :
 	r.pushSemantic('w', std::bind(&Befunge98Strategy::instructionCompare, this));
 }
 
-bool Befunge98Strategy::instructionLeft(){
+FungeError Befunge98Strategy::instructionLeft(){
 	ip.left();
 	if(runner.isMode(FUNGE_MODE_SWITCH)){
 		ip.set(']');
 	}
-	return true;
+	return ERROR_NONE;
 }
 
-bool Befunge98Strategy::instructionRight(){
+FungeError Befunge98Strategy::instructionRight(){
 	ip.right();
 	if(runner.isMode(FUNGE_MODE_SWITCH)){
 		ip.set('[');
 	}
-	return true;
+	return ERROR_NONE;
 }
 
-bool Befunge98Strategy::instructionCompare(){
+FungeError Befunge98Strategy::instructionCompare(){
 	stack_t b = stack.top().pop();
 	stack_t a = stack.top().pop();
 	if(a < b){
@@ -42,7 +42,7 @@ bool Befunge98Strategy::instructionCompare(){
 	}else if(a > b){
 		ip.right();
 	}
-	return true;
+	return ERROR_NONE;
 }
 
 FungeStrategy* Befunge98Strategy::clone(FungeRunner& r) const{

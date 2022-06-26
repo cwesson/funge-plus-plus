@@ -15,7 +15,7 @@ class FingerprintMVRS : public Fingerprint {
 		explicit FingerprintMVRS(FungeRunner& r);
 		virtual ~FingerprintMVRS() = default;
 		
-		virtual bool execute(inst_t cmd) override;
+		virtual FungeError execute(inst_t cmd) override;
 	
 	private:
 		void copySpace(const Field& fsrc, const Vector& src, const Vector& sz, Field& fdest, const Vector& dest) const;

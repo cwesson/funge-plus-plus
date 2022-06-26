@@ -11,6 +11,7 @@
 #include "FingerprintBOOL.h"
 #include "FingerprintCPLI.h"
 #include "FingerprintDBUG.h"
+#include "FingerprintDIRF.h"
 #include "FingerprintDynamic.h"
 #include "FingerprintFING.h"
 #include "FingerprintFIXP.h"
@@ -60,7 +61,7 @@ FingerprintStrategy::~FingerprintStrategy(){
 	}
 }
 
-bool FingerprintStrategy::execute(Fingerprint* fing, inst_t i){
+FungeError FingerprintStrategy::execute(Fingerprint* fing, inst_t i){
 	return fing->execute(i);
 }
 
@@ -72,6 +73,7 @@ Fingerprint* FingerprintStrategy::loadBuiltin(uint64_t fingerprint){
 		case 0x424F4F4C: fing = new FingerprintBOOL(runner); break;
 		case 0x43504C49: fing = new FingerprintCPLI(runner); break;
 		case 0x44425547: fing = new FingerprintDBUG(runner); break;
+		case 0x44495246: fing = new FingerprintDIRF(runner); break;
 		case 0x46494e47: fing = new FingerprintFING(runner); break;
 		case 0x46495850: fing = new FingerprintFIXP(runner); break;
 		case 0x46504450: fing = new FingerprintFloat<double>(runner); break;
@@ -90,7 +92,7 @@ Fingerprint* FingerprintStrategy::loadBuiltin(uint64_t fingerprint){
 		case 0x52454643: fing = new FingerprintREFC(runner); break;
 		case 0x5354524E: fing = new FingerprintSTRN(runner); break;
 		case 0x53554252: fing = new FingerprintSUBR(runner); break;
-		case 0x544f5953: fing = new FingerprintTOYS(runner); break;
+		case 0x544F5953: fing = new FingerprintTOYS(runner); break;
 		case FingerprintDynamic::ID:
 			if(runner.getUniverse().getCreator() != nullptr){
 				fing = new FingerprintDynamic(runner, runner.getUniverse().getCreator());

@@ -19,7 +19,7 @@ void FingerprintDBUG::activate(){
 	dbg = &runner.getUniverse().getDebugger();
 }
 
-bool FingerprintDBUG::execute(inst_t cmd){
+FungeError FingerprintDBUG::execute(inst_t cmd){
 	switch(cmd){
 		case 'A':{
 			Vector v = popVector(runner);
@@ -39,9 +39,9 @@ bool FingerprintDBUG::execute(inst_t cmd){
 			dbg->addWatchpoint(v);
 		} break;
 		default:
-			return false;
+			return ERROR_UNIMP;
 	}
-	return true;
+	return ERROR_NONE;
 }
 
 }

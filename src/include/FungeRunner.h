@@ -32,12 +32,13 @@ class FungeRunner {
 		
 		void operator()();
 		void tick();
-		bool execute(inst_t i);
+		FungeError execute(inst_t i);
 		
 		FungeUniverse& getUniverse();
 		Field& getField();
 		StackStack& getStack();
 		InstructionPointer& getIP();
+		const InstructionPointer& getIP()const;
 		bool isMode(FungeMode m) const;
 		stack_t getMode() const;
 		void setUniverse(FungeUniverse& other);

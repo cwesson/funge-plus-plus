@@ -16,7 +16,7 @@ class Fingerprint {
 		Fingerprint(FungeRunner& r, std::initializer_list<inst_t> in);
 		virtual ~Fingerprint() = default;
 		
-		virtual bool execute(inst_t cmd) = 0;
+		virtual FungeError execute(inst_t cmd) = 0;
 
 		virtual void activate(){}
 		

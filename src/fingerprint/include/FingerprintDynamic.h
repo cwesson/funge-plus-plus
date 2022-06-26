@@ -14,7 +14,7 @@ class FingerprintDynamic : public Fingerprint {
 		explicit FingerprintDynamic(FungeRunner& r, FungeRunner* c);
 		virtual ~FingerprintDynamic() = default;
 		
-		virtual bool execute(inst_t cmd) override;
+		virtual FungeError execute(inst_t cmd) override;
 
 		static constexpr uint64_t ID = 0x64796E616D696366;  // "dynamicf";
 	

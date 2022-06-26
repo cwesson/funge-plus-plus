@@ -15,7 +15,8 @@ FingerprintMVRS::FingerprintMVRS(FungeRunner& r) :
 	Fingerprint(r, {'B', 'C', 'F', 'G', 'J', 'N', 'P'})
 {}
 
-bool FingerprintMVRS::execute(inst_t cmd){
+FungeError FingerprintMVRS::execute(inst_t cmd){
+	FungeError ret = ERROR_NONE;
 	FungeMultiverse& multi = FungeMultiverse::getInstance();
 	const FungeUniverse& universe = runner.getUniverse();
 	switch(cmd){
@@ -30,8 +31,8 @@ bool FingerprintMVRS::execute(inst_t cmd){
 			if(flgs == 0){
 				flgs = runner.getMode();
 			}else if((flgs & 0x1FF) != 0){
-				ip.reflect();
-				return true;
+				ret = ERROR_UNSPEC;
+				break;
 			}
 			switch(lng){
 				case 0:
@@ -44,15 +45,17 @@ bool FingerprintMVRS::execute(inst_t cmd){
 					lng = 98;
 					break;
 				default:
-					ip.reflect();
-					return true;
+					ret = ERROR_UNSPEC;
+					break;
 			}
-			FungeConfig config;
-			config.name = name;
-			config.dimensions = dim;
-			config.standard = lng;
-			config.mode = flgs;
-			multi.create(config);
+			if(ret == ERROR_NONE){
+				FungeConfig config;
+				config.name = name;
+				config.dimensions = dim;
+				config.standard = lng;
+				config.mode = flgs;
+				multi.create(config);
+			}
 		} break;
 		case 'C':{
 			stack.top().push(multi.size());
@@ -64,8 +67,8 @@ bool FingerprintMVRS::execute(inst_t cmd){
 			std::string name = popString(stack.top());
 			FungeUniverse* other = multi[name];
 			if(other == nullptr){
-				ip.reflect();
-				return true;
+				ret = ERROR_UNSPEC;
+				break;
 			}
 			copySpace(other->getField(), src, size, runner.getUniverse().getField(), dest);
 		} break;
@@ -75,8 +78,8 @@ bool FingerprintMVRS::execute(inst_t cmd){
 			std::string name = popString(stack.top());
 			FungeUniverse* other = multi[name];
 			if(other == nullptr){
-				ip.reflect();
-				return true;
+				ret = ERROR_UNSPEC;
+				break;
 			}
 			other->transferRunner(&runner);
 			ip.setPos(pos);
@@ -86,8 +89,8 @@ bool FingerprintMVRS::execute(inst_t cmd){
 			std::string name = popString(stack.top());
 			FungeUniverse* other = multi[name];
 			if(other == nullptr){
-				ip.reflect();
-				return true;
+				ret = ERROR_UNSPEC;
+				break;
 			}
 			other->transferRunner(&runner);
 		}break;
@@ -101,15 +104,15 @@ bool FingerprintMVRS::execute(inst_t cmd){
 			std::string name = popString(stack.top());
 			FungeUniverse* other = multi[name];
 			if(other == nullptr){
-				ip.reflect();
-				return true;
+				ret = ERROR_UNSPEC;
+				break;
 			}
 			copySpace(runner.getUniverse().getField(), src, size, other->getField(), dest);
 		} break;
 		default:
-			return false;
+			ret = ERROR_UNIMP;
 	}
-	return true;
+	return ret;
 }
 
 void FingerprintMVRS::copySpace(const Field& fsrc, const Vector& src, const Vector& sz, Field& fdest, const Vector& dest) const {

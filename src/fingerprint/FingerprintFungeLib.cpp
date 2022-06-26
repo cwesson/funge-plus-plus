@@ -47,12 +47,12 @@ FingerprintFungeLib* FingerprintFungeLib::factory(FungeRunner& r, std::string& n
 	return fing;
 }
 
-bool FingerprintFungeLib::execute(inst_t cmd){
+FungeError FingerprintFungeLib::execute(inst_t cmd){
 	dynamic->createRunner(Vector{0, 0, (cmd - 'A')}, Vector{1}, runner);
 	dynamic->wait();
 	StackStack& transstack = runner.getStack();
 	transstack.setRunner(runner);
-	return true;
+	return ERROR_NONE;
 }
 
 }

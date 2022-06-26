@@ -6,7 +6,6 @@
 
 #include "FingerprintMODE.h"
 #include "FungeUniverse.h"
-#include <cmath>
 
 namespace Funge {
 
@@ -14,7 +13,7 @@ FingerprintMODE::FingerprintMODE(FungeRunner& r) :
 	Fingerprint(r, {'H', 'I', 'Q', 'S'})
 {}
 
-bool FingerprintMODE::execute(inst_t cmd){
+FungeError FingerprintMODE::execute(inst_t cmd){
 	switch(cmd){
 		case 'H':{
 			runner.getUniverse().toggleMode(FUNGE_MODE_HOVER);
@@ -29,9 +28,9 @@ bool FingerprintMODE::execute(inst_t cmd){
 			runner.getUniverse().toggleMode(FUNGE_MODE_SWITCH);
 		} break;
 		default:
-			return false;
+			return ERROR_UNIMP;
 	}
-	return true;
+	return ERROR_NONE;
 }
 
 }

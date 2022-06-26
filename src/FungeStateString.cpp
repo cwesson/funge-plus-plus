@@ -54,7 +54,7 @@ void FungeStateString::escape(inst_t i){
 	stack.top().push(code);
 }
 
-bool FungeStateString::execute(inst_t i){
+FungeError FungeStateString::execute(inst_t i){
 	if(i == '\"'){
 		previous = '\0';
 		runner.setState(runner.getNormalState());
@@ -68,7 +68,7 @@ bool FungeStateString::execute(inst_t i){
 					stack.top().push(static_cast<stack_t>(i));
 					previous = i;
 				}else{
-					return false;
+					return ERROR_SKIP;
 				}
 				break;
 			case STRING_C:
@@ -80,10 +80,10 @@ bool FungeStateString::execute(inst_t i){
 				}
 				break;
 			default:
-				return false;
+				return ERROR_UNSPEC;
 		}
 	}
-	return true;
+	return ERROR_NONE;
 }
 
 }

@@ -19,7 +19,7 @@ class FingerprintFungeLib : public Fingerprint {
 
 		static FingerprintFungeLib* factory(FungeRunner& r, std::string& name);
 		
-		virtual bool execute(inst_t cmd) override;
+		virtual FungeError execute(inst_t cmd) override;
 	
 	private:
 		FungeUniverse* dynamic;

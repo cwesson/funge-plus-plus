@@ -14,7 +14,7 @@ FingerprintSUBR::FingerprintSUBR(FungeRunner& r) :
 	offset(false)
 {}
 
-bool FingerprintSUBR::execute(inst_t cmd){
+FungeError FingerprintSUBR::execute(inst_t cmd){
 	switch(cmd){
 		case 'A':{
 			offset = false;
@@ -63,9 +63,9 @@ bool FingerprintSUBR::execute(inst_t cmd){
 			ip.setDelta(vd);
 		} break;
 		default:
-			return false;
+			return ERROR_UNIMP;
 	}
-	return true;
+	return ERROR_NONE;
 }
 
 }

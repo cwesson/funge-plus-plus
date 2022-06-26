@@ -127,6 +127,7 @@ void FungeUniverse::operator()(){
 					if(thread->isRunning()){
 						runners.push_back(thread);
 					}else{
+						debug.endThread(*thread);
 						delete thread;
 						cv.notify_all();
 					}

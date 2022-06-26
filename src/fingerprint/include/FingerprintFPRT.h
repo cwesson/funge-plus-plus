@@ -15,7 +15,7 @@ class FingerprintFPRT : public Fingerprint {
 		explicit FingerprintFPRT(FungeRunner& r);
 		virtual ~FingerprintFPRT() = default;
 		
-		virtual bool execute(inst_t cmd) override;
+		virtual FungeError execute(inst_t cmd) override;
 };
 
 }

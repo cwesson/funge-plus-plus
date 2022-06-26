@@ -67,16 +67,34 @@ void FungeRunner::tick(){
 	while(!done && !ip.isStopped()){
 		getUniverse().getDebugger().tick(*this);
 		inst_t i = ip.get();
-		done = execute(i);
-		if(!done && i != ' '){
-			std::cerr << "Unimplemented instruction " << static_cast<int>(i) << " \'" << static_cast<char>(i) << "\' at " << ip << "." << std::endl;
-			ip.reflect();
+		FungeError err = execute(i);
+		switch(err){
+			case ERROR_NONE:
+				ip.next();
+				done = true;
+				break;
+			case ERROR_SKIP:
+				ip.next();
+				done = false;
+				break;
+			case ERROR_BLOCK:
+				done = true;
+				break;
+			case ERROR_UNIMP:
+				std::cerr << "Unimplemented instruction " << static_cast<int>(i) << " \'" << static_cast<char>(i) << "\' at " << ip << "." << std::endl;
+				ip.reflect();
+				ip.next();
+				break;
+			case ERROR_UNSPEC:
+			default:
+				ip.reflect();
+				ip.next();
+				break;
 		}
-		ip.next();
 	}
 }
 
-bool FungeRunner::execute(inst_t i){
+FungeError FungeRunner::execute(inst_t i){
 	return state->execute(i);
 }
 
@@ -105,6 +123,10 @@ StackStack& FungeRunner::getStack(){
 }
 
 InstructionPointer& FungeRunner::getIP(){
+	return ip;
+}
+
+const InstructionPointer& FungeRunner::getIP() const{
 	return ip;
 }
 

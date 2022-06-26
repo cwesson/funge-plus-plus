@@ -16,7 +16,7 @@ class FingerprintCPLI : public Fingerprint {
 		explicit FingerprintCPLI(FungeRunner& r);
 		virtual ~FingerprintCPLI() = default;
 		
-		virtual bool execute(inst_t cmd) override;
+		virtual FungeError execute(inst_t cmd) override;
 	
 	private:
 		typedef std::complex<stack_t> cpli_t;

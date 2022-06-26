@@ -13,7 +13,7 @@ FingerprintJSTR::FingerprintJSTR(FungeRunner& r) :
 	Fingerprint(r, {'G', 'P'})
 {}
 
-bool FingerprintJSTR::execute(inst_t cmd){
+FungeError FingerprintJSTR::execute(inst_t cmd){
 	switch(cmd){
 		case 'G':{
 			stack_t n = stack.top().pop();
@@ -37,9 +37,9 @@ bool FingerprintJSTR::execute(inst_t cmd){
 			}
 		} break;
 		default:
-			return false;
+			return ERROR_UNIMP;
 	}
-	return true;
+	return ERROR_NONE;
 }
 
 }

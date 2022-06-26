@@ -25,6 +25,7 @@ Defunge::Defunge():
 	cmdMap()
 {
 	cmdMap["run"]       = &Defunge::runCommand;
+	cmdMap["r"]         = &Defunge::runCommand;
 	cmdMap["continue"]  = &Defunge::runCommand;
 	cmdMap["con"]       = &Defunge::runCommand;
 	cmdMap["c"]         = &Defunge::runCommand;
@@ -111,6 +112,7 @@ void Defunge::debug(FungeDebugger* dbg, FungeRunner* run){
 		case FungeDebugger::STATE_START:
 		case FungeDebugger::STATE_STEP:
 		case FungeDebugger::STATE_BREAK:
+		case FungeDebugger::STATE_END:
 			break;
 	}
 	
@@ -293,12 +295,16 @@ Defunge::Error Defunge::threadCommand(std::istringstream& iss){
 		runner = debugger->threads[tid].runner;
 	}
 	for(auto t : debugger->threads){
-		if(runner != nullptr && t.second.runner->getIP().getID() == tid){
-			std::cout << "* ";
+		if(t.second.state != FungeDebugger::STATE_END){
+			if(runner != nullptr && t.second.runner->getIP().getID() == tid){
+				std::cout << "* ";
+			}else{
+				std::cout << "  ";
+			}
+			printIP(t.second.runner->getIP());
 		}else{
-			std::cout << "  ";
+			std::cout << "  " << t.first << ": end" << std::endl;
 		}
-		printIP(t.second.runner->getIP());
 	}
 	return DEFUNGE_OK;
 }

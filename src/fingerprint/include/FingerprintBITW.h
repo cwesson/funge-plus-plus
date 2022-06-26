@@ -15,7 +15,7 @@ class FingerprintBITW : public Fingerprint {
 		explicit FingerprintBITW(FungeRunner& r);
 		virtual ~FingerprintBITW() = default;
 		
-		virtual bool execute(inst_t cmd) override;
+		virtual FungeError execute(inst_t cmd) override;
 };
 
 }

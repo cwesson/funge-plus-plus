@@ -70,6 +70,10 @@ void FungeDebugger::addWatchpoint(const Vector& vec){
 	}
 }
 
+void FungeDebugger::endThread(FungeRunner& runner){
+	threads[runner.getIP().getID()].state = STATE_END;
+}
+
 void FungeDebugger::intro(FungeRunner& runner){
 	static bool first = true;
 

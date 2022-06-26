@@ -19,31 +19,31 @@ Trefunge98Strategy::Trefunge98Strategy(FungeRunner& r) :
 	r.pushSemantic('m', std::bind(&Trefunge98Strategy::instructionIf, this));
 }
 
-bool Trefunge98Strategy::instructionHigh(){
+FungeError Trefunge98Strategy::instructionHigh(){
 	if(!runner.getUniverse().invertHL()){
 		ip.setDelta(Vector{0, 0, 1});
 	}else{
 		ip.setDelta(Vector{0, 0, -1});
 	}
-	return true;
+	return ERROR_NONE;
 }
 
-bool Trefunge98Strategy::instructionLow(){
+FungeError Trefunge98Strategy::instructionLow(){
 	if(!runner.getUniverse().invertHL()){
 		ip.setDelta(Vector{0, 0, -1});
 	}else{
 		ip.setDelta(Vector{0, 0, 1});
 	}
-	return true;
+	return ERROR_NONE;
 }
 
-bool Trefunge98Strategy::instructionIf(){
+FungeError Trefunge98Strategy::instructionIf(){
 	if(stack.top().pop() == 0){
 		ip.setDelta(Vector{0, 0, 1});
 	}else{
 		ip.setDelta(Vector{0, 0, -1});
 	}
-	return true;
+	return ERROR_NONE;
 }
 
 FungeStrategy* Trefunge98Strategy::clone(FungeRunner& r) const{

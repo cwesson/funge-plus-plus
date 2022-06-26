@@ -12,7 +12,7 @@ FingerprintCPLI::FingerprintCPLI(FungeRunner& r) :
 	Fingerprint(r, {'A', 'D', 'M', 'O', 'S', 'V'})
 {}
 
-bool FingerprintCPLI::execute(inst_t cmd){
+FungeError FingerprintCPLI::execute(inst_t cmd){
 	switch(cmd){
 		case 'A':{
 			cpli_t b = popComplex(stack.top());
@@ -56,9 +56,9 @@ bool FingerprintCPLI::execute(inst_t cmd){
 			stack.top().push(std::round(std::abs(d)));
 		} break;
 		default:
-			return false;
+			return ERROR_UNIMP;
 	}
-	return true;
+	return ERROR_NONE;
 }
 
 FingerprintCPLI::cpli_t FingerprintCPLI::popComplex(Stack& stack){

@@ -12,7 +12,8 @@ FingerprintFRTH::FingerprintFRTH(FungeRunner& r) :
 	Fingerprint(r, {'D', 'L', 'O', 'P', 'R'})
 {}
 
-bool FingerprintFRTH::execute(inst_t cmd){
+FungeError FingerprintFRTH::execute(inst_t cmd){
+	FungeError ret = ERROR_NONE;
 	switch(cmd){
 		case 'D':{
 			stack_t n = stack.top().size();
@@ -50,7 +51,7 @@ bool FingerprintFRTH::execute(inst_t cmd){
 		case 'P':{
 			stack_t u = stack.top().pop();
 			if(u < 0){
-				ip.reflect();
+				ret = ERROR_UNSPEC;
 				break;
 			}
 			stack_t x = stack.top().get(u+1);
@@ -65,9 +66,9 @@ bool FingerprintFRTH::execute(inst_t cmd){
 			stack.top().push(a);
 		} break;
 		default:
-			return false;
+			ret = ERROR_UNIMP;
 	}
-	return true;
+	return ret;
 }
 
 }

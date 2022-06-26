@@ -15,7 +15,7 @@ FingerprintREFC::FingerprintREFC(FungeRunner& r) :
 	Fingerprint(r, {'R', 'D'})
 {}
 
-bool FingerprintREFC::execute(inst_t cmd){
+FungeError FingerprintREFC::execute(inst_t cmd){
 	switch(cmd){
 		case 'R':{
 			Vector v = popVector(runner);
@@ -37,9 +37,9 @@ bool FingerprintREFC::execute(inst_t cmd){
 			}
 		} break;
 		default:
-			return false;
+			return ERROR_UNIMP;
 	}
-	return true;
+	return ERROR_NONE;
 }
 
 }

@@ -13,7 +13,7 @@ FingerprintMODU::FingerprintMODU(FungeRunner& r) :
 	Fingerprint(r, {'M', 'R', 'U'})
 {}
 
-bool FingerprintMODU::execute(inst_t cmd){
+FungeError FingerprintMODU::execute(inst_t cmd){
 	switch(cmd){
 		case 'M':{
 			stack_t a = stack.top().pop();
@@ -43,9 +43,9 @@ bool FingerprintMODU::execute(inst_t cmd){
 			}
 		} break;
 		default:
-			return false;
+			return ERROR_UNIMP;
 	}
-	return true;
+	return ERROR_NONE;
 }
 
 }

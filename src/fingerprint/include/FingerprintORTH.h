@@ -15,7 +15,7 @@ class FingerprintORTH : public Fingerprint {
 		explicit FingerprintORTH(FungeRunner& r);
 		virtual ~FingerprintORTH() = default;
 		
-		virtual bool execute(inst_t cmd) override;
+		virtual FungeError execute(inst_t cmd) override;
 };
 
 }

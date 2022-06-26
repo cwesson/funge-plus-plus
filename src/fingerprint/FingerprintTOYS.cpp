@@ -22,7 +22,8 @@ FingerprintTOYS::FingerprintTOYS(FungeRunner& r) :
 	dis()
 {}
 
-bool FingerprintTOYS::execute(inst_t cmd){
+FungeError FingerprintTOYS::execute(inst_t cmd){
+	FungeError ret = ERROR_NONE;
 	switch(cmd){
 		case 'A':{
 			stack_t n = stack.top().pop();
@@ -169,7 +170,7 @@ bool FingerprintTOYS::execute(inst_t cmd){
 			if(runner.getUniverse().dimensions() > n){
 				ip.setDelta(v);
 			}else{
-				ip.reflect();
+				ret = ERROR_UNSPEC;
 			}
 		} break;
 		case 'U':{
@@ -218,11 +219,9 @@ bool FingerprintTOYS::execute(inst_t cmd){
 			if(cell < value){
 				stack.top().push(value);
 				pushVector(runner, v);
-				ip.reflect();
-				ip.next();
-				ip.reflect();
+				ret = ERROR_BLOCK;
 			}else if(cell > value){
-				ip.reflect();
+				ip.reflect(); // not an error
 			}
 		} break;
 		case 'X':{
@@ -236,7 +235,7 @@ bool FingerprintTOYS::execute(inst_t cmd){
 				inc.set(1, inc.get(1)+1);
 				ip.setPos(inc);
 			}else{
-				ip.reflect();
+				ret = ERROR_UNSPEC;
 			}
 		} break;
 		case 'Z':{
@@ -245,13 +244,13 @@ bool FingerprintTOYS::execute(inst_t cmd){
 				inc.set(2, inc.get(2)+1);
 				ip.setPos(inc);
 			}else{
-				ip.reflect();
+				ret = ERROR_UNSPEC;
 			}
 		} break;
 		default:
-			return false;
+			ret = ERROR_UNIMP;
 	}
-	return true;
+	return ret;
 }
 
 void FingerprintTOYS::copySpace(const Vector& src, const Vector& sz, const Vector& dest, bool low, bool move){

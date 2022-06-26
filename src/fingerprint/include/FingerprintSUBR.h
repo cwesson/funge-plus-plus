@@ -15,7 +15,7 @@ class FingerprintSUBR : public Fingerprint {
 		explicit FingerprintSUBR(FungeRunner& r);
 		virtual ~FingerprintSUBR() = default;
 		
-		virtual bool execute(inst_t cmd) override;
+		virtual FungeError execute(inst_t cmd) override;
 	private:
 		bool offset;
 };

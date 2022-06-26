@@ -14,7 +14,7 @@ FingerprintNFUN::FingerprintNFUN(FungeRunner& r) :
 			{'A', 'B', 'H', 'I', 'L', 'M', 'Q', 'T', 'U', 'V', 'X', 'Y', 'Z'})
 {}
 
-bool FingerprintNFUN::execute(inst_t cmd){
+FungeError FingerprintNFUN::execute(inst_t cmd){
 	size_t dim = 0;
 	switch(cmd){
 		case 'A':{
@@ -99,12 +99,12 @@ bool FingerprintNFUN::execute(inst_t cmd){
 			dim = n;
 		} break;
 		default:
-			return false;
+			return ERROR_UNIMP;
 	}
 	if(runner.getUniverse().dimensions() < dim){
 		runner.getUniverse().dimensions(dim);
 	}
-	return true;
+	return ERROR_NONE;
 }
 
 }

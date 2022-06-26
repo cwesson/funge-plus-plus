@@ -17,7 +17,7 @@ class FingerprintREFC : public Fingerprint {
 		explicit FingerprintREFC(FungeRunner& r);
 		virtual ~FingerprintREFC() = default;
 		
-		virtual bool execute(inst_t cmd) override;
+		virtual FungeError execute(inst_t cmd) override;
 	
 	protected:
 		static std::map<stack_t, Vector> refc_map;

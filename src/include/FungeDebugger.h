@@ -25,6 +25,7 @@ class FungeDebugger {
 		void swbreak(FungeRunner& runner);
 		void addBreakpoint(const Vector& vec);
 		void addWatchpoint(const Vector& vec);
+		void endThread(FungeRunner& runner);
 	
 	private:
 		enum State {
@@ -32,6 +33,7 @@ class FungeDebugger {
 			STATE_RUN,
 			STATE_STEP,
 			STATE_BREAK,
+			STATE_END,
 		};
 		
 		enum {

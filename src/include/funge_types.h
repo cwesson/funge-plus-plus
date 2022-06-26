@@ -76,4 +76,16 @@ enum FungeThread {
 	THREAD_NATIVE, ///< Native OS threading, Funge++ extension.
 };
 
+/**
+ * Error codes.
+ */
+enum FungeError {
+	ERROR_NONE,     ///< No error.
+	ERROR_SKIP,     ///< Skip instruction.
+	ERROR_BLOCK,    ///< Instruction blocked.
+	ERROR_UNIMP,    ///< Unimplemented unstruction.
+	ERROR_NOTAVAIL, ///< Feature not available.
+	ERROR_UNSPEC,   ///< General execution error.
+};
+
 }

@@ -22,32 +22,32 @@ class Unefunge98Strategy : public FungeStrategy {
 		Unefunge98Strategy(const Unefunge98Strategy& orig, FungeRunner& r);
 		void init();
 
-		bool instructionPush(int n);
-		bool instructionSysInfo();
-		bool instructionNoop();
+		FungeError instructionPush(int n);
+		FungeError instructionSysInfo();
+		FungeError instructionNoop();
 		// Flow Control
-		bool instructionJumpOver();
-		bool instructionJumpForward();
-		bool instructionReflect();
-		bool instructionAbsolute();
-		bool instructionIterate();
-		bool instructionQuit();
-		bool instructionThread();
+		FungeError instructionJumpOver();
+		FungeError instructionJumpForward();
+		FungeError instructionReflect();
+		FungeError instructionAbsolute();
+		FungeError instructionIterate();
+		FungeError instructionQuit();
+		FungeError instructionThread();
 		// Stack Operations
-		bool instructionClear();
-		bool instructionUnder();
-		bool instructionBegin();
-		bool instructionEnd();
+		FungeError instructionClear();
+		FungeError instructionUnder();
+		FungeError instructionBegin();
+		FungeError instructionEnd();
 		// I/O
-		bool instructionFileIn();
-		bool instructionFileOut();
-		bool instructionExecute();
+		FungeError instructionFileIn();
+		FungeError instructionFileOut();
+		FungeError instructionExecute();
 		// Self-Modifying
-		bool instructionFetch();
-		bool instructionStore();
+		FungeError instructionFetch();
+		FungeError instructionStore();
 		// Fingerprints
-		bool instructionLoad();
-		bool instructionUnload();
+		FungeError instructionLoad();
+		FungeError instructionUnload();
 
 		void pushSysInfo(int num);
 		FingerprintStrategy finger;

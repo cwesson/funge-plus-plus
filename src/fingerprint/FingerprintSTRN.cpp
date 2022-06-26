@@ -13,7 +13,8 @@ FingerprintSTRN::FingerprintSTRN(FungeRunner& r) :
 	Fingerprint(r, {'A', 'C', 'D', 'F', 'G', 'I', 'L', 'M', 'N', 'P', 'R', 'S', 'V'})
 {}
 
-bool FingerprintSTRN::execute(inst_t cmd){
+FungeError FingerprintSTRN::execute(inst_t cmd){
+	FungeError ret = ERROR_NONE;
 	switch(cmd){
 		case 'A':{
 			std::string upper = popString(stack.top());
@@ -56,7 +57,7 @@ bool FingerprintSTRN::execute(inst_t cmd){
 		case 'L':{
 			stack_t n = stack.top().pop();
 			if(n < 0){
-				ip.reflect();
+				ret = ERROR_UNSPEC;
 				break;
 			}
 			std::string str = popString(stack.top());
@@ -66,12 +67,12 @@ bool FingerprintSTRN::execute(inst_t cmd){
 			stack_t n = stack.top().pop();
 			stack_t s = stack.top().pop();
 			if(n < 0 || s < 0){
-				ip.reflect();
+				ret = ERROR_UNSPEC;
 				break;
 			}
 			std::string str = popString(stack.top());
 			if(static_cast<size_t>(s) > str.length()){
-				ip.reflect();
+				ret = ERROR_UNSPEC;
 				break;
 			}
 			pushString(stack.top(), str.substr(s, n));
@@ -94,7 +95,7 @@ bool FingerprintSTRN::execute(inst_t cmd){
 		case 'R':{
 			stack_t n = stack.top().pop();
 			if(n < 0){
-				ip.reflect();
+				ret = ERROR_UNSPEC;
 				break;
 			}
 			std::string str = popString(stack.top());
@@ -112,9 +113,9 @@ bool FingerprintSTRN::execute(inst_t cmd){
 			stack.top().push(std::stoi(str));
 		} break;
 		default:
-			return false;
+			ret = ERROR_UNIMP;
 	}
-	return true;
+	return ret;
 }
 
 }

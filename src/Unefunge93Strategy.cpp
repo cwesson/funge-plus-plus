@@ -57,41 +57,41 @@ Unefunge93Strategy::Unefunge93Strategy(FungeRunner& r) :
 	r.pushSemantic('p', std::bind(&Unefunge93Strategy::instructionPut, this));
 }
 
-bool Unefunge93Strategy::instructionPush(int n){
+FungeError Unefunge93Strategy::instructionPush(int n){
 	stack.top().push(n);
-	return true;
+	return ERROR_NONE;
 }
 
-bool Unefunge93Strategy::instructionWest(){
+FungeError Unefunge93Strategy::instructionWest(){
 	ip.setDelta(Vector{-1});
-	return true;
+	return ERROR_NONE;
 }
 
-bool Unefunge93Strategy::instructionEast(){
+FungeError Unefunge93Strategy::instructionEast(){
 	ip.setDelta(Vector{1});
-	return true;
+	return ERROR_NONE;
 }
 
-bool Unefunge93Strategy::instructionStop(){
+FungeError Unefunge93Strategy::instructionStop(){
 	ip.stop();
-	return true;
+	return ERROR_NONE;
 }
 
-bool Unefunge93Strategy::instructionTrampoline(){
+FungeError Unefunge93Strategy::instructionTrampoline(){
 	ip.next();
-	return true;
+	return ERROR_NONE;
 }
 
-bool Unefunge93Strategy::instructionIf(){
+FungeError Unefunge93Strategy::instructionIf(){
 	if(stack.top().pop() == 0){
 		ip.setDelta(Vector{1});
 	}else{
 		ip.setDelta(Vector{-1});
 	}
-	return true;
+	return ERROR_NONE;
 }
 
-bool Unefunge93Strategy::instructionGoAway(){
+FungeError Unefunge93Strategy::instructionGoAway(){
 	size_t d = runner.getUniverse().dimensions()*2;
 	int r = random(0, d-1);
 	Vector v;
@@ -101,15 +101,15 @@ bool Unefunge93Strategy::instructionGoAway(){
 		v.set(r>>1, 1);
 	}
 	ip.setDelta(v);
-	return true;
+	return ERROR_NONE;
 }
 
-bool Unefunge93Strategy::instructionNot(){
+FungeError Unefunge93Strategy::instructionNot(){
 	stack.top().push(!stack.top().pop());
-	return true;
+	return ERROR_NONE;
 }
 
-bool Unefunge93Strategy::instructionRemainder(){
+FungeError Unefunge93Strategy::instructionRemainder(){
 	stack_t a = stack.top().pop();
 	stack_t b = stack.top().pop();
 	if(a == 0){
@@ -117,31 +117,31 @@ bool Unefunge93Strategy::instructionRemainder(){
 	}else{
 		stack.top().push(b%a);
 	}
-	return true;
+	return ERROR_NONE;
 }
 
-bool Unefunge93Strategy::instructionMultiply(){
+FungeError Unefunge93Strategy::instructionMultiply(){
 	stack_t a = stack.top().pop();
 	stack_t b = stack.top().pop();
 	stack.top().push(b*a);
-	return true;
+	return ERROR_NONE;
 }
 
-bool Unefunge93Strategy::instructionAdd(){
+FungeError Unefunge93Strategy::instructionAdd(){
 	stack_t a = stack.top().pop();
 	stack_t b = stack.top().pop();
 	stack.top().push(b+a);
-	return true;
+	return ERROR_NONE;
 }
 
-bool Unefunge93Strategy::instructionSubtract(){
+FungeError Unefunge93Strategy::instructionSubtract(){
 	stack_t a = stack.top().pop();
 	stack_t b = stack.top().pop();
 	stack.top().push(b-a);
-	return true;
+	return ERROR_NONE;
 }
 
-bool Unefunge93Strategy::instructionDivide(){
+FungeError Unefunge93Strategy::instructionDivide(){
 	stack_t a = stack.top().pop();
 	stack_t b = stack.top().pop();
 	if(a == 0){
@@ -149,10 +149,10 @@ bool Unefunge93Strategy::instructionDivide(){
 	}else{
 		stack.top().push(b/a);
 	}
-	return true;
+	return ERROR_NONE;
 }
 
-bool Unefunge93Strategy::instructionGreater(){
+FungeError Unefunge93Strategy::instructionGreater(){
 	stack_t a = stack.top().pop();
 	stack_t b = stack.top().pop();
 	if(b > a){
@@ -160,106 +160,101 @@ bool Unefunge93Strategy::instructionGreater(){
 	}else{
 		stack.top().push(0);
 	}
-	return true;
+	return ERROR_NONE;
 }
 
-bool Unefunge93Strategy::instructionPop(){
+FungeError Unefunge93Strategy::instructionPop(){
 	stack.top().pop();
-	return true;
+	return ERROR_NONE;
 }
 
-bool Unefunge93Strategy::instructionDuplicate(){
+FungeError Unefunge93Strategy::instructionDuplicate(){
 	stack_t x = stack.top().pop();
 	stack.top().push(x);
 	stack.top().push(x);
-	return true;
+	return ERROR_NONE;
 }
 
-bool Unefunge93Strategy::instructionSwap(){
+FungeError Unefunge93Strategy::instructionSwap(){
 	stack_t a = stack.top().pop();
 	stack_t b = stack.top().pop();
 	stack.top().push(a);
 	stack.top().push(b);
-	return true;
+	return ERROR_NONE;
 }
 
-bool Unefunge93Strategy::instructionNumIn(){
+FungeError Unefunge93Strategy::instructionNumIn(){
 	stack_t num = 0;
 	int c = getchar();
 	if(c == EOF){
-		ip.reflect();
-		return true;
+		return ERROR_UNSPEC;
 	}
 	while(c < '0' || c > '9'){
 		c = getchar();
 		if(c == EOF){
-			ip.reflect();
-			return true;
+			return ERROR_UNSPEC;
 		}
 	}
 	while(c >= '0' && c <= '9'){
 		num = (num*10) + (c-'0');
 		c = getchar();
 		if(c == EOF){
-			ip.reflect();
-			return true;
+			return ERROR_UNSPEC;
 		}
 	}
 	ungetc(c, stdin);
 	stack.top().push(num);
-	return true;
+	return ERROR_NONE;
 }
 
-bool Unefunge93Strategy::instructionCharIn(){
+FungeError Unefunge93Strategy::instructionCharIn(){
 	int q = getchar();
 	if(q == EOF){
-		ip.reflect();
-		return true;
+		return ERROR_UNSPEC;
 	}
 	if(q == 13){
 		q = getchar();
 		if(q == EOF){
-			ip.reflect();
-			return true;
+			return ERROR_UNSPEC;
 		}
 	}
 	stack.top().push(q);
-	return true;
+	return ERROR_NONE;
 }
 
-bool Unefunge93Strategy::instructionString(){
+FungeError Unefunge93Strategy::instructionString(){
 	runner.setState(runner.getStringState());
-	return true;
+	return ERROR_NONE;
 }
 
-bool Unefunge93Strategy::instructionCharOut(){
+FungeError Unefunge93Strategy::instructionCharOut(){
 	stack_t x = stack.top().pop();
 	if(x == 10){
 		std::cout << std::endl;
 	}else{
 		std::cout << static_cast<char>(x);
 	}
-	return true;
+	return ERROR_NONE;
 }
 
-bool Unefunge93Strategy::instructionNumOut(){
+FungeError Unefunge93Strategy::instructionNumOut(){
 	stack_t x = stack.top().pop();
 	std::cout << static_cast<int>(x) << ' ';
-	return true;
+	return ERROR_NONE;
 }
 
-bool Unefunge93Strategy::instructionGet(){
+FungeError Unefunge93Strategy::instructionGet(){
 	const Vector& storage = ip.getStorage();
 	Vector v = popVector(runner);
 	stack.top().push(static_cast<stack_t>(field.get(v+storage)));
-	return true;
+	return ERROR_NONE;
 }
 
-bool Unefunge93Strategy::instructionPut(){
+FungeError Unefunge93Strategy::instructionPut(){
 	const Vector& storage = ip.getStorage();
 	Vector v = popVector(runner);
 	field.set(v+storage, stack.top().pop());
-	return true;
+	return ERROR_NONE;
 }
 
 FungeStrategy* Unefunge93Strategy::clone(FungeRunner& r) const{

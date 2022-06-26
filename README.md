@@ -28,8 +28,8 @@ specification.  This mode can be enabled with `-fthreads=native`.
 
 ### Auto-Dimensions
 The dimensionality (up to 4D) is determined automatically based on the file contents.  This can be overriden with
-the `-std` argument.  Funge-lib formatted files are 3D.  Higher dimensions can be determined automatically from BeQunge formatted files with or without
-the `Dimensions` directive.
+the `-std` argument.  Funge-lib formatted files are 3D.  Higher dimensions can be determined automatically from BeQunge
+formatted files with or without the `Dimensions` directive.
 
 Standard instructions which operate on vectors (`g`, `p`, `x`, `?`), operate with vector lengths equal to the number of
 dimensions detected.  This enables those instructions to function in a standardized way in higher-dimension funges.  For
@@ -47,13 +47,18 @@ numbers are 128-bit.
 
 ## Errata
 ### High/Low
-The Funge-98 specification is inconsistent about the delta of the `h` and `l`  instructions (https://github.com/catseye/Funge-98/issues/10).  Funge++ uses the
-definition in the program flow section, that is `h` is "delta <- (0,0,1)" and `l` is "delta <- (0,0,-1)".  This makes
-it compatible with BeQunge and Rc/Funge-98.  The `-finvert-hl` argument flips this behavior.
+The Funge-98 specification is inconsistent about the delta of the `h` and `l`  instructions (https://github.com/catseye/Funge-98/issues/10).
+Funge++ uses thedefinition in the program flow section, that is `h` is "delta <- (0,0,1)" and `l` is
+"delta <- (0,0,-1)".  This makes it compatible with BeQunge and Rc/Funge-98.  The `-finvert-hl` argument flips this
+behavior.
 
 ## Fingerprints
 Funge++ supports the following fingerprints.  These can either be loaded at runtime by the `(` instruction, or by
 specifying the `-l` command line argument.
+
+Funge++ also supports dynamic Funge fingerprints.  When a fingerprint is loaded, Funge++ will search for funge-lib files
+in the `fing` directory before loading a built-in fingerprint.  This allows users to override the built-in fingerprints.
+Instructions from dynamic Funges run with the same stack as the IP that called them.
 
 `BASE` [I/O for numbers in other bases](http://www.rcfunge98.com/rcfunge2_manual.html#BASE).
 
@@ -64,6 +69,8 @@ specifying the `-l` command line argument.
 `CPLI` [Complex Integer Extension](http://www.rcfunge98.com/rcfunge2_manual.html#CPLI).
 
 `DBUG` [Debugger Control](doc/DBUG.md).
+
+`DIRF` [Directory Functions](http://www.rcfunge98.com/rcfunge2_manual.html#DIRF).
 
 `FING` [Operate on single fingerprint semantics](http://www.rcfunge98.com/rcfunge2_manual.html#FING).
 
@@ -99,7 +106,7 @@ specifying the `-l` command line argument.
 
 `REFC` [Referenced Cells Extension](https://github.com/catseye/Funge-98/blob/master/library/REFC.markdown).
 
-`ROMA` [Roman Numerals](https://github.com/catseye/Funge-98/blob/master/library/ROMA.markdown).
+`ROMA` [Roman Numerals](doc/ROMA.md).
 
 `STRN` [String functions](http://www.rcfunge98.com/rcfunge2_manual.html#STRN).
 
