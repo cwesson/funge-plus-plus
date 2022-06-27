@@ -35,7 +35,7 @@ class Defunge {
 		Defunge();
 
 		void debugWrite(const Field& field, const Vector& pos, inst_t inst);
-		void printIP(const InstructionPointer& ip);
+		void printIP(const FungeRunner& ip);
 		void printField(FungeDebugger* dbg, const Field& field, const Vector& center, const Vector& size, const Vector& dim, const InstructionPointer* ip);
 
 		Error runCommand(std::istringstream& iss);

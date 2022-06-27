@@ -82,11 +82,7 @@ FungeError Unefunge98Strategy::instructionJumpOver(){
 	do{
 		ip.next();
 	}while(ip.get() != ';');
-	do{
-		ip.next();
-	}while(ip.get() == ' ');
-	runner.execute(ip.get());
-	return ERROR_NONE;
+	return ERROR_SKIP;
 }
 
 FungeError Unefunge98Strategy::instructionJumpForward(){
@@ -409,7 +405,7 @@ void Unefunge98Strategy::pushSysInfo(int num){
 	// Team number
 	pushes += stack.top().push(0);
 	// Thread ID
-	pushes += stack.top().push(ip.getID());
+	pushes += stack.top().push(runner.getID());
 	// Scalars per vector
 	pushes += stack.top().push(s);
 	// Path separator

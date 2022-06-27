@@ -27,6 +27,7 @@ class StackStack {
 		 * Copy constructor.
 		 */
 		StackStack(const StackStack& orig) = delete;
+		StackStack(const StackStack&& orig) = delete;
 
 		/**
 		 * Copy constructor.
@@ -103,7 +104,7 @@ class StackStack {
 		
 	private:
 		FungeRunner* runner;
-		std::vector<Stack> stack;
+		std::vector<Stack*> stack;
 };
 
 }

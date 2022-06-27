@@ -82,7 +82,7 @@ void Defunge::debug(FungeDebugger* dbg, FungeRunner* run){
 	runner = run;
 	const InstructionPointer& ip = runner->getIP();
 
-	size_t id = ip.getID();
+	size_t id = runner->getID();
 	auto found = dbg->threads.find(id);
 	if(found == dbg->threads.end()){
 		dbg->threads.insert({id, {
@@ -116,7 +116,7 @@ void Defunge::debug(FungeDebugger* dbg, FungeRunner* run){
 			break;
 	}
 	
-	printIP(ip);
+	printIP(*runner);
 	
 	for(bool debugging = true; debugging; ){
 		std::cout << "\e[33m(defunge)\e[0m " << std::flush;
@@ -148,8 +148,9 @@ void Defunge::debug(FungeDebugger* dbg, FungeRunner* run){
 	}
 }
 
-void Defunge::printIP(const InstructionPointer& ip){
-	std::cout << ip.getID() << ": " << ip.getPos() << " \"" << static_cast<char>(ip.get()) << "\"" << std::endl;
+void Defunge::printIP(const FungeRunner& r){
+	const InstructionPointer& ip = runner->getIP();
+	std::cout << r.getID() << ": " << ip.getPos() << " \"" << static_cast<char>(ip.get()) << "\"" << std::endl;
 }
 
 void Defunge::printField(FungeDebugger* dbg, const Field& field, const Vector& center, const Vector& size, const Vector& dim, const InstructionPointer* ip){
@@ -201,7 +202,7 @@ Defunge::Error Defunge::runCommand(std::istringstream& iss){
 		return DEFUNGE_NO_THREAD;
 	}
 
-	size_t tid = runner->getIP().getID();
+	size_t tid = runner->getID();
 	debugger->threads[tid].state = FungeDebugger::STATE_RUN;
 	return DEFUNGE_BREAK;
 }
@@ -219,7 +220,7 @@ Defunge::Error Defunge::stepCommand(std::istringstream& iss){
 		return DEFUNGE_NO_THREAD;
 	}
 
-	size_t tid = runner->getIP().getID();
+	size_t tid = runner->getID();
 	debugger->threads[tid].state = FungeDebugger::STATE_STEP;
 	return DEFUNGE_BREAK;
 }
@@ -275,7 +276,7 @@ Defunge::Error Defunge::positionCommand(std::istringstream& iss){
 		return DEFUNGE_NO_THREAD;
 	}
 
-	printIP(runner->getIP());
+	printIP(*runner);
 	return DEFUNGE_OK;
 }
 
@@ -286,7 +287,7 @@ Defunge::Error Defunge::threadCommand(std::istringstream& iss){
 
 	size_t tid = 0;
 	if(runner != nullptr){
-		tid = runner->getIP().getID();
+		tid = runner->getID();
 	}
 	size_t thread = tid;
 	iss >> thread;
@@ -296,12 +297,12 @@ Defunge::Error Defunge::threadCommand(std::istringstream& iss){
 	}
 	for(auto t : debugger->threads){
 		if(t.second.state != FungeDebugger::STATE_END){
-			if(runner != nullptr && t.second.runner->getIP().getID() == tid){
+			if(runner != nullptr && t.second.runner->getID() == tid){
 				std::cout << "* ";
 			}else{
 				std::cout << "  ";
 			}
-			printIP(t.second.runner->getIP());
+			printIP(*t.second.runner);
 		}else{
 			std::cout << "  " << t.first << ": end" << std::endl;
 		}
@@ -317,7 +318,7 @@ Defunge::Error Defunge::backtraceCommand(std::istringstream& iss){
 
 	std::cout << "Backtrace" << std::endl;
 	size_t i = 0;
-	size_t tid = runner->getIP().getID();
+	size_t tid = runner->getID();
 	const Field& field = runner->getUniverse().getField();
 	for(auto b : debugger->threads[tid].backtrace){
 		std::cout << "#" << i++ << "  " << b << " \"" << static_cast<char>(field.get(b)) << "\"" << std::endl;
@@ -347,7 +348,7 @@ Defunge::Error Defunge::setposCommand(std::istringstream& iss){
 	iss >> v;
 	InstructionPointer& ip = runner->getIP();
 	ip.setPos(v);
-	printIP(ip);
+	printIP(*runner);
 	return DEFUNGE_OK;
 }
 

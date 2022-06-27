@@ -44,6 +44,15 @@ void FungeDebugger::swbreak(FungeRunner& runner){
 	}
 }
 
+void FungeDebugger::trap(FungeRunner& runner){
+	if(runner.isMode(FUNGE_MODE_DEBUG)){
+		intro(runner);
+		std::cout << "Exception Trapped " << runner.getIP().getPos() << std::endl;
+		threads[lastThread].state = STATE_BREAK;
+		Defunge::getInstance().debug(this, &runner);
+	}
+}
+
 void FungeDebugger::debugWrite(const Field& field, const Vector& pos, inst_t inst){
 	if(watchpoints.contains(pos)){
 		threads[lastThread].state = STATE_BREAK;
@@ -71,7 +80,7 @@ void FungeDebugger::addWatchpoint(const Vector& vec){
 }
 
 void FungeDebugger::endThread(FungeRunner& runner){
-	threads[runner.getIP().getID()].state = STATE_END;
+	threads[runner.getID()].state = STATE_END;
 }
 
 void FungeDebugger::intro(FungeRunner& runner){

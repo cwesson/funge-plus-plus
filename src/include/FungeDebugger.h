@@ -23,6 +23,7 @@ class FungeDebugger {
 		void tick(FungeRunner& runner);
 		void write(Field& field, const Vector& pos, inst_t inst);
 		void swbreak(FungeRunner& runner);
+		void trap(FungeRunner& runner);
 		void addBreakpoint(const Vector& vec);
 		void addWatchpoint(const Vector& vec);
 		void endThread(FungeRunner& runner);

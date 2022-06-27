@@ -34,6 +34,7 @@ class FungeRunner {
 		void tick();
 		FungeError execute(inst_t i);
 		
+		size_t getID() const;
 		FungeUniverse& getUniverse();
 		Field& getField();
 		StackStack& getStack();
@@ -48,11 +49,16 @@ class FungeRunner {
 		semantic_t getSemantic(inst_t i);
 
 		void shareStack(FungeRunner& other);
+		const FungeRunner* getParent();
 	
 	private:
+		static size_t count;
+
+		size_t id;
 		FungeUniverse* universe;
 		std::shared_ptr<StackStack> stack;
 		InstructionPointer ip;
+		const FungeRunner* parent;
 		
 		FungeStateNormal normalState;
 		FungeStateString stringState;

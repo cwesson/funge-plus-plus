@@ -12,19 +12,24 @@ namespace Funge {
 
 Stack::Stack(StackStack& s) :
 	ss(s),
-	stack()
+	stack(),
+	ops(0),
+	mutex()
 {
 	
 }
 
 Stack::Stack(const Stack& orig, StackStack& s) :
 	ss(s),
-	stack(orig.stack)
+	stack(orig.stack),
+	ops(0),
+	mutex()
 {
 	
 }
 
 stack_t Stack::pop(){
+	std::lock_guard<std::mutex> lock(mutex);
 	stack_t ret = 0;
 	if(!stack.empty()){
 		if(ss.getRunner().isMode(FUNGE_MODE_QUEUE)){
@@ -35,10 +40,12 @@ stack_t Stack::pop(){
 			stack.pop_back();
 		}
 	}
+	++ops;
 	return ret;
 }
 
 stack_t Stack::peek() const{
+	std::lock_guard<std::mutex> lock(mutex);
 	stack_t ret = 0;
 	if(!stack.empty()){
 		if(ss.getRunner().isMode(FUNGE_MODE_QUEUE)){
@@ -51,15 +58,18 @@ stack_t Stack::peek() const{
 }
 
 size_t Stack::push(stack_t v){
+	std::lock_guard<std::mutex> lock(mutex);
 	if(ss.getRunner().isMode(FUNGE_MODE_INVERT)){
 		stack.push_front(v);
 	}else{
 		stack.push_back(v);
 	}
+	++ops;
 	return 1;
 }
 
 void Stack::clear(){
+	std::lock_guard<std::mutex> lock(mutex);
 	stack.clear();
 }
 
@@ -67,7 +77,12 @@ size_t Stack::size() const{
 	return stack.size();
 }
 
+size_t Stack::age() const{
+	return ops;
+}
+
 stack_t Stack::get(size_t p) const{
+	std::lock_guard<std::mutex> lock(mutex);
 	if(p <= stack.size() && p > 0){
 		auto it = stack.rbegin();
 		--p;

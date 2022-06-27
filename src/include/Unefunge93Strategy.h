@@ -18,6 +18,7 @@ class Unefunge93Strategy : public FungeStrategy {
 		virtual FungeStrategy* clone(FungeRunner& r) const override;
 	
 	private:
+		FungeError instructionSkip();
 		FungeError instructionPush(int n);
 		// Flow Control
 		FungeError instructionWest();

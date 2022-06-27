@@ -86,6 +86,8 @@ Instructions from dynamic Funges run with the same stack as the IP that called t
 
 `HRTI` [High Resolution Timer Interface](https://github.com/catseye/Funge-98/blob/master/library/HRTI.markdown).
 
+`IIPC` [Inter IP Communication](http://www.rcfunge98.com/rcfunge2_manual.html#IIPC).
+
 `JSTR` [3d string vectors](http://www.rcfunge98.com/rcfunge2_manual.html#JSTR).
 
 `LONG` [Long Integers](http://www.rcfunge98.com/rcfunge2_manual.html#LONG).

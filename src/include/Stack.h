@@ -9,6 +9,7 @@
 #include "funge_types.h"
 #include <cstddef>
 #include <list>
+#include <mutex>
 
 namespace Funge {
 class StackStack;
@@ -16,7 +17,8 @@ class StackStack;
 class Stack {
 	public:
 		explicit Stack(StackStack& s);
-		//Stack(const Stack& orig) = delete;
+		Stack(const Stack& orig) = delete;
+		Stack(const Stack&& orig) = delete;
 		Stack(const Stack& orig, StackStack& s);
 		
 		stack_t pop();
@@ -25,6 +27,7 @@ class Stack {
 		void clear();
 		
 		size_t size() const;
+		size_t age() const;
 		
 		stack_t get(size_t p) const;
 		stack_t operator[](size_t p) const;
@@ -32,6 +35,8 @@ class Stack {
 	private:
 		StackStack& ss;
 		std::list<stack_t> stack;
+		size_t ops;
+		mutable std::mutex mutex;
 };
 
 }

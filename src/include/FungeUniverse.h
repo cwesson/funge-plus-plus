@@ -107,6 +107,7 @@ class FungeUniverse {
 		const std::vector<std::string>& arguments() const;
 		const std::vector<std::string>& environment() const;
 		const std::vector<uint64_t>& fingerprints() const;
+		FungeRunner* getRunner(size_t id);
 		size_t dimensions(size_t d=0);
 		unsigned int standard() const;
 		FungeTopo topology() const;

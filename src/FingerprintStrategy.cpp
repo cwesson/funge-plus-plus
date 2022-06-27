@@ -20,6 +20,7 @@
 #include "FingerprintFRTH.h"
 #include "FingerprintFungeLib.h"
 #include "FingerprintHRTI.h"
+#include "FingerprintIIPC.h"
 #include "FingerprintJSTR.h"
 #include "FingerprintLONG.h"
 #include "FingerprintMODE.h"
@@ -81,6 +82,7 @@ Fingerprint* FingerprintStrategy::loadBuiltin(uint64_t fingerprint){
 		case 0x46505350: fing = new FingerprintFloat<float>(runner); break;
 		case 0x46525448: fing = new FingerprintFRTH(runner); break;
 		case 0x48525449: fing = new FingerprintHRTI(runner); break;
+		case 0x49495043: fing = new FingerprintIIPC(runner); break;
 		case 0x4A535452: fing = new FingerprintJSTR(runner); break;
 		case 0x4C4F4E47: fing = new FingerprintLONG(runner); break;
 		case 0x4D4F4445: fing = new FingerprintMODE(runner); break;

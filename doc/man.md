@@ -13,7 +13,7 @@ funge - N-dimensional Funge-98 interpreter
 written in C++. 
 
 # OPTIONS
-**-std=[un93|une98|be93|be98|tre98]**
+**-std=[une93|une98|be93|be98|tre98]**
 : Overrides the automatically detected dimensionality.
 
 **-fconcurrent**, **-fno-concurrent**

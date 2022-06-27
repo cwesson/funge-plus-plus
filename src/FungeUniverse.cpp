@@ -196,6 +196,15 @@ const std::vector<uint64_t>& FungeUniverse::fingerprints() const {
 	return config.fingerprints;
 }
 
+FungeRunner* FungeUniverse::getRunner(size_t id){
+	for(auto r : runners){
+		if(r->getID() == id){
+			return r;
+		}
+	}
+	return nullptr;
+}
+
 size_t FungeUniverse::dimensions(size_t d){
 	if(d > 0){
 		config.dimensions = d;

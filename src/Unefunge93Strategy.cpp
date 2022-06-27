@@ -16,6 +16,8 @@ namespace Funge {
 Unefunge93Strategy::Unefunge93Strategy(FungeRunner& r) :
 	FungeStrategy(r)
 {
+	r.pushSemantic(' ', std::bind(&Unefunge93Strategy::instructionSkip, this));
+	r.pushSemantic('\t', std::bind(&Unefunge93Strategy::instructionSkip, this));
 	r.pushSemantic('0', std::bind(&Unefunge93Strategy::instructionPush, this, 0));
 	r.pushSemantic('1', std::bind(&Unefunge93Strategy::instructionPush, this, 1));
 	r.pushSemantic('2', std::bind(&Unefunge93Strategy::instructionPush, this, 2));
@@ -55,6 +57,10 @@ Unefunge93Strategy::Unefunge93Strategy(FungeRunner& r) :
 	// Self-Modifying
 	r.pushSemantic('g', std::bind(&Unefunge93Strategy::instructionGet, this));
 	r.pushSemantic('p', std::bind(&Unefunge93Strategy::instructionPut, this));
+}
+
+FungeError Unefunge93Strategy::instructionSkip(){
+	return ERROR_SKIP;
 }
 
 FungeError Unefunge93Strategy::instructionPush(int n){

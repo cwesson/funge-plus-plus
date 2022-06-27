@@ -94,14 +94,10 @@ semantic_t FungeStateNormal::getSemantic(inst_t i){
 }
 
 FungeError FungeStateNormal::execute(inst_t i){
-	FungeError done = ERROR_SKIP;
-	if(i != ' '){
-		auto found = semantics.find(i);
-		if(found != semantics.cend() && found->second.size() > 0){
-			done = found->second.top()();
-		}else{
-			done = ERROR_UNIMP;
-		}
+	FungeError done = ERROR_UNIMP;
+	auto found = semantics.find(i);
+	if(found != semantics.cend() && found->second.size() > 0){
+		done = found->second.top()();
 	}
 	return done;
 }

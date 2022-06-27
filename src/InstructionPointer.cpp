@@ -11,11 +11,8 @@
 
 namespace Funge {
 
-size_t InstructionPointer::count = 0;
-
 InstructionPointer::InstructionPointer(FungeRunner& r) :
 	runner(r),
-	id(count++),
 	stopped(false),
 	pos({0}),
 	delta({1}),
@@ -26,7 +23,6 @@ InstructionPointer::InstructionPointer(FungeRunner& r) :
 
 InstructionPointer::InstructionPointer(const InstructionPointer& orig, FungeRunner& r) :
 	runner(r),
-	id(count++),
 	stopped(orig.stopped),
 	pos(orig.pos),
 	delta(orig.delta),
@@ -130,10 +126,6 @@ const Vector& InstructionPointer::getDelta() const{
 
 const Vector& InstructionPointer::getStorage() const{
 	return storage;
-}
-
-size_t InstructionPointer::getID() const{
-	return id;
 }
 
 std::ostream& operator<<(std::ostream& os, const InstructionPointer& rhs){
