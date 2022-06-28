@@ -57,6 +57,8 @@ Unefunge93Strategy::Unefunge93Strategy(FungeRunner& r) :
 	// Self-Modifying
 	r.pushSemantic('g', std::bind(&Unefunge93Strategy::instructionGet, this));
 	r.pushSemantic('p', std::bind(&Unefunge93Strategy::instructionPut, this));
+
+	r.setErrorHandler(std::bind(&Unefunge93Strategy::errorHandler, this, std::placeholders::_1));
 }
 
 FungeError Unefunge93Strategy::instructionSkip(){
@@ -261,6 +263,25 @@ FungeError Unefunge93Strategy::instructionPut(){
 	Vector v = popVector(runner);
 	field.set(v+storage, stack.top().pop());
 	return ERROR_NONE;
+}
+
+void Unefunge93Strategy::errorHandler(FungeError e){
+	inst_t i = ip.get();
+	switch(e){
+		[[unlikely]] case ERROR_NONE:
+		[[unlikely]] case ERROR_SKIP:
+		[[unlikely]] case ERROR_BLOCK:
+			break;
+		case ERROR_UNIMP:
+			std::cerr << "Unimplemented instruction " << static_cast<int>(i) << " \'" << static_cast<char>(i) << "\' at " << ip << "." << std::endl;
+			[[fallthrough]];
+		case ERROR_NOTAVAIL:
+		case ERROR_UNSPEC:
+		[[unlikely]] default:
+			ip.reflect();
+			ip.next();
+			break;
+	}
 }
 
 FungeStrategy* Unefunge93Strategy::clone(FungeRunner& r) const{

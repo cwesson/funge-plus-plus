@@ -18,6 +18,7 @@ FungeRunner::FungeRunner(FungeUniverse& uni, const Vector& pos, const Vector& de
 	stack(new StackStack(*this)),
 	ip(*this),
 	parent(nullptr),
+	errorHandler(nullptr),
 	normalState(*this),
 	stringState(*this),
 	state(&normalState)
@@ -32,6 +33,7 @@ FungeRunner::FungeRunner(FungeUniverse& uni, const Vector& pos, const Vector& de
 	stack(r.stack),
 	ip(*this),
 	parent(&r),
+	errorHandler(nullptr),
 	normalState(*this),
 	stringState(*this),
 	state(&normalState)
@@ -47,6 +49,7 @@ FungeRunner::FungeRunner(const FungeRunner& runner) :
 	stack(new StackStack(*runner.stack, *this)),
 	ip(runner.ip, *this),
 	parent(&runner),
+	errorHandler(runner.errorHandler),
 	normalState(runner.normalState, *this),
 	stringState(*this),
 	state(&normalState)
@@ -84,14 +87,15 @@ void FungeRunner::tick(){
 			case ERROR_BLOCK:
 				break;
 			case ERROR_UNIMP:
-				std::cerr << "Unimplemented instruction " << static_cast<int>(i) << " \'" << static_cast<char>(i) << "\' at " << ip << "." << std::endl;
-				[[fallthrough]];
 			case ERROR_NOTAVAIL:
 			case ERROR_UNSPEC:
 			[[unlikely]] default:
 				getUniverse().getDebugger().trap(*this);
-				ip.reflect();
-				ip.next();
+				if(errorHandler != nullptr){
+					errorHandler(err);
+				}else{
+					ip.next();
+				}
 				break;
 		}
 	} while(err == ERROR_SKIP);
@@ -156,6 +160,10 @@ semantic_t FungeRunner::popSemantic(inst_t i){
 
 semantic_t FungeRunner::getSemantic(inst_t i){
 	return normalState.getSemantic(i);
+}
+
+void FungeRunner::setErrorHandler(std::function<void(FungeError)> func){
+	errorHandler = func;
 }
 
 void FungeRunner::setUniverse(FungeUniverse& other){

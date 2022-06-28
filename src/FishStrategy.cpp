@@ -83,6 +83,8 @@ FishStrategy::FishStrategy(FungeRunner& r) :
 	r.pushSemantic('p', std::bind(&FishStrategy::instructionPut, this));
 	r.pushSemantic(';', std::bind(&FishStrategy::instructionEnd, this));
 
+	r.setErrorHandler(std::bind(&FishStrategy::errorHandler, this, std::placeholders::_1));
+
 	regs.push({false, 0});
 }
 
@@ -383,6 +385,22 @@ FungeError FishStrategy::instructionRegister(){
 	}
 
 	return ERROR_NONE;
+}
+
+void FishStrategy::errorHandler(FungeError e){
+	switch(e){
+		[[unlikely]] case ERROR_NONE:
+		[[unlikely]] case ERROR_SKIP:
+		[[unlikely]] case ERROR_BLOCK:
+			break;
+		case ERROR_UNIMP:
+		case ERROR_NOTAVAIL:
+		case ERROR_UNSPEC:
+		[[unlikely]] default:
+			std::cerr << "something smells fishy..." << std::endl;
+			ip.next();
+			break;
+	}
 }
 
 FungeStrategy* FishStrategy::clone(FungeRunner& r) const{
