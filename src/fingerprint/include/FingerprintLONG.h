@@ -7,7 +7,7 @@
 #pragma once
 
 #include "Fingerprint.h"
-#include "bigint.h"
+#include "tmp/bigint.h"
 
 namespace Funge {
 
@@ -16,7 +16,7 @@ class FingerprintLONG : public Fingerprint {
 		explicit FingerprintLONG(FungeRunner& r);
 		virtual ~FingerprintLONG() = default;
 		
-		virtual bool execute(inst_t cmd) override;
+		virtual FungeError execute(inst_t cmd) override;
 
 	private:
 		typedef bigint<uint64_t> fungelong_t;

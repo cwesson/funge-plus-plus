@@ -13,7 +13,8 @@ FingerprintHRTI::FingerprintHRTI(FungeRunner& r) :
 	Fingerprint(r, {'E', 'G', 'M', 'S', 'T'})
 {}
 
-bool FingerprintHRTI::execute(inst_t cmd){
+FungeError FingerprintHRTI::execute(inst_t cmd){
+	FungeError ret = ERROR_NONE;
 	switch(cmd){
 		case 'E':{
 			hrti_mark = std::chrono::steady_clock::time_point();
@@ -31,16 +32,16 @@ bool FingerprintHRTI::execute(inst_t cmd){
 		} break;
 		case 'T':{
 			if(hrti_mark == std::chrono::steady_clock::time_point()){
-				ip.reflect();
+				ret = ERROR_UNSPEC;
 			}else{
 				auto dur = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - hrti_mark);
 				stack.top().push(dur.count());
 			}
 		} break;
 		default:
-			return false;
+			ret = ERROR_UNIMP;
 	}
-	return true;
+	return ret;
 }
 
 }

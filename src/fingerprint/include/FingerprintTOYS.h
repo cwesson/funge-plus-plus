@@ -16,7 +16,7 @@ class FingerprintTOYS : public Fingerprint {
 		explicit FingerprintTOYS(FungeRunner& r);
 		virtual ~FingerprintTOYS() = default;
 		
-		virtual bool execute(inst_t cmd) override;
+		virtual FungeError execute(inst_t cmd) override;
 		
 	private:
 		std::default_random_engine rd;

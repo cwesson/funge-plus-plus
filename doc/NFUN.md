@@ -11,11 +11,13 @@ The NFUN fingerprint enables higher-dimension funges.
 `V` delta <- (0,0,0,1)
 
 ### 5th Dimension
-`H` delta <- (0,0,0,0,-1)
+`H` delta <- (0,0,0,0,1)
 
-`L` delta <- (0,0,0,0,1)
+`L` delta <- (0,0,0,0,-1)
 
 `M` delta <- if(b) (0,0,0,0,-1) else (0,0,0,0,0,1)
+
+The **-finvert-hl** flag affects `H` and `L`.
 
 ### 6th Dimension
 `C` delta <- (0,0,0,0,0,-1)

@@ -15,7 +15,7 @@ class FungeStateString : public FungeState {
 		explicit FungeStateString(FungeRunner& r);
 		virtual ~FungeStateString() = default;
 		
-		virtual bool execute(inst_t i) override;
+		virtual FungeError execute(inst_t i) override;
 
 		void setEnd(inst_t i);
 	private:

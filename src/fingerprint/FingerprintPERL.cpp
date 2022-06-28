@@ -5,8 +5,8 @@
  */
 
 #include "FingerprintPERL.h"
-#include "FungeConfig.h"
 #include "FungeUtilities.h"
+#include "FungeUniverse.h"
 #include <iomanip>
 
 namespace Funge {
@@ -15,31 +15,32 @@ FingerprintPERL::FingerprintPERL(FungeRunner& r) :
 	Fingerprint(r, {'E', 'I', 'S'})
 {}
 
-bool FingerprintPERL::execute(inst_t cmd){
+FungeError FingerprintPERL::execute(inst_t cmd){
+	FungeError ret = ERROR_NONE;
 	switch(cmd){
 		case 'E':{
-			if(funge_config.execute){
+			if(runner.getUniverse().allowExecute()){
 				int e = perl(popString(stack.top()));
 				pushString(stack.top(), std::to_string(e));
 			}else{
-				ip.reflect();
+				ret = ERROR_UNSPEC;
 			}
 		} break;
 		case 'I':{
-			if(funge_config.execute){
+			if(runner.getUniverse().allowExecute()){
 				int e = perl(popString(stack.top()));
 				stack.top().push(e);
 			}else{
-				ip.reflect();
+				ret = ERROR_UNSPEC;
 			}
 		} break;
 		case 'S':{
 			stack.top().push(1);
 		} break;
 		default:
-			return false;
+			ret = ERROR_UNIMP;
 	}
-	return true;
+	return ret;
 }
 
 int FingerprintPERL::perl(const std::string& code){

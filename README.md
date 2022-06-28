@@ -9,46 +9,16 @@ file is an instruction at (0,0).  Each subsequent character is an instruction at
 line feed (as well as CRLF) are treated as Y+1 and reset X to zero.  Form feeds in the file represent Z+1 and reset
 X and Y to zero.  Carriage returns and line feeds following a form feed are ignored (i.e FF may be own its own line).
 
+See the [man page](doc/man.md) for more information.
+
 ### Higher Dimensions
 Vertical Tabs in the file represent 4D+1 and reset X, Y, and Z to zero.  Carriage returns and line feeds
 following a vertical tab are ignored.  This is not part of the Funge-98 specification, but provides a simple way to
 create 4-dimensional funges.
 
+Trefunge frunges can be loaded as funge-lib formatted `.fl` files.
+
 Higher dimension funges can be loaded as BeQunge formatted `.beq` files.  Loading a `.beq` file implies `-lNFUN`.
-
-### Arguments
-`funge [ARGS] file [YARGS]`
-
-#### ARGS:
-`-std=[un93|une98|be93|be98|tre98]` Overrides the automatically detected dimensionality.
-
-`-fconcurrent` `-fno-concurrent` Enable or disable use of split instruction `t`.
-
-`-fexecute` `-fno-execute` Enable or disable use of execute instruction `=`.
-
-`-ffilesystem` `-fno-filesystem` Enable or disable use of filesystem instructions `i` and `o`.
-
-`-finvert-hl` Invert the `h` and `l` instructions.
-
-`-ftopo=[torus|lahey]` Set the topology.
-
-`-fstrings=[multispace|sgml|c]` Set the string mode.
-
-`-fcells=[char|int]` Set the cell size.
-
-`-fthreads=[native|funge]` Set the threading mode.
-
-`-l[fingerprint]` Load fingerprint at start.  This does not push the fingerprint ID to the stack.
-
-`-g` Start in [debugger mode](#debugger).
-
-#### YARGS:
-Any arguments following the Befunge file are passed to the Befunge program.  These arguments are available to the
-program using the `y` instruction.
-
-### Exit Code
-`funge` sets the program exit code to the value popped by the quit instruction `q` if encountered.  If `funge` fails
-to load the funge program, the exit code is set to an error.  In any other case, the exit code is zero.
 
 ## Features
 
@@ -58,8 +28,8 @@ specification.  This mode can be enabled with `-fthreads=native`.
 
 ### Auto-Dimensions
 The dimensionality (up to 4D) is determined automatically based on the file contents.  This can be overriden with
-the `-std` argument.  Higher dimensions can be determined automatically from BeQunge formatted files with or without
-the `Dimensions` directive.
+the `-std` argument.  Funge-lib formatted files are 3D.  Higher dimensions can be determined automatically from BeQunge
+formatted files with or without the `Dimensions` directive.
 
 Standard instructions which operate on vectors (`g`, `p`, `x`, `?`), operate with vector lengths equal to the number of
 dimensions detected.  This enables those instructions to function in a standardized way in higher-dimension funges.  For
@@ -77,13 +47,18 @@ numbers are 128-bit.
 
 ## Errata
 ### High/Low
-The Funge-98 specification is inconsistent about the delta of the `h` and `l`  instructions (https://github.com/catseye/Funge-98/issues/10).  Funge++ uses the
-definition in the program flow section, that is `h` is "delta <- (0,0,1)" and `l` is "delta <- (0,0,-1)".  This makes
-it compatible with BeQunge and Rc/Funge-98.  The `-finvert-hl` argument flips this behavior.
+The Funge-98 specification is inconsistent about the delta of the `h` and `l`  instructions (https://github.com/catseye/Funge-98/issues/10).
+Funge++ uses thedefinition in the program flow section, that is `h` is "delta <- (0,0,1)" and `l` is
+"delta <- (0,0,-1)".  This makes it compatible with BeQunge and Rc/Funge-98.  The `-finvert-hl` argument flips this
+behavior.
 
 ## Fingerprints
-Funge++ supports the following fingerprints.  These can either be loaded at runtime by the '(' instruction, or by
+Funge++ supports the following fingerprints.  These can either be loaded at runtime by the `(` instruction, or by
 specifying the `-l` command line argument.
+
+Funge++ also supports dynamic Funge fingerprints.  When a fingerprint is loaded, Funge++ will search for funge-lib files
+in the `fing` directory before loading a built-in fingerprint.  This allows users to override the built-in fingerprints.
+Instructions from dynamic Funges run with the same stack as the IP that called them.
 
 `BASE` [I/O for numbers in other bases](http://www.rcfunge98.com/rcfunge2_manual.html#BASE).
 
@@ -94,6 +69,8 @@ specifying the `-l` command line argument.
 `CPLI` [Complex Integer Extension](http://www.rcfunge98.com/rcfunge2_manual.html#CPLI).
 
 `DBUG` [Debugger Control](doc/DBUG.md).
+
+`DIRF` [Directory Functions](http://www.rcfunge98.com/rcfunge2_manual.html#DIRF).
 
 `FING` [Operate on single fingerprint semantics](http://www.rcfunge98.com/rcfunge2_manual.html#FING).
 
@@ -109,13 +86,17 @@ specifying the `-l` command line argument.
 
 `HRTI` [High Resolution Timer Interface](https://github.com/catseye/Funge-98/blob/master/library/HRTI.markdown).
 
-`JSTR` [3d string vectors](http://www.rcfunge98.com/rcfunge2_manual.html#JSTR)
+`IIPC` [Inter IP Communication](http://www.rcfunge98.com/rcfunge2_manual.html#IIPC).
 
-`LONG` [Long Integers](http://www.rcfunge98.com/rcfunge2_manual.html#LONG)
+`JSTR` [3d string vectors](http://www.rcfunge98.com/rcfunge2_manual.html#JSTR).
+
+`LONG` [Long Integers](http://www.rcfunge98.com/rcfunge2_manual.html#LONG).
 
 `MODE` [Standard Modes](https://github.com/catseye/Funge-98/blob/master/library/MODE.markdown).
 
 `MODU` [Modulo Arithmetic Extension](https://github.com/catseye/Funge-98/blob/master/library/MODU.markdown).
+
+`MVRS` [Multiverse extension](http://www.rcfunge98.com/rcfunge2_manual.html#MVRS).
 
 `NFUN` [N-Dimensional Funge](doc/NFUN.md).
 
@@ -127,11 +108,11 @@ specifying the `-l` command line argument.
 
 `REFC` [Referenced Cells Extension](https://github.com/catseye/Funge-98/blob/master/library/REFC.markdown).
 
-`ROMA` [Roman Numerals](https://github.com/catseye/Funge-98/blob/master/library/ROMA.markdown).
+`ROMA` [Roman Numerals](doc/ROMA.md).
 
-`STRN` [String functions](http://www.rcfunge98.com/rcfunge2_manual.html#STRN)
+`STRN` [String functions](http://www.rcfunge98.com/rcfunge2_manual.html#STRN).
 
-`SUBR` [Subroutine extension](http://www.rcfunge98.com/rcfunge2_manual.html#SUBR)
+`SUBR` [Subroutine extension](http://www.rcfunge98.com/rcfunge2_manual.html#SUBR).
 
 `TERM` [Terminal extension](http://www.rcfunge98.com/rcfunge2_manual.html#TERM).
 
@@ -140,57 +121,4 @@ specifying the `-l` command line argument.
 ## Debugger
 The Funge++ debugger, known as defunge, can be run on any Befunge program by specifying the `-g` command line argument.
 
-### Commands
-Defunge supports the follow commands.  All arguments are optional, but must be given in the order shown.  Vector
-arguments to commands are a comma separated list of coordinates inside parenthesis, starting with the X dimension:
-`(x, y, z)`.  As many dimensions as necessary are allowed.
-
-*run*
-Run the IP being debugged.
-
-*quit*
-Stop running the program and exit the debugger.
-
-*step*
-Execute the current instruction and break again.
-
-*peek c s*
-Print element *c* from stack *s*.  Stack 0 is the top stack, element 1 is the top of the stack.  If *c* is 0,
-print the entire stack stack.
-
-*read v*
-Print the cell at vector *v*.
-
-*get v s d*
-Print field vector *s* cells around the cell at vector *v* in the dimensions specified by vector *d*.
-
-*list s d*
-Print the field vector *s* cells around the current IP in the dimensions specified by vector *d*.
-
-*break v*
-Add a breakpoint on the cell at vector *v*.
-
-*watch v*
-Add a write watchpoint on the cell at vector *v*.
-
-*delta*
-Print the delta of the current IP.
-
-*storage*
-Print the storage offset of the current IP.
-
-*position*
-Print the position of the current IP.
-
-*thread n*
-Switch the debugger to the IP with ID *n*.
-
-*backtrace*
-Print the backtrace of the current IP.
-
-*setdelta v*
-Set the delta of the current IP to vector *v*.
-
-*setpos v*
-Set the postion of the current IP to vector *v*.
-
+See [Defunge](doc/defunge.md) for details.

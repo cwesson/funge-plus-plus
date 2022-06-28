@@ -15,10 +15,10 @@ class FingerprintFING : public Fingerprint {
 		explicit FingerprintFING(FungeRunner& r);
 		virtual ~FingerprintFING() = default;
 		
-		virtual bool execute(inst_t cmd) override;
+		virtual FungeError execute(inst_t cmd) override;
 	
 	private:
-		bool instructionReflect();
+		FungeError instructionReflect();
 };
 
 }

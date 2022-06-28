@@ -7,8 +7,8 @@
 #include "Unefunge98Strategy.h"
 #include "FungeRunner.h"
 #include "FungeUtilities.h"
-#include "FungeConfig.h"
 #include "FungeVersion.h"
+#include "FungeUniverse.h"
 #include <thread>
 #include <fstream>
 #include <ctime>
@@ -64,32 +64,28 @@ void Unefunge98Strategy::init(){
 	runner.pushSemantic(')', std::bind(&Unefunge98Strategy::instructionUnload, this));
 }
 
-bool Unefunge98Strategy::instructionPush(int n){
+FungeError Unefunge98Strategy::instructionPush(int n){
 	stack.top().push(n);
-	return true;
+	return ERROR_NONE;
 }
 
-bool Unefunge98Strategy::instructionSysInfo(){
+FungeError Unefunge98Strategy::instructionSysInfo(){
 	pushSysInfo(stack.top().pop());
-	return true;
+	return ERROR_NONE;
 }
 
-bool Unefunge98Strategy::instructionNoop(){
-	return true;
+FungeError Unefunge98Strategy::instructionNoop(){
+	return ERROR_NONE;
 }
 
-bool Unefunge98Strategy::instructionJumpOver(){
+FungeError Unefunge98Strategy::instructionJumpOver(){
 	do{
 		ip.next();
 	}while(ip.get() != ';');
-	do{
-		ip.next();
-	}while(ip.get() == ' ');
-	runner.execute(ip.get());
-	return true;
+	return ERROR_SKIP;
 }
 
-bool Unefunge98Strategy::instructionJumpForward(){
+FungeError Unefunge98Strategy::instructionJumpForward(){
 	int j = stack.top().pop();
 	if(j < 0){
 		ip.reflect();
@@ -100,21 +96,21 @@ bool Unefunge98Strategy::instructionJumpForward(){
 	if(j < 0){
 		ip.reflect();
 	}
-	return true;
+	return ERROR_NONE;
 }
 
-bool Unefunge98Strategy::instructionReflect(){
+FungeError Unefunge98Strategy::instructionReflect(){
 	ip.reflect();
-	return true;
+	return ERROR_NONE;
 }
 
-bool Unefunge98Strategy::instructionAbsolute(){
-	Vector v = popVector(stack.top());
+FungeError Unefunge98Strategy::instructionAbsolute(){
+	Vector v = popVector(runner);
 	ip.setDelta(v);
-	return true;
+	return ERROR_NONE;
 }
 
-bool Unefunge98Strategy::instructionIterate(){
+FungeError Unefunge98Strategy::instructionIterate(){
 	Vector v = ip.getPos();
 	ip.next();
 	char c = field.get(ip.getPos());
@@ -139,32 +135,33 @@ bool Unefunge98Strategy::instructionIterate(){
 	if(k == 0){
 		ip.next();
 	}
-	return true;
+	return ERROR_NONE;
 }
 
-bool Unefunge98Strategy::instructionQuit(){
+FungeError Unefunge98Strategy::instructionQuit(){
 	int r = stack.top().pop();
-	exit(r);
+	runner.getUniverse().killAll(r);
 	// Unreachable
-	return true;
+	return ERROR_NONE;
 }
 
-bool Unefunge98Strategy::instructionThread(){
-	if(funge_config.concurrent){
+FungeError Unefunge98Strategy::instructionThread(){
+	if(runner.getUniverse().allowConcurrent()){
 		runner.getUniverse().cloneRunner(runner);
 	}else{
 		std::cerr << "Run with -fconcurrent to enable concurrency." << std::endl;
-		return false;
+		return ERROR_NOTAVAIL;
 	}
-	return true;
+	return ERROR_NONE;
 }
 
-bool Unefunge98Strategy::instructionClear(){
+FungeError Unefunge98Strategy::instructionClear(){
 	stack.top().clear();
-	return true;
+	return ERROR_NONE;
 }
 
-bool Unefunge98Strategy::instructionUnder(){
+FungeError Unefunge98Strategy::instructionUnder(){
+	FungeError ret = ERROR_NONE;
 	if(stack.size() > 1){
 		const stack_t n = stack.top().pop();
 		if(n > 0){
@@ -179,12 +176,12 @@ bool Unefunge98Strategy::instructionUnder(){
 			}
 		}
 	}else{
-		ip.reflect();
+		ret = ERROR_UNSPEC;
 	}
-	return true;
+	return ret;
 }
 
-bool Unefunge98Strategy::instructionBegin(){
+FungeError Unefunge98Strategy::instructionBegin(){
 	const stack_t n = stack.top().pop();
 	stack.push();
 	if(n > 0){
@@ -201,19 +198,20 @@ bool Unefunge98Strategy::instructionBegin(){
 		}
 	}
 	const Vector& storage = ip.getStorage();
-	pushVector(stack.second(), storage);
+	pushVector(runner, storage, &stack.second());
 	ip.setStorage(ip.getPos()+ip.getDelta());
 	
-	if(funge_config.switchmode){
+	if(runner.isMode(FUNGE_MODE_SWITCH)){
 		ip.set('}');
 	}
-	return true;
+	return ERROR_NONE;
 }
 
-bool Unefunge98Strategy::instructionEnd(){
+FungeError Unefunge98Strategy::instructionEnd(){
+	FungeError ret = ERROR_NONE;
 	if(stack.size() > 1){
 		const stack_t n = stack.top().pop();
-		Vector v = popVector(stack.second());
+		Vector v = popVector(runner, &stack.second());
 		ip.setStorage(v);
 		if(n > 0){
 			stack_t trans[n];
@@ -230,83 +228,87 @@ bool Unefunge98Strategy::instructionEnd(){
 		}
 		stack.pop();
 	}else{
-		ip.reflect();
+		ret = ERROR_UNSPEC;
 	}
 	
-	if(funge_config.switchmode){
+	if(runner.isMode(FUNGE_MODE_SWITCH)){
 		ip.set('{');
 	}
-	return true;
+	return ret;
 }
 
-bool Unefunge98Strategy::instructionFileIn(){
-	if(funge_config.filesystem){
+FungeError Unefunge98Strategy::instructionFileIn(){
+	FungeError ret = ERROR_NONE;
+	if(runner.getUniverse().allowFilesystem()){
 		std::string filepath = popString(stack.top());
 		stack_t flags = stack.top().pop();
-		Vector va = popVector(stack.top());
+		Vector va = popVector(runner);
 		va += ip.getStorage();
 		std::ifstream file(filepath);
 		if(!file.fail()){
 			Vector vb = field.parse(va, file, !!(flags & FILE_IN_BINARY));
-			pushVector(stack.top(), vb);
-			pushVector(stack.top(), va);
+			pushVector(runner, vb);
+			pushVector(runner, va);
 		}else{
-			ip.reflect();
+			ret = ERROR_UNSPEC;
 		}
 	}else{
 		std::cerr << "Run with -ffilesystem to enable execution." << std::endl;
-		return false;
+		ret = ERROR_NOTAVAIL;
 	}
-	return true;
+	return ret;
 }
 
-bool Unefunge98Strategy::instructionFileOut(){
-	if(funge_config.filesystem){
+FungeError Unefunge98Strategy::instructionFileOut(){
+	FungeError ret = ERROR_NONE;
+	if(runner.getUniverse().allowFilesystem()){
 		std::string filepath = popString(stack.top());
 		stack_t flags = stack.top().pop();
 		std::ignore = flags;
-		Vector va = popVector(stack.top());
+		Vector va = popVector(runner);
 		va += ip.getStorage();
-		Vector vb = popVector(stack.top());
+		Vector vb = popVector(runner);
 		std::ofstream file(filepath);
 		if(!file.fail()){
 			field.dump(va, vb, file, !(flags & FILE_OUT_TEXT));
 		}else{
-			ip.reflect();
+			ret = ERROR_UNSPEC;
 		}
 	}else{
 		std::cerr << "Run with -ffilesystem to enable execution." << std::endl;
-		return false;
+		ret = ERROR_NOTAVAIL;
 	}
-	return true;
+	return ret;
 }
 
-bool Unefunge98Strategy::instructionExecute(){
-	if(funge_config.execute){
+FungeError Unefunge98Strategy::instructionExecute(){
+	FungeError ret = ERROR_NONE;
+	if(runner.getUniverse().allowExecute()){
 		std::string sys = popString(stack.top());
 		int code = system(sys.c_str());
 		stack.top().push(code);
 	}else{
 		std::cerr << "Run with -fexecute to enable execution." << std::endl;
-		return false;
+		return ret = ERROR_NOTAVAIL;
 	}
-	return true;
+	return ret;
 }
 
-bool Unefunge98Strategy::instructionFetch(){
+FungeError Unefunge98Strategy::instructionFetch(){
 	ip.next();
 	stack.top().push((int)ip.get());
-	return true;
+	return ERROR_NONE;
 }
 
-bool Unefunge98Strategy::instructionStore(){
+FungeError Unefunge98Strategy::instructionStore(){
 	ip.next();
 	ip.set((char)(int)stack.top().pop());
-	return true;
+	return ERROR_NONE;
 }
 
-bool Unefunge98Strategy::instructionLoad(){
-	if(funge_config.fingerprint){
+FungeError Unefunge98Strategy::instructionLoad(){
+	FungeError ret = ERROR_NONE;
+	if(runner.getUniverse().allowFingerprints()){
 		const stack_t count = stack.top().pop();
 		uint64_t fingerprint = 0;
 		for(stack_t i = 0; i < count; ++i){
@@ -316,57 +318,60 @@ bool Unefunge98Strategy::instructionLoad(){
 			stack.top().push(fingerprint);
 			stack.top().push(1);
 		}else{
-			ip.reflect();
+			ret = ERROR_UNSPEC;
 		}
 	}else{
 		std::cerr << "Run with -ffingerprint to enable fingerprints." << std::endl;
-		return false;
+		ret = ERROR_NOTAVAIL;
 	}
 	
-	if(funge_config.switchmode){
+	if(runner.isMode(FUNGE_MODE_SWITCH)){
 		ip.set(')');
 	}
-	return true;
+	return ret;
 }
 
-bool Unefunge98Strategy::instructionUnload(){
-	if(funge_config.fingerprint){
+FungeError Unefunge98Strategy::instructionUnload(){
+	FungeError ret = ERROR_NONE;
+	if(runner.getUniverse().allowFingerprints()){
 		const stack_t count = stack.top().pop();
 		uint64_t fingerprint = 0;
 		for(stack_t i = 0; i < count; ++i){
 			fingerprint = (fingerprint << 8) + stack.top().pop();
 		}
 		if(!finger.unload(fingerprint)){
-			ip.reflect();
+			ret = ERROR_UNSPEC;
 		}
 	}else{
 		std::cerr << "Run with -ffingerprint to enable fingerprints." << std::endl;
-		return false;
+		ret = ERROR_NOTAVAIL;
 	}
 	
-	if(funge_config.switchmode){
+	if(runner.isMode(FUNGE_MODE_SWITCH)){
 		ip.set('(');
 	}
-	return true;
+	return ret;
 }
 
 void Unefunge98Strategy::pushSysInfo(int num){
-	const size_t s = funge_config.dimensions;
+	const size_t s = runner.getUniverse().dimensions();
 	const stack_t tsize = stack.top().size();
 	int pushes = 0;
 	// ENV variables
 	pushes += stack.top().push(0);
 	pushes += stack.top().push(0);
-	if(funge_config.env.size() > 0){
-		for(auto arg = funge_config.env.crbegin(); arg != funge_config.env.crend(); ++arg){
+	auto environment = runner.getUniverse().environment();
+	if(environment.size() > 0){
+		for(auto arg = environment.crbegin(); arg != environment.crend(); ++arg){
 			pushes += pushString(stack.top(), *arg);
 		}
 	}
 	// ARGV
 	pushes += stack.top().push(0);
 	pushes += stack.top().push(0);
-	if(funge_config.args.size() > 0){
-		for(auto arg = funge_config.args.crbegin(); arg != funge_config.args.crend(); ++arg){
+	auto args = runner.getUniverse().arguments();
+	if(args.size() > 0){
+		for(auto arg = args.crbegin(); arg != args.crend(); ++arg){
 			pushes += pushString(stack.top(), *arg);
 		}
 	}
@@ -392,17 +397,17 @@ void Unefunge98Strategy::pushSysInfo(int num){
 		pushes += stack.top().push(field.min(i));
 	}
 	// Storage Offset
-	pushes += pushVector(stack.top(), ip.getStorage());
+	pushes += pushVector(runner, ip.getStorage());
 	// Delta vector
-	pushes += pushVector(stack.top(), ip.getDelta());
+	pushes += pushVector(runner, ip.getDelta());
 	// Current position
-	pushes += pushVector(stack.top(), ip.getPos());
+	pushes += pushVector(runner, ip.getPos());
 	// Team number
 	pushes += stack.top().push(0);
 	// Thread ID
-	pushes += stack.top().push(ip.getID());
+	pushes += stack.top().push(runner.getID());
 	// Scalars per vector
-	pushes += stack.top().push(funge_config.dimensions);
+	pushes += stack.top().push(s);
 	// Path separator
 	pushes += stack.top().push('/');
 	// Operating Paradigm
@@ -415,13 +420,13 @@ void Unefunge98Strategy::pushSysInfo(int num){
 	pushes += stack.top().push(sizeof(stack_t));
 	// Flags
 	stack_t flags = ENV_UNBUFFERED_IO;
-	if(funge_config.concurrent){
+	if(runner.getUniverse().allowConcurrent()){
 		flags |= ENV_CONCURRENT;
 	}
-	if(funge_config.execute){
+	if(runner.getUniverse().allowExecute()){
 		flags |= ENV_EXECUTE;
 	}
-	if(funge_config.filesystem){
+	if(runner.getUniverse().allowFilesystem()){
 		flags |= ENV_FILE_IN | ENV_FILE_OUT;
 	}
 	pushes += stack.top().push(flags);

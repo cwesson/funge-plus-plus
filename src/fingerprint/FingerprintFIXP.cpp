@@ -16,7 +16,7 @@ FingerprintFIXP::FingerprintFIXP(FungeRunner& r) :
 	gen(rd())
 {}
 
-bool FingerprintFIXP::execute(inst_t cmd){
+FungeError FingerprintFIXP::execute(inst_t cmd){
 	switch(cmd){
 		case 'A':{
 			stack_t a = stack.top().pop();
@@ -103,9 +103,9 @@ bool FingerprintFIXP::execute(inst_t cmd){
 			stack.top().push(b ^ a);
 		} break;
 		default:
-			return false;
+			return ERROR_UNIMP;
 	}
-	return true;
+	return ERROR_NONE;
 }
 
 double FingerprintFIXP::stackToFloat(stack_t n){

@@ -61,7 +61,7 @@ FingerprintBASE::FingerprintBASE(FungeRunner& r) :
 	base_map[85] = &base85[0];
 }
 
-bool FingerprintBASE::execute(inst_t cmd){
+FungeError FingerprintBASE::execute(inst_t cmd){
 	switch(cmd)
 	{
 		case 'B':{
@@ -88,9 +88,9 @@ bool FingerprintBASE::execute(inst_t cmd){
 		} break;
 		
 		default:
-			return false;
+			return ERROR_UNIMP;
 	}
-	return true;
+	return ERROR_NONE;
 }
 
 void FingerprintBASE::printNum(stack_t num, unsigned int base) const{

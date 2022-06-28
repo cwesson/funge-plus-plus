@@ -6,15 +6,20 @@
 
 #pragma once
 
+#include "funge_types.h"
 #include <cstddef>
 #include <list>
-#include "funge_types.h"
+#include <mutex>
 
 namespace Funge {
+class StackStack;
 
 class Stack {
 	public:
-		Stack();
+		explicit Stack(StackStack& s);
+		Stack(const Stack& orig) = delete;
+		Stack(const Stack&& orig) = delete;
+		Stack(const Stack& orig, StackStack& s);
 		
 		stack_t pop();
 		stack_t peek() const;
@@ -22,12 +27,16 @@ class Stack {
 		void clear();
 		
 		size_t size() const;
+		size_t age() const;
 		
 		stack_t get(size_t p) const;
 		stack_t operator[](size_t p) const;
 	
 	private:
+		StackStack& ss;
 		std::list<stack_t> stack;
+		size_t ops;
+		mutable std::mutex mutex;
 };
 
 }

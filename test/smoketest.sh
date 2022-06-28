@@ -126,6 +126,7 @@ test_simple test/test_romap.b98 "MMCDXXI MLXVI MDCCLXXVI "
 test_simple test/test_television.b98 "9 8 7 6 5 4 3 2 1 0 "
 test_simple test/test_tumbler.b98 "0 "
 test_simple test/test_subr.b98 "7 6 5 4 3 2 1 362880 "
+test_simple test/test_mvrs.b98 "1 Hello test2 3 "
 test_simple test/test_fing.b98 "1 5 10 100 100 "
 # Edge Cases
 test_simple test/kk.b98 "!12 "

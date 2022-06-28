@@ -13,7 +13,7 @@ FingerprintORTH::FingerprintORTH(FungeRunner& r) :
 	Fingerprint(r, {'A', 'E', 'G', 'O', 'P', 'S', 'V', 'W', 'X', 'Y', 'Z'})
 {}
 
-bool FingerprintORTH::execute(inst_t cmd){
+FungeError FingerprintORTH::execute(inst_t cmd){
 	switch(cmd){
 		case 'A':{
 			stack_t a = stack.top().pop();
@@ -78,9 +78,9 @@ bool FingerprintORTH::execute(inst_t cmd){
 			}
 		} break;
 		default:
-			return false;
+			return ERROR_UNIMP;
 	}
-	return true;
+	return ERROR_NONE;
 }
 
 }

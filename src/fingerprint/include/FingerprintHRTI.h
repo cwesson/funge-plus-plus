@@ -17,7 +17,7 @@ class FingerprintHRTI : public Fingerprint {
 		explicit FingerprintHRTI(FungeRunner& r);
 		virtual ~FingerprintHRTI() = default;
 		
-		virtual bool execute(inst_t cmd) override;
+		virtual FungeError execute(inst_t cmd) override;
 	
 	protected:
 		std::chrono::steady_clock::time_point hrti_mark;

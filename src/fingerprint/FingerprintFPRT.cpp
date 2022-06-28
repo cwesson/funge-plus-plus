@@ -13,7 +13,8 @@ FingerprintFPRT::FingerprintFPRT(FungeRunner& r) :
 	Fingerprint(r, {'D', 'F', 'I', 'L', 'S'})
 {}
 
-bool FingerprintFPRT::execute(inst_t cmd){
+FungeError FingerprintFPRT::execute(inst_t cmd){
+	FungeError ret = ERROR_NONE;
 	switch(cmd){
 		case 'D':{
 			stack_t n = stack.top().pop();
@@ -22,7 +23,7 @@ bool FingerprintFPRT::execute(inst_t cmd){
 			char str[1024];
 			int ret = snprintf(str, sizeof(str), fmt.c_str(), f);
 			if(ret < 0){
-				ip.reflect();
+				ret = ERROR_UNSPEC;
 				break;
 			}
 			pushString(stack.top(), std::string(str));
@@ -34,7 +35,7 @@ bool FingerprintFPRT::execute(inst_t cmd){
 			char str[1024];
 			int ret = snprintf(str, sizeof(str), fmt.c_str(), f);
 			if(ret < 0){
-				ip.reflect();
+				ret = ERROR_UNSPEC;
 				break;
 			}
 			pushString(stack.top(), std::string(str));
@@ -45,7 +46,7 @@ bool FingerprintFPRT::execute(inst_t cmd){
 			char str[1024];
 			int ret = snprintf(str, sizeof(str), fmt.c_str(), i);
 			if(ret < 0){
-				ip.reflect();
+				ret = ERROR_UNSPEC;
 				break;
 			}
 			pushString(stack.top(), std::string(str));
@@ -58,7 +59,7 @@ bool FingerprintFPRT::execute(inst_t cmd){
 			char str[1024];
 			int ret = snprintf(str, sizeof(str), fmt.c_str(), n);
 			if(ret < 0){
-				ip.reflect();
+				ret = ERROR_UNSPEC;
 				break;
 			}
 			pushString(stack.top(), std::string(str));
@@ -69,15 +70,15 @@ bool FingerprintFPRT::execute(inst_t cmd){
 			char str[1024];
 			int ret = snprintf(str, sizeof(str), fmt.c_str(), s.c_str());
 			if(ret < 0){
-				ip.reflect();
+				ret = ERROR_UNSPEC;
 				break;
 			}
 			pushString(stack.top(), std::string(str));
 		} break;
 		default:
-			return false;
+			ret = ERROR_UNIMP;
 	}
-	return true;
+	return ret;
 }
 
 }

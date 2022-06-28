@@ -20,7 +20,7 @@ class FungeStateNormal : public FungeState {
 		FungeStateNormal(const FungeStateNormal& orig, FungeRunner& r);
 		virtual ~FungeStateNormal();
 		
-		virtual bool execute(inst_t i) override;
+		virtual FungeError execute(inst_t i) override;
 
 		void pushSemantic(inst_t i, semantic_t func);
 		semantic_t popSemantic(inst_t i);

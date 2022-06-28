@@ -16,7 +16,7 @@ class FingerprintBASE : public Fingerprint {
 		explicit FingerprintBASE(FungeRunner& r);
 		virtual ~FingerprintBASE() = default;
 		
-		virtual bool execute(inst_t cmd) override;
+		virtual FungeError execute(inst_t cmd) override;
 	
 	private:
 		static const char digit_map[32];

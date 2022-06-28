@@ -8,6 +8,7 @@
 #include "FungeRunner.h"
 #include "FungeConfig.h"
 #include "FungeUtilities.h"
+#include "FungeUniverse.h"
 
 namespace Funge {
 
@@ -15,6 +16,7 @@ FishStrategy::FishStrategy(FungeRunner& r) :
 	FungeStrategy(r),
 	regs()
 {
+	r.pushSemantic(' ', std::bind(&FishStrategy::instructionSkip, this));
 	r.pushSemantic('0', std::bind(&FishStrategy::instructionPush, this,  0));
 	r.pushSemantic('1', std::bind(&FishStrategy::instructionPush, this,  1));
 	r.pushSemantic('2', std::bind(&FishStrategy::instructionPush, this,  2));
@@ -84,58 +86,62 @@ FishStrategy::FishStrategy(FungeRunner& r) :
 	regs.push({false, 0});
 }
 
-bool FishStrategy::instructionPush(stack_t n){
+FungeError FishStrategy::instructionSkip(){
+	return ERROR_SKIP;
+}
+
+FungeError FishStrategy::instructionPush(stack_t n){
 	stack.top().push(n);
-	return true;
+	return ERROR_NONE;
 }
 
-bool FishStrategy::instructionRight(){
+FungeError FishStrategy::instructionRight(){
 	ip.setDelta(Vector{1, 0});
-	return true;
+	return ERROR_NONE;
 }
 
-bool FishStrategy::instructionLeft(){
+FungeError FishStrategy::instructionLeft(){
 	ip.setDelta(Vector{-1, 0});
-	return true;
+	return ERROR_NONE;
 }
 
-bool FishStrategy::instructionDown(){
+FungeError FishStrategy::instructionDown(){
 	ip.setDelta(Vector{0, 1});
-	return true;
+	return ERROR_NONE;
 }
 
-bool FishStrategy::instructionUp(){
+FungeError FishStrategy::instructionUp(){
 	ip.setDelta(Vector{0, -1});
-	return true;
+	return ERROR_NONE;
 }
 
-bool FishStrategy::instructionMirror1(){
+FungeError FishStrategy::instructionMirror1(){
 	ip.setDelta(Vector{ip.getDelta().get(1), ip.getDelta().get(0)});
-	return true;
+	return ERROR_NONE;
 }
 
-bool FishStrategy::instructionMirror2(){
+FungeError FishStrategy::instructionMirror2(){
 	ip.setDelta(Vector{-ip.getDelta().get(1), -ip.getDelta().get(0)});
-	return true;
+	return ERROR_NONE;
 }
 
-bool FishStrategy::instructionMirrorVert(){
+FungeError FishStrategy::instructionMirrorVert(){
 	ip.setDelta(Vector{-ip.getDelta().get(0), ip.getDelta().get(1)});
-	return true;
+	return ERROR_NONE;
 }
 
-bool FishStrategy::instructionMirrorHori(){
+FungeError FishStrategy::instructionMirrorHori(){
 	ip.setDelta(Vector{ip.getDelta().get(0), -ip.getDelta().get(1)});
-	return true;
+	return ERROR_NONE;
 }
 
-bool FishStrategy::instructionMirrorAll(){
+FungeError FishStrategy::instructionMirrorAll(){
 	ip.setDelta(Vector{-ip.getDelta().get(0), -ip.getDelta().get(1)});
-	return true;
+	return ERROR_NONE;
 }
 
-bool FishStrategy::instructionRandom(){
-	size_t d = funge_config.dimensions*2;
+FungeError FishStrategy::instructionRandom(){
+	size_t d = runner.getUniverse().dimensions()*2;
 	int r = random(0, d-1);
 	Vector v;
 	if(r & 1){
@@ -144,131 +150,131 @@ bool FishStrategy::instructionRandom(){
 		v.set(r>>1, 1);
 	}
 	ip.setDelta(v);
-	return true;
+	return ERROR_NONE;
 }
 
-bool FishStrategy::instructionTrampoline(){
+FungeError FishStrategy::instructionTrampoline(){
 	ip.next();
-	return true;
+	return ERROR_NONE;
 }
 
-bool FishStrategy::instructionConditional(){
+FungeError FishStrategy::instructionConditional(){
 	if(!stack.top().pop()){
 		ip.next();
 	}
-	return true;
+	return ERROR_NONE;
 }
 
-bool FishStrategy::instructionJump(){
+FungeError FishStrategy::instructionJump(){
 	stack_t y = stack.top().pop();
 	stack_t x = stack.top().pop();
 	ip.setPos(Vector{x,y} - ip.getDelta());
-	return true;
+	return ERROR_NONE;
 }
 
-bool FishStrategy::instructionAdd(){
+FungeError FishStrategy::instructionAdd(){
 	stack_t x = stack.top().pop();
 	stack_t y = stack.top().pop();
 	stack.top().push(y + x);
-	return true;
+	return ERROR_NONE;
 }
 
-bool FishStrategy::instructionSub(){
+FungeError FishStrategy::instructionSub(){
 	stack_t x = stack.top().pop();
 	stack_t y = stack.top().pop();
 	stack.top().push(y - x);
-	return true;
+	return ERROR_NONE;
 }
 
-bool FishStrategy::instructionMult(){
+FungeError FishStrategy::instructionMult(){
 	stack_t x = stack.top().pop();
 	stack_t y = stack.top().pop();
 	stack.top().push(y * x);
-	return true;
+	return ERROR_NONE;
 }
 
-bool FishStrategy::instructionDiv(){
+FungeError FishStrategy::instructionDiv(){
 	stack_t x = stack.top().pop();
 	stack_t y = stack.top().pop();
 	if(x == 0){
-		return false;
+		return ERROR_UNSPEC;
 	}
 	stack.top().push(y / x);
-	return true;
+	return ERROR_NONE;
 }
 
-bool FishStrategy::instructionModu(){
+FungeError FishStrategy::instructionModu(){
 	stack_t x = stack.top().pop();
 	stack_t y = stack.top().pop();
 	if(x == 0){
-		return false;
+		return ERROR_UNSPEC;
 	}
 	stack.top().push(y % x);
-	return true;
+	return ERROR_NONE;
 }
 
-bool FishStrategy::instructionEqual(){
+FungeError FishStrategy::instructionEqual(){
 	stack_t x = stack.top().pop();
 	stack_t y = stack.top().pop();
 	stack.top().push(y == x);
-	return true;
+	return ERROR_NONE;
 }
 
-bool FishStrategy::instructionGreater(){
+FungeError FishStrategy::instructionGreater(){
 	stack_t x = stack.top().pop();
 	stack_t y = stack.top().pop();
 	stack.top().push(y > x);
-	return true;
+	return ERROR_NONE;
 }
 
-bool FishStrategy::instructionLess(){
+FungeError FishStrategy::instructionLess(){
 	stack_t x = stack.top().pop();
 	stack_t y = stack.top().pop();
 	stack.top().push(y < x);
-	return true;
+	return ERROR_NONE;
 }
 
-bool FishStrategy::instructionString(inst_t i){
+FungeError FishStrategy::instructionString(inst_t i){
 	runner.setState(runner.getStringState(i));
-	return true;
+	return ERROR_NONE;
 }
 
-bool FishStrategy::instructionDuplicate(){
+FungeError FishStrategy::instructionDuplicate(){
 	stack_t x = stack.top().pop();
 	stack.top().push(x);
 	stack.top().push(x);
-	return true;
+	return ERROR_NONE;
 }
 
-bool FishStrategy::instructionRemove(){
+FungeError FishStrategy::instructionRemove(){
 	stack.top().pop();
-	return true;
+	return ERROR_NONE;
 }
 
-bool FishStrategy::instructionSwap2(){
+FungeError FishStrategy::instructionSwap2(){
 	stack_t x = stack.top().pop();
 	stack_t y = stack.top().pop();
 	stack.top().push(x);
 	stack.top().push(y);
-	return true;
+	return ERROR_NONE;
 }
 
-bool FishStrategy::instructionSwap3(){
+FungeError FishStrategy::instructionSwap3(){
 	stack_t x = stack.top().pop();
 	stack_t y = stack.top().pop();
 	stack_t z = stack.top().pop();
 	stack.top().push(x);
 	stack.top().push(z);
 	stack.top().push(y);
-	return true;
+	return ERROR_NONE;
 }
 
-bool FishStrategy::instructionLength(){
+FungeError FishStrategy::instructionLength(){
 	stack.top().push(stack.top().size());
-	return true;
+	return ERROR_NONE;
 }
 
-bool FishStrategy::instructionShiftLeft(){
+FungeError FishStrategy::instructionShiftLeft(){
 	stack_t len = stack.top().size();
 	stack_t temp[len];
 	for(stack_t i = 0; i < len; ++i){
@@ -278,10 +284,10 @@ bool FishStrategy::instructionShiftLeft(){
 		stack.top().push(temp[i-1]);
 	}
 	stack.top().push(temp[len-1]);
-	return true;
+	return ERROR_NONE;
 }
 
-bool FishStrategy::instructionShiftRight(){
+FungeError FishStrategy::instructionShiftRight(){
 	stack_t len = stack.top().size();
 	stack_t temp[len];
 	for(stack_t i = 0; i < len; ++i){
@@ -291,10 +297,10 @@ bool FishStrategy::instructionShiftRight(){
 	for(stack_t i = len-1; i > 0; --i){
 		stack.top().push(temp[i]);
 	}
-	return true;
+	return ERROR_NONE;
 }
 
-bool FishStrategy::instructionReverse(){
+FungeError FishStrategy::instructionReverse(){
 	stack_t len = stack.top().size();
 	stack_t temp[len];
 	for(stack_t i = 0; i < len; ++i){
@@ -303,69 +309,69 @@ bool FishStrategy::instructionReverse(){
 	for(stack_t i = 0; i < len; ++i){
 		stack.top().push(temp[i]);
 	}
-	return true;
+	return ERROR_NONE;
 }
 
-bool FishStrategy::instructionCreateStack(){
+FungeError FishStrategy::instructionCreateStack(){
 	stack_t x = stack.top().pop();
 	stack.push();
 	for(stack_t i = 0; i < x; ++i){
 		stack.top().push(stack.second().pop());
 	}
 	regs.push({false, 0});
-	return true;
+	return ERROR_NONE;
 }
 
-bool FishStrategy::instructionRemoveStack(){
+FungeError FishStrategy::instructionRemoveStack(){
 	while(stack.top().size() > 0){
 		stack.second().push(stack.top().pop());
 	}
 	stack.pop();
 	regs.pop();
-	return true;
+	return ERROR_NONE;
 }
 
-bool FishStrategy::instructionOutChar(){
+FungeError FishStrategy::instructionOutChar(){
 	stack_t x = stack.top().pop();
 	std::cout << static_cast<char>(x);
-	return true;
+	return ERROR_NONE;
 }
 
-bool FishStrategy::instructionOutInt(){
+FungeError FishStrategy::instructionOutInt(){
 	stack_t x = stack.top().pop();
 	std::cout << x;
-	return true;
+	return ERROR_NONE;
 }
 
-bool FishStrategy::instructionIn(){
+FungeError FishStrategy::instructionIn(){
 	int q = getchar();
 	if(q == EOF){
 		q = -1;
 	}
 	stack.top().push(q);
-	return true;
+	return ERROR_NONE;
 }
 
-bool FishStrategy::instructionGet(){
+FungeError FishStrategy::instructionGet(){
 	const Vector& storage = ip.getStorage();
-	Vector v = popVector(stack.top());
+	Vector v = popVector(runner);
 	stack.top().push(static_cast<stack_t>(field.get(v+storage)));
-	return true;
+	return ERROR_NONE;
 }
 
-bool FishStrategy::instructionPut(){
+FungeError FishStrategy::instructionPut(){
 	const Vector& storage = ip.getStorage();
-	Vector v = popVector(stack.top());
+	Vector v = popVector(runner);
 	field.set(v+storage, stack.top().pop());
-	return true;
+	return ERROR_NONE;
 }
 
-bool FishStrategy::instructionEnd(){
+FungeError FishStrategy::instructionEnd(){
 	ip.stop();
-	return true;
+	return ERROR_NONE;
 }
 
-bool FishStrategy::instructionRegister(){
+FungeError FishStrategy::instructionRegister(){
 	reg& top = regs.top();
 
 	if(top.set){
@@ -376,7 +382,7 @@ bool FishStrategy::instructionRegister(){
 		top.set = true;
 	}
 
-	return true;
+	return ERROR_NONE;
 }
 
 FungeStrategy* FishStrategy::clone(FungeRunner& r) const{

@@ -16,7 +16,7 @@ class FingerprintDBUG : public Fingerprint {
 		explicit FingerprintDBUG(FungeRunner& r);
 		virtual ~FingerprintDBUG() = default;
 		
-		virtual bool execute(inst_t cmd) override;
+		virtual FungeError execute(inst_t cmd) override;
 
 		virtual void activate() override;
 	

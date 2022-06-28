@@ -6,9 +6,8 @@
 
 #pragma once
 
+#include "FungeRunner.h"
 #include "Field.h"
-#include "StackStack.h"
-#include "InstructionPointer.h"
 #include <set>
 #include <map>
 #include <mutex>
@@ -18,13 +17,16 @@ namespace Funge {
 
 class FungeDebugger {
 	public:
-		static FungeDebugger* getInstance();
-		static void tick(const Field& field, const StackStack& stack, InstructionPointer& ip);
-		static void write(const Field& field, const Vector& pos, inst_t inst);
+		explicit FungeDebugger(FungeUniverse& uni);
+		~FungeDebugger() = default;
 
-		void swbreak(const Field& field, const StackStack& stack, InstructionPointer& ip);
+		void tick(FungeRunner& runner);
+		void write(Field& field, const Vector& pos, inst_t inst);
+		void swbreak(FungeRunner& runner);
+		void trap(FungeRunner& runner);
 		void addBreakpoint(const Vector& vec);
 		void addWatchpoint(const Vector& vec);
+		void endThread(FungeRunner& runner);
 	
 	private:
 		enum State {
@@ -32,6 +34,7 @@ class FungeDebugger {
 			STATE_RUN,
 			STATE_STEP,
 			STATE_BREAK,
+			STATE_END,
 		};
 		
 		enum {
@@ -39,27 +42,22 @@ class FungeDebugger {
 		};
 		
 		struct Thread {
-			InstructionPointer* ip;
-			const StackStack* stack;
+			FungeRunner* runner;
 			std::list<Vector> backtrace;
 			State state;
 		};
 		
-		static FungeDebugger* instance;
-		
-		FungeDebugger();
-		~FungeDebugger();
-		
-		void debug(const Field& field, const StackStack& stack, InstructionPointer& ip);
+		void intro(FungeRunner& runner);
 		void debugWrite(const Field& field, const Vector& pos, inst_t inst);
-		void printIP(const InstructionPointer& ip);
-		void printField(const Field& field, const Vector& center, const Vector& size, const Vector& dim, const InstructionPointer& ip);
-		
+
+		FungeUniverse& universe;
 		std::set<Vector> breakpoints;
 		std::set<Vector> watchpoints;
 		std::map<size_t, Thread> threads;
 		std::recursive_mutex mutex;
 		size_t lastThread;
+
+		friend class Defunge;
 };
 
 }

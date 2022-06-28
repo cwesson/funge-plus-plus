@@ -16,7 +16,7 @@ class FingerprintFIXP : public Fingerprint {
 		explicit FingerprintFIXP(FungeRunner& r);
 		virtual ~FingerprintFIXP() = default;
 		
-		virtual bool execute(inst_t cmd) override;
+		virtual FungeError execute(inst_t cmd) override;
 
 	private:
 		std::default_random_engine rd;

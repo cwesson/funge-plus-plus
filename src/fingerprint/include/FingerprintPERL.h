@@ -16,7 +16,7 @@ class FingerprintPERL : public Fingerprint {
 		explicit FingerprintPERL(FungeRunner& r);
 		virtual ~FingerprintPERL() = default;
 		
-		virtual bool execute(inst_t cmd) override;
+		virtual FungeError execute(inst_t cmd) override;
 	
 	private:
 		int perl(const std::string&);

@@ -4,17 +4,86 @@
  * @author Conlan Wesson
  */
 
-#include <fstream>
-#include <iostream>
 #include "Field.h"
 #include "FungeConfig.h"
 #include "FungeRunner.h"
-#include "FungeUniverse.h"
+#include "FungeMultiverse.h"
 #include "Vector.h"
 #include <cstring>
+#include <filesystem>
+#include <fstream>
+#include <iostream>
+#include <sstream>
 
-int main(int argc, char **argv, char **envp){
-	std::string filepath;
+namespace Funge{
+
+int createUniverse(const std::filesystem::path& filepath, FungeConfig& config);
+
+int parseFMV(const std::filesystem::path& filepath, FungeConfig& config){
+	std::string dir = filepath.parent_path();
+	std::ifstream stream(filepath);
+	if(stream.fail()){
+		std::cerr << "Failed to open " << filepath << std::endl;
+		return EIO;
+	}
+
+	while(stream.good()){
+		std::string line;
+		std::getline(stream, line);
+		auto iss = std::istringstream(line);
+
+		std::string filename;
+		iss >> filename;
+		std::filesystem::path path(filename);
+		if(path.is_relative()){
+			path.assign(dir + path.preferred_separator + filename);
+		}
+		// Get arguments for this universe
+		FungeConfig cfg(config);
+		while(iss.good()){
+			std::string arg;
+			iss >> arg;
+			cfg.args.push_back(arg);
+		}
+
+		int uni = createUniverse(path, cfg);
+		if(uni != 0){
+			return uni;
+		}
+	}
+
+	return 0;
+}
+
+int createUniverse(const std::filesystem::path& filepath, FungeConfig& config){
+	Field::FileFormat fmt = Field::FORMAT_BF;
+
+	std::string ext = filepath.extension();
+	if(ext == ".beq"){
+		fmt = Field::FORMAT_BEQ;
+		config.fingerprints.push_back(0x4e46554e);
+	}else if(ext == ".fl"){
+		fmt = Field::FORMAT_FL;
+	}else if(ext == ".fmv"){
+		return parseFMV(filepath, config);
+	}
+	config.name = filepath;
+	
+	std::ifstream stream(filepath);
+	if(stream.fail()){
+		std::cerr << "Failed to open " << filepath << std::endl;
+		return EIO;
+	}
+
+	FungeUniverse* universe = FungeMultiverse::getInstance().create(stream, fmt, config);
+	universe->createRunner(Vector{0}, Vector{1});
+
+	return 0;
+}
+
+int fungemain(int argc, char **argv, char **envp){
+	FungeConfig funge_config;
+	std::filesystem::path filepath;
 	int a = 1;
 	for( ; a < argc; ++a){
 		if(argv[a][0] != '-'){
@@ -23,57 +92,57 @@ int main(int argc, char **argv, char **envp){
 			std::strtok(argv[a], "=");
 			char* arg = std::strtok(NULL, "=");
 			if(strcmp(arg, "une93") == 0){
-				Funge::funge_config.dimensions = 1;
-				Funge::funge_config.standard = Funge::FUNGE_93;
+				funge_config.dimensions = 1;
+				funge_config.standard = Funge::FUNGE_93;
 			}else if(strcmp(arg, "une98") == 0){
-				Funge::funge_config.dimensions = 1;
-				Funge::funge_config.standard = Funge::FUNGE_98;
+				funge_config.dimensions = 1;
+				funge_config.standard = Funge::FUNGE_98;
 			}else if(strcmp(arg, "be93") == 0){
-				Funge::funge_config.dimensions = 2;
-				Funge::funge_config.standard = Funge::FUNGE_93;
+				funge_config.dimensions = 2;
+				funge_config.standard = Funge::FUNGE_93;
 			}else if(strcmp(arg, "be98") == 0){
-				Funge::funge_config.dimensions = 2;
-				Funge::funge_config.standard = Funge::FUNGE_98;
+				funge_config.dimensions = 2;
+				funge_config.standard = Funge::FUNGE_98;
 			}else if(strcmp(arg, "tre98") == 0){
-				Funge::funge_config.dimensions = 3;
-				Funge::funge_config.standard = Funge::FUNGE_98;
+				funge_config.dimensions = 3;
+				funge_config.standard = Funge::FUNGE_98;
 			}else if(strcmp(arg, "fish") == 0){
-				Funge::funge_config.dimensions = 2;
-				Funge::funge_config.standard = Funge::FUNGE_FISH;
+				funge_config.dimensions = 2;
+				funge_config.standard = Funge::FUNGE_FISH;
 			}else{
 				std::cerr << "Unsupported standard: " << arg << std::endl;
 				return EINVAL;
 			}
-			if(Funge::funge_config.standard == Funge::FUNGE_93 || Funge::funge_config.standard == Funge::FUNGE_FISH){
-				Funge::funge_config.topo = Funge::TOPO_TORUS;
-				Funge::funge_config.strings = Funge::STRING_MULTISPACE;
-				Funge::funge_config.cells = Funge::CELL_CHAR;
+			if(funge_config.standard == Funge::FUNGE_93 || funge_config.standard == Funge::FUNGE_FISH){
+				funge_config.topo = Funge::TOPO_TORUS;
+				funge_config.strings = Funge::STRING_MULTISPACE;
+				funge_config.cells = Funge::CELL_CHAR;
 			}else{
-				Funge::funge_config.topo = Funge::TOPO_LAHEY;
-				Funge::funge_config.strings = Funge::STRING_SGML;
-				Funge::funge_config.cells = Funge::CELL_INT;
+				funge_config.topo = TOPO_LAHEY;
+				funge_config.strings = STRING_SGML;
+				funge_config.cells = CELL_INT;
 			}
 		}else if(strcmp(argv[a], "-fconcurrent") == 0){
-			Funge::funge_config.concurrent = true;
+			funge_config.concurrent = true;
 		}else if(strcmp(argv[a], "-fexecute") == 0){
-			Funge::funge_config.execute = true;
+			funge_config.execute = true;
 		}else if(strcmp(argv[a], "-ffilesystem") == 0){
-			Funge::funge_config.filesystem = true;
+			funge_config.filesystem = true;
 		}else if(strcmp(argv[a], "-fno-concurrent") == 0){
-			Funge::funge_config.concurrent = false;
+			funge_config.concurrent = false;
 		}else if(strcmp(argv[a], "-fno-execute") == 0){
-			Funge::funge_config.execute = false;
+			funge_config.execute = false;
 		}else if(strcmp(argv[a], "-fno-filesystem") == 0){
-			Funge::funge_config.filesystem = false;
+			funge_config.filesystem = false;
 		}else if(strcmp(argv[a], "-finvert-hl") == 0){
-			Funge::funge_config.inverthl = true;
+			funge_config.inverthl = true;
 		}else if(strncmp(argv[a], "-ftopo=", 7) == 0){
 			std::strtok(argv[a], "=");
 			char* arg = strtok(NULL, "=");
 			if(strcmp(arg, "torus") == 0){
-				Funge::funge_config.topo = Funge::TOPO_TORUS;
+				funge_config.topo = TOPO_TORUS;
 			}else if(strcmp(arg, "lahey") == 0){
-				Funge::funge_config.topo = Funge::TOPO_LAHEY;
+				funge_config.topo = TOPO_LAHEY;
 			}else{
 				std::cerr << "Unsupported topology: " << arg << std::endl;
 				return EINVAL;
@@ -82,73 +151,71 @@ int main(int argc, char **argv, char **envp){
 			std::strtok(argv[a], "=");
 			char* arg = std::strtok(NULL, "=");
 			if(strcmp(arg, "multispace") == 0){
-				Funge::funge_config.strings = Funge::STRING_MULTISPACE;
+				funge_config.strings = STRING_MULTISPACE;
 			}else if(strcmp(arg, "sgml") == 0){
-				Funge::funge_config.strings = Funge::STRING_SGML;
+				funge_config.strings = STRING_SGML;
 			}else if(strcmp(arg, "c") == 0){
-				Funge::funge_config.strings = Funge::STRING_C;
+				funge_config.strings = STRING_C;
 			}else{
-				std::cerr << "Unsupported topology: " << arg << std::endl;
+				std::cerr << "Unsupported strings: " << arg << std::endl;
 				return EINVAL;
 			}
 		}else if(strncmp(argv[a], "-fcells=", 8) == 0){
 			std::strtok(argv[a], "=");
 			char* arg = std::strtok(NULL, "=");
 			if(strcmp(arg, "char") == 0){
-				Funge::funge_config.cells = Funge::CELL_CHAR;
+				funge_config.cells = CELL_CHAR;
 			}else if(strcmp(arg, "int") == 0){
-				Funge::funge_config.cells = Funge::CELL_INT;
+				funge_config.cells = CELL_INT;
 			}else{
-				std::cerr << "Unsupported topology: " << arg << std::endl;
+				std::cerr << "Unsupported cell size: " << arg << std::endl;
 				return EINVAL;
 			}
 		}else if(strncmp(argv[a], "-fthreads=", 10) == 0){
 			std::strtok(argv[a], "=");
 			char* arg = std::strtok(NULL, "=");
 			if(strcmp(arg, "native") == 0){
-				Funge::funge_config.threads = Funge::THREAD_NATIVE;
+				funge_config.threads = THREAD_NATIVE;
 			}else if(strcmp(arg, "funge") == 0){
-				Funge::funge_config.threads = Funge::THREAD_FUNGE;
+				funge_config.threads = THREAD_FUNGE;
 			}else{
-				std::cerr << "Unsupported topology: " << arg << std::endl;
+				std::cerr << "Unsupported threading: " << arg << std::endl;
 				return EINVAL;
 			}
 		}else if(strncmp(argv[a], "-l", 2) == 0){
 			std::string fing(&argv[a][2]);
 			uint64_t fingerprint = std::accumulate(fing.begin(), fing.end(), 0, [](uint64_t f, char c){return (f << 8) + c;});
-			Funge::funge_config.fingerprints.push_back(fingerprint);
+			funge_config.fingerprints.push_back(fingerprint);
 		}else if(strcmp(argv[a], "-g") == 0){
-			Funge::funge_config.debug = true;
+			funge_config.mode |= FUNGE_MODE_DEBUG;
 		}
 	}
 	if(a < argc){
-		filepath = argv[a++];
-		Funge::funge_config.args.push_back(filepath);
+		filepath.assign(argv[a++]);
+		funge_config.args.push_back(filepath);
 	}
-	if(filepath == ""){
+	if(filepath.empty()){
 		std::cerr << "No input file specified.";
 		return EINVAL;
 	}
 	for( ; a < argc; ++a){
-		Funge::funge_config.args.push_back(std::string(argv[a]));
+		funge_config.args.push_back(std::string(argv[a]));
 	}
 	for(char **env = envp; *env != nullptr; ++env)
 	{
-		Funge::funge_config.env.push_back(std::string(*env));
+		funge_config.env.push_back(std::string(*env));
 	}
-	
-	std::ifstream file(filepath);
-	if(file.fail()){
-		return EIO;
+
+	int uni = createUniverse(filepath, funge_config);
+	if(uni != 0){
+		return uni;
 	}
-	Funge::Field::FileFormat fmt = Funge::Field::FORMAT_BF;
-	if(filepath.substr(filepath.find_last_of(".") + 1) == "beq"){
-		fmt = Funge::Field::FORMAT_BEQ;
-		Funge::funge_config.fingerprints.push_back(0x4e46554e);
-	}
-	
-	Funge::FungeUniverse universe(file, Funge::funge_config.dimensions, fmt);
-	universe.waitAll();
-	
-	return 0;
+
+	return FungeMultiverse::getInstance().waitAll();
+}
+
+} // namespace Funge
+
+int main(int argc, char **argv, char **envp){
+	return Funge::fungemain(argc, argv, envp);
 }

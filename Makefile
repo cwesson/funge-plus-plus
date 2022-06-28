@@ -3,8 +3,9 @@
 # @author Conlan Wesson
 ##
 
-SRCS := third_party/bigint/bigint.cpp $(shell find src/ -name \*.cpp)
-OBJS := $(subst third_party/,bin/,$(subst src/,bin/,$(subst .cpp,.o,$(SRCS))))
+FUNGESRC := $(shell find src/ -name \*.cpp)
+SRCS := third_party/bigint/src/bigint.cpp $(FUNGESRC)
+OBJS := $(addsuffix .o,$(addprefix bin/,$(basename $(SRCS))))
 DEPS := $(OBJS:%.o=%.d)
 
 EXEC := bin/funge
@@ -18,7 +19,7 @@ LINTARGS := $(INCLUDES) --enable=all --std=c++20
 LD := g++
 LDARGS := -pthread
 
-.PHONY: all clean realclean build funge test
+.PHONY: all clean realclean build funge test lint doc man ut unittest cpputest
 
 GCOV ?= 0
 ifneq ($(GCOV),0)
@@ -34,39 +35,50 @@ funge: $(EXEC)
 
 $(EXEC): $(OBJS)
 	@echo "LD  " $(subst bin/,,$@)
-	@$(LD) $(LDARGS) -o $@ $(OBJS)
+	@$(LD) $(LDARGS) -o $@ $^
 
-bin/%.o: src/%.cpp
+bin/%.o: %.cpp
 	@mkdir -p $(dir $@)
 	@echo "CPP " $(subst src/,,$<)
 	@$(CPP) $(CPPARGS) -MMD -o $@ -c $<
 
-bin/%.o: third_party/%.cpp
-	@mkdir -p $(dir $@)
-	@echo "CPP " $(subst third_party/,,$<)
-	@$(CPP) $(CPPARGS) -MMD -o $@ -c $<
-
 -include $(DEPS)
 
-test: build
+test: build ut
 	@./test/smoketest.sh
 
 lint:
-	@cppcheck $(LINTARGS) $(SRCS)
+	@cppcheck $(LINTARGS) $(FUNGESRC)
+
+doc: man
+	@echo "DOX "
+	@doxygen Doxyfile
+
+man: bin/funge.1
+
+bin/funge.1: doc/man.md
+	@mkdir -p $(dir $@)
+	@echo "MAN "
+	@pandoc $< -s -t man -o $@
 
 CPPUTESTLIB := test/cpputest/src/CppUTest/libCppUTest.a
-UTCPPARGS := -I src/include -I test/cpputest/include -lpthread -std=c++20
+UTCPPARGS := -I src/include -I test/cpputest/include -lpthread -std=c++2a
 UTSRCS := test/ut/unittest.cpp src/Vector.cpp src/VectorRange.cpp
+UTBIN := bin/unittest
 
 ut: unittest
 
-unittest: $(UTSRCS) $(CPPUTESTLIB)
-	$(CPP) $(UTCPPARGS) -o ./bin/$@ $(UTSRCS) $(CPPUTESTLIB)
-	./bin/unittest -c -v
+unittest: $(UTBIN)
+	@$(UTBIN) -c -v -ojunit
 
-$(CPPUTESTLIB): cpputest
+$(UTBIN): $(UTSRCS) $(CPPUTESTLIB)
+	@mkdir -p $(dir $@)
+	@echo "LD  " $@
+	@$(CPP) $(UTCPPARGS) -o $@ $^
 
-cpputest:
+cpputest: $(CPPUTESTLIB)
+
+$(CPPUTESTLIB):
 	cd test/cpputest; cmake .
 	make -C test/cpputest
 
@@ -76,6 +88,7 @@ clean:
 	@echo CLEAN bin/
 	@rm -f $(OBJS) $(DEPS)
 
-realclean:
+realclean: clean
 	@echo REALCLEAN
 	@rm -rf bin/
+	@rm -rf doc/html/

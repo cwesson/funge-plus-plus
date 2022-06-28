@@ -15,7 +15,7 @@ class FingerprintFRTH : public Fingerprint {
 		explicit FingerprintFRTH(FungeRunner& r);
 		virtual ~FingerprintFRTH() = default;
 		
-		virtual bool execute(inst_t cmd) override;
+		virtual FungeError execute(inst_t cmd) override;
 };
 
 }

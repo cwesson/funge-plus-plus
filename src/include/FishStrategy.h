@@ -19,55 +19,56 @@ class FishStrategy : public FungeStrategy {
 		virtual FungeStrategy* clone(FungeRunner& r) const override;
 	
 	private:
-		bool instructionPush(stack_t n);
+		FungeError instructionSkip();
+		FungeError instructionPush(stack_t n);
 		// Directions
-		bool instructionRight();
-		bool instructionLeft();
-		bool instructionDown();
-		bool instructionUp();
+		FungeError instructionRight();
+		FungeError instructionLeft();
+		FungeError instructionDown();
+		FungeError instructionUp();
 		// Mirrors
-		bool instructionMirror1();
-		bool instructionMirror2();
-		bool instructionMirrorVert();
-		bool instructionMirrorHori();
-		bool instructionMirrorAll();
+		FungeError instructionMirror1();
+		FungeError instructionMirror2();
+		FungeError instructionMirrorVert();
+		FungeError instructionMirrorHori();
+		FungeError instructionMirrorAll();
 		// Movement
-		bool instructionRandom();
-		bool instructionTrampoline();
-		bool instructionConditional();
-		bool instructionJump();
+		FungeError instructionRandom();
+		FungeError instructionTrampoline();
+		FungeError instructionConditional();
+		FungeError instructionJump();
 		// Arithmetic
-		bool instructionAdd();
-		bool instructionSub();
-		bool instructionMult();
-		bool instructionDiv();
-		bool instructionModu();
+		FungeError instructionAdd();
+		FungeError instructionSub();
+		FungeError instructionMult();
+		FungeError instructionDiv();
+		FungeError instructionModu();
 		// Comparisons
-		bool instructionEqual();
-		bool instructionGreater();
-		bool instructionLess();
+		FungeError instructionEqual();
+		FungeError instructionGreater();
+		FungeError instructionLess();
 		// Strings
-		bool instructionString(inst_t i);
+		FungeError instructionString(inst_t i);
 		// Stack Manipulation
-		bool instructionDuplicate();
-		bool instructionRemove();
-		bool instructionSwap2();
-		bool instructionSwap3();
-		bool instructionLength();
-		bool instructionShiftLeft();
-		bool instructionShiftRight();
-		bool instructionReverse();
-		bool instructionCreateStack();
-		bool instructionRemoveStack();
+		FungeError instructionDuplicate();
+		FungeError instructionRemove();
+		FungeError instructionSwap2();
+		FungeError instructionSwap3();
+		FungeError instructionLength();
+		FungeError instructionShiftLeft();
+		FungeError instructionShiftRight();
+		FungeError instructionReverse();
+		FungeError instructionCreateStack();
+		FungeError instructionRemoveStack();
 		// I/O
-		bool instructionOutChar();
-		bool instructionOutInt();
-		bool instructionIn();
+		FungeError instructionOutChar();
+		FungeError instructionOutInt();
+		FungeError instructionIn();
 		// Miscellaneous
-		bool instructionRegister();
-		bool instructionGet();
-		bool instructionPut();
-		bool instructionEnd();
+		FungeError instructionRegister();
+		FungeError instructionGet();
+		FungeError instructionPut();
+		FungeError instructionEnd();
 
 		struct reg {
 			bool set;

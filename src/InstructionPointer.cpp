@@ -5,44 +5,42 @@
  */
 
 #include "InstructionPointer.h"
-#include "FungeConfig.h"
+#include "FungeUniverse.h"
+#include "FungeRunner.h"
+#include "Field.h"
 
 namespace Funge {
 
-size_t InstructionPointer::count = 0;
-
-InstructionPointer::InstructionPointer(Field& f) :
-	id(count++),
+InstructionPointer::InstructionPointer(FungeRunner& r) :
+	runner(r),
 	stopped(false),
 	pos({0}),
 	delta({1}),
-	storage({0}),
-	field(f)
+	storage({0})
 {
 	
 }
 
-InstructionPointer::InstructionPointer(const InstructionPointer& orig) :
-	id(count++),
+InstructionPointer::InstructionPointer(const InstructionPointer& orig, FungeRunner& r) :
+	runner(r),
 	stopped(orig.stopped),
 	pos(orig.pos),
 	delta(orig.delta),
-	storage(orig.storage),
-	field(orig.field)
+	storage(orig.storage)
 {
 	
 }
 
 inst_t InstructionPointer::get() const{
-	return field[pos];
+	return runner.getField()[pos];
 }
 
 void InstructionPointer::set(inst_t i){
-	field.set(pos, i);
+	runner.getField().set(pos, i);
 }
 
-bool InstructionPointer::inField(){
-	for(size_t n = 0; n < funge_config.dimensions; ++n){
+bool InstructionPointer::inField(const Field& field) const {
+	for(size_t n = 0; n < field.dimensions(); ++n){
 		if(pos.get(n) < field.min(n) || pos.get(n) > field.max(n)){
 			return false;
 		}
@@ -53,7 +51,8 @@ bool InstructionPointer::inField(){
 void InstructionPointer::next(){
 	if(!stopped){
 		pos += delta;
-		if(funge_config.topo == TOPO_TORUS){
+		const Field& field = runner.getField();
+		if(field.topology() == TOPO_TORUS){
 			if(pos.get(0) > 80){
 				pos.set(0, 0);
 			}else if(pos.get(0) < 0){
@@ -65,10 +64,10 @@ void InstructionPointer::next(){
 				pos.set(1, 24);
 			}
 		}else{
-			if(!inField()){
+			if(!inField(field)){
 				delta.reverse();
 				pos += delta;
-				while(inField()){
+				while(inField(field)){
 					pos += delta;
 				}
 				delta.reverse();
@@ -83,7 +82,7 @@ void InstructionPointer::setPos(const Vector& v){
 }
 
 void InstructionPointer::setDelta(const Vector& v){
-	if(funge_config.hovermode){
+	if(runner.getUniverse().isMode(FUNGE_MODE_HOVER)){
 		size_t size = std::max(delta.size(), v.size());
 		for(size_t i = 0; i < size; ++i){
 			delta.set(i, delta.get(i) + v.get(i));
@@ -127,10 +126,6 @@ const Vector& InstructionPointer::getDelta() const{
 
 const Vector& InstructionPointer::getStorage() const{
 	return storage;
-}
-
-size_t InstructionPointer::getID() const{
-	return id;
 }
 
 std::ostream& operator<<(std::ostream& os, const InstructionPointer& rhs){

@@ -12,7 +12,7 @@ FingerprintBOOL::FingerprintBOOL(FungeRunner& r) :
 	Fingerprint(r, {'A', 'L', 'N', 'O', 'R', 'X'})
 {}
 
-bool FingerprintBOOL::execute(inst_t cmd){
+FungeError FingerprintBOOL::execute(inst_t cmd){
 	switch(cmd){
 		case 'A':{
 			stack_t a = stack.top().pop();
@@ -34,9 +34,9 @@ bool FingerprintBOOL::execute(inst_t cmd){
 			stack.top().push(b ^ a);
 		} break;
 		default:
-			return false;
+			return ERROR_UNIMP;
 	}
-	return true;
+	return ERROR_NONE;
 }
 
 }

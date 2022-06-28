@@ -5,7 +5,7 @@
  */
 
 #include "FingerprintNFUN.h"
-#include "FungeConfig.h"
+#include "FungeUniverse.h"
 
 namespace Funge {
 
@@ -14,7 +14,7 @@ FingerprintNFUN::FingerprintNFUN(FungeRunner& r) :
 			{'A', 'B', 'H', 'I', 'L', 'M', 'Q', 'T', 'U', 'V', 'X', 'Y', 'Z'})
 {}
 
-bool FingerprintNFUN::execute(inst_t cmd){
+FungeError FingerprintNFUN::execute(inst_t cmd){
 	size_t dim = 0;
 	switch(cmd){
 		case 'A':{
@@ -30,7 +30,11 @@ bool FingerprintNFUN::execute(inst_t cmd){
 			dim = 6;
 		} break;
 		case 'H':{
-			ip.setDelta(Vector{0, 0, 0, 0, -1});
+			if(!runner.getUniverse().invertHL()){
+				ip.setDelta(Vector{0, 0, 0, 0, 1});
+			}else{
+				ip.setDelta(Vector{0, 0, 0, 0, -1});
+			}
 			dim = 5;
 		} break;
 		case 'I':{
@@ -42,7 +46,11 @@ bool FingerprintNFUN::execute(inst_t cmd){
 			dim = 4;
 		} break;
 		case 'L':{
-			ip.setDelta(Vector{0, 0, 0, 0, 1});
+			if(!runner.getUniverse().invertHL()){
+				ip.setDelta(Vector{0, 0, 0, 0, -1});
+			}else{
+				ip.setDelta(Vector{0, 0, 0, 0, 1});
+			}
 			dim = 5;
 		} break;
 		case 'M':{
@@ -91,12 +99,12 @@ bool FingerprintNFUN::execute(inst_t cmd){
 			dim = n;
 		} break;
 		default:
-			return false;
+			return ERROR_UNIMP;
 	}
-	if(funge_config.dimensions < dim){
-		funge_config.dimensions = dim;
+	if(runner.getUniverse().dimensions() < dim){
+		runner.getUniverse().dimensions(dim);
 	}
-	return true;
+	return ERROR_NONE;
 }
 
 }

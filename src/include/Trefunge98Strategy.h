@@ -18,9 +18,9 @@ class Trefunge98Strategy : public FungeStrategy {
 		virtual FungeStrategy* clone(FungeRunner& r) const override;
 
 	private:
-		bool instructionHigh();
-		bool instructionLow();
-		bool instructionIf();
+		FungeError instructionHigh();
+		FungeError instructionLow();
+		FungeError instructionIf();
 };
 
 }

@@ -6,7 +6,7 @@
 
 #include "FingerprintDBUG.h"
 #include "FungeUtilities.h"
-#include "FungeConfig.h"
+#include "FungeUniverse.h"
 
 namespace Funge {
 
@@ -16,32 +16,32 @@ FingerprintDBUG::FingerprintDBUG(FungeRunner& r) :
 {}
 
 void FingerprintDBUG::activate(){
-	dbg = FungeDebugger::getInstance();
+	dbg = &runner.getUniverse().getDebugger();
 }
 
-bool FingerprintDBUG::execute(inst_t cmd){
+FungeError FingerprintDBUG::execute(inst_t cmd){
 	switch(cmd){
 		case 'A':{
-			Vector v = popVector(stack.top());
+			Vector v = popVector(runner);
 			dbg->addBreakpoint(v);
 		} break;
 		case 'B':{
-			dbg->swbreak(field, stack, ip);
+			dbg->swbreak(runner);
 		} break;
 		case 'D':{
-			funge_config.debug = false;
+			runner.getUniverse().clearMode(FUNGE_MODE_DEBUG);
 		} break;
 		case 'E':{
-			funge_config.debug = true;
+			runner.getUniverse().setMode(FUNGE_MODE_DEBUG);
 		} break;
 		case 'W':{
-			Vector v = popVector(stack.top());
+			Vector v = popVector(runner);
 			dbg->addWatchpoint(v);
 		} break;
 		default:
-			return false;
+			return ERROR_UNIMP;
 	}
-	return true;
+	return ERROR_NONE;
 }
 
 }

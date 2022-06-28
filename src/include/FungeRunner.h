@@ -6,19 +6,21 @@
 
 #pragma once
 
-#include "Field.h"
 #include "StackStack.h"
 #include "InstructionPointer.h"
+#include "FungeState.h"
 #include "FungeStateNormal.h"
 #include "FungeStateString.h"
-#include "FungeUniverse.h"
+#include "FungeConfig.h"
+#include <memory>
 
 namespace Funge {
-class FungeState;
+class FungeUniverse;
 
 class FungeRunner {
 	public:
-		explicit FungeRunner(FungeUniverse& uni);
+		FungeRunner(FungeUniverse& uni, const Vector& pos, const Vector& delta);
+		FungeRunner(FungeUniverse& uni, const Vector& pos, const Vector& delta, FungeRunner& r);
 		FungeRunner(const FungeRunner& runner);
 		virtual ~FungeRunner();
 		
@@ -30,22 +32,33 @@ class FungeRunner {
 		
 		void operator()();
 		void tick();
-		bool execute(inst_t i);
+		FungeError execute(inst_t i);
 		
+		size_t getID() const;
 		FungeUniverse& getUniverse();
 		Field& getField();
 		StackStack& getStack();
 		InstructionPointer& getIP();
+		const InstructionPointer& getIP()const;
+		bool isMode(FungeMode m) const;
+		stack_t getMode() const;
+		void setUniverse(FungeUniverse& other);
 
 		void pushSemantic(inst_t i, semantic_t func);
 		semantic_t popSemantic(inst_t i);
 		semantic_t getSemantic(inst_t i);
+
+		void shareStack(FungeRunner& other);
+		const FungeRunner* getParent();
 	
 	private:
-		FungeUniverse& universe;
-		Field& field;
-		StackStack stack;
+		static size_t count;
+
+		size_t id;
+		FungeUniverse* universe;
+		std::shared_ptr<StackStack> stack;
 		InstructionPointer ip;
+		const FungeRunner* parent;
 		
 		FungeStateNormal normalState;
 		FungeStateString stringState;

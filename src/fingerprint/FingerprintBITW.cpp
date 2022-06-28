@@ -12,7 +12,7 @@ FingerprintBITW::FingerprintBITW(FungeRunner& r) :
 	Fingerprint(r, {'A', 'L', 'N', 'O', 'R', 'X'})
 {}
 
-bool FingerprintBITW::execute(inst_t cmd){
+FungeError FingerprintBITW::execute(inst_t cmd){
 	switch(cmd){
 		case 'A':{
 			stack_t a = stack.top().pop();
@@ -44,9 +44,9 @@ bool FingerprintBITW::execute(inst_t cmd){
 			stack.top().push(b ^ a);
 		} break;
 		default:
-			return false;
+			return ERROR_UNIMP;
 	}
-	return true;
+	return ERROR_NONE;
 }
 
 }

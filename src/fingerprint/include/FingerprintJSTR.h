@@ -16,7 +16,7 @@ class FingerprintJSTR : public Fingerprint {
 		explicit FingerprintJSTR(FungeRunner& r);
 		virtual ~FingerprintJSTR() = default;
 		
-		virtual bool execute(inst_t cmd) override;
+		virtual FungeError execute(inst_t cmd) override;
 };
 
 }

@@ -15,7 +15,7 @@ class FingerprintSTRN : public Fingerprint {
 		explicit FingerprintSTRN(FungeRunner& r);
 		virtual ~FingerprintSTRN() = default;
 		
-		virtual bool execute(inst_t cmd) override;
+		virtual FungeError execute(inst_t cmd) override;
 };
 
 }

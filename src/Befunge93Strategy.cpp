@@ -18,23 +18,23 @@ Befunge93Strategy::Befunge93Strategy(FungeRunner& r) :
 	r.pushSemantic('|', std::bind(&Befunge93Strategy::instructionIf, this));
 }
 
-bool Befunge93Strategy::instructionNorth(){
+FungeError Befunge93Strategy::instructionNorth(){
 	ip.setDelta(Vector{0, -1});
-	return true;
+	return ERROR_NONE;
 }
 
-bool Befunge93Strategy::instructionSouth(){
+FungeError Befunge93Strategy::instructionSouth(){
 	ip.setDelta(Vector{0, 1});
-	return true;
+	return ERROR_NONE;
 }
 
-bool Befunge93Strategy::instructionIf(){
+FungeError Befunge93Strategy::instructionIf(){
 	if(stack.top().pop() == 0){
 		ip.setDelta(Vector{0, 1});
 	}else{
 		ip.setDelta(Vector{0, -1});
 	}
-	return true;
+	return ERROR_NONE;
 }
 
 FungeStrategy* Befunge93Strategy::clone(FungeRunner& r) const{

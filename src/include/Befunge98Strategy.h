@@ -18,9 +18,9 @@ class Befunge98Strategy : public FungeStrategy {
 		virtual FungeStrategy* clone(FungeRunner& r) const override;
 
 	private:
-		bool instructionLeft();
-		bool instructionRight();
-		bool instructionCompare();
+		FungeError instructionLeft();
+		FungeError instructionRight();
+		FungeError instructionCompare();
 };
 
 }

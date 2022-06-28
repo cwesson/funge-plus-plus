@@ -10,6 +10,6 @@
 
 namespace Funge {
 
-typedef std::function<bool()> semantic_t;
+typedef std::function<FungeError()> semantic_t;
 
 }

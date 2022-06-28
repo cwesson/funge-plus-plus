@@ -12,7 +12,7 @@ FingerprintLONG::FingerprintLONG(FungeRunner& r) :
 	Fingerprint(r, {'A', 'B', 'D', 'E', 'L', 'M', 'N', 'O', 'P', 'R', 'S', 'Z'})
 {}
 
-bool FingerprintLONG::execute(inst_t cmd){
+FungeError FingerprintLONG::execute(inst_t cmd){
 	switch(cmd){
 		case 'A':{
 			fungelong_t b = popLong();
@@ -89,9 +89,9 @@ bool FingerprintLONG::execute(inst_t cmd){
 			pushLong(r);
 		} break;
 		default:
-			return false;
+			return ERROR_UNIMP;
 	}
-	return true;
+	return ERROR_NONE;
 }
 
 FingerprintLONG::fungelong_t FingerprintLONG::popLong(){

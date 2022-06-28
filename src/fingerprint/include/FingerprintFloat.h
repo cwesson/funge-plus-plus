@@ -23,7 +23,7 @@ class FingerprintFloat : public Fingerprint {
 
 		virtual ~FingerprintFloat() = default;
 		
-		virtual bool execute(inst_t cmd) override {
+		virtual FungeError execute(inst_t cmd) override {
 			switch(cmd){
 				case 'A':{
 					T b = stackToT(stack.top().pop());
@@ -134,9 +134,9 @@ class FingerprintFloat : public Fingerprint {
 					stack.top().push(TToStack(n));
 				} break;
 				default:
-					return false;
+					return ERROR_UNIMP;
 			}
-			return true;
+			return ERROR_NONE;
 		}
 
 	private:

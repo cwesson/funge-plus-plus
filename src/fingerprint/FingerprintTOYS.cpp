@@ -5,8 +5,8 @@
  */
 
 #include "FingerprintTOYS.h"
-#include "FungeConfig.h"
 #include "FungeUtilities.h"
+#include "FungeUniverse.h"
 #include "VectorRange.h"
 #include <cmath>
 
@@ -22,7 +22,8 @@ FingerprintTOYS::FingerprintTOYS(FungeRunner& r) :
 	dis()
 {}
 
-bool FingerprintTOYS::execute(inst_t cmd){
+FungeError FingerprintTOYS::execute(inst_t cmd){
+	FungeError ret = ERROR_NONE;
 	switch(cmd){
 		case 'A':{
 			stack_t n = stack.top().pop();
@@ -38,9 +39,9 @@ bool FingerprintTOYS::execute(inst_t cmd){
 			stack.top().push(a-b);
 		} break;
 		case 'C':{
-			Vector dest = popVector(stack.top());
-			Vector size = popVector(stack.top());
-			Vector src = popVector(stack.top());
+			Vector dest = popVector(runner);
+			Vector size = popVector(runner);
+			Vector src = popVector(runner);
 			copySpace(src, size, dest, true, false);
 		} break;
 		case 'D':{
@@ -54,8 +55,8 @@ bool FingerprintTOYS::execute(inst_t cmd){
 			stack.top().push(sum);
 		} break;
 		case 'F':{
-			Vector dest = popVector(stack.top());
-			Vector size = popVector(stack.top());
+			Vector dest = popVector(runner);
+			Vector size = popVector(runner);
 			if(sizeToRange(size)){
 				VectorRange range(Vector({0}), size);
 				for(range.begin(); *range != range.end(); ++range){
@@ -64,8 +65,8 @@ bool FingerprintTOYS::execute(inst_t cmd){
 			}
 		} break;
 		case 'G':{
-			Vector src = popVector(stack.top());
-			Vector size = popVector(stack.top());
+			Vector src = popVector(runner);
+			Vector size = popVector(runner);
 			if(sizeToRange(size)){
 				VectorRange range(size, Vector({0}));
 				for(range.begin(); *range != range.end(); ++range){
@@ -96,9 +97,9 @@ bool FingerprintTOYS::execute(inst_t cmd){
 			}
 		} break;
 		case 'K':{
-			Vector dest = popVector(stack.top());
-			Vector size = popVector(stack.top());
-			Vector src = popVector(stack.top());
+			Vector dest = popVector(runner);
+			Vector size = popVector(runner);
+			Vector src = popVector(runner);
 			copySpace(src, size, dest, false, false);
 		} break;
 		case 'L':{
@@ -109,9 +110,9 @@ bool FingerprintTOYS::execute(inst_t cmd){
 			stack.top().push(a);
 		} break;
 		case 'M':{
-			Vector dest = popVector(stack.top());
-			Vector size = popVector(stack.top());
-			Vector src = popVector(stack.top());
+			Vector dest = popVector(runner);
+			Vector size = popVector(runner);
+			Vector src = popVector(runner);
 			copySpace(src, size, dest, true, true);
 		} break;
 		case 'N':{
@@ -148,8 +149,8 @@ bool FingerprintTOYS::execute(inst_t cmd){
 			stack.top().push(a);
 		} break;
 		case 'S':{
-			Vector dest = popVector(stack.top());
-			Vector size = popVector(stack.top());
+			Vector dest = popVector(runner);
+			Vector size = popVector(runner);
 			inst_t i = stack.top().pop();
 			if(sizeToRange(size)){
 				VectorRange range(Vector({0}), size);
@@ -166,14 +167,14 @@ bool FingerprintTOYS::execute(inst_t cmd){
 			}else{
 				v.set(n, -1);
 			}
-			if(funge_config.dimensions > n){
+			if(runner.getUniverse().dimensions() > n){
 				ip.setDelta(v);
 			}else{
-				ip.reflect();
+				ret = ERROR_UNSPEC;
 			}
 		} break;
 		case 'U':{
-				size_t d = std::min(funge_config.dimensions, static_cast<size_t>(3))*2;
+				size_t d = std::min(runner.getUniverse().dimensions(), static_cast<size_t>(3))*2;
 				int r = dis(gen)%d;
 				Vector v;
 				if(r & 1){
@@ -206,23 +207,21 @@ bool FingerprintTOYS::execute(inst_t cmd){
 				ip.setDelta(v);
 		} break;
 		case 'V':{
-			Vector dest = popVector(stack.top());
-			Vector size = popVector(stack.top());
-			Vector src = popVector(stack.top());
+			Vector dest = popVector(runner);
+			Vector size = popVector(runner);
+			Vector src = popVector(runner);
 			copySpace(src, size, dest, false, true);
 		} break;
 		case 'W':{
-			Vector v = popVector(stack.top());
+			Vector v = popVector(runner);
 			stack_t value = stack.top().pop();
 			stack_t cell = field.get(v);
 			if(cell < value){
 				stack.top().push(value);
-				pushVector(stack.top(), v);
-				ip.reflect();
-				ip.next();
-				ip.reflect();
+				pushVector(runner, v);
+				ret = ERROR_BLOCK;
 			}else if(cell > value){
-				ip.reflect();
+				ip.reflect(); // not an error
 			}
 		} break;
 		case 'X':{
@@ -231,27 +230,27 @@ bool FingerprintTOYS::execute(inst_t cmd){
 			ip.setPos(inc);
 		} break;
 		case 'Y':{
-			if(funge_config.dimensions > 1){
+			if(runner.getUniverse().dimensions() > 1){
 				Vector inc(ip.getPos());
 				inc.set(1, inc.get(1)+1);
 				ip.setPos(inc);
 			}else{
-				ip.reflect();
+				ret = ERROR_UNSPEC;
 			}
 		} break;
 		case 'Z':{
-			if(funge_config.dimensions > 2){
+			if(runner.getUniverse().dimensions() > 2){
 				Vector inc(ip.getPos());
 				inc.set(2, inc.get(2)+1);
 				ip.setPos(inc);
 			}else{
-				ip.reflect();
+				ret = ERROR_UNSPEC;
 			}
 		} break;
 		default:
-			return false;
+			ret = ERROR_UNIMP;
 	}
-	return true;
+	return ret;
 }
 
 void FingerprintTOYS::copySpace(const Vector& src, const Vector& sz, const Vector& dest, bool low, bool move){

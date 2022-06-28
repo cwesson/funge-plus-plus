@@ -15,7 +15,7 @@ class FingerprintMODE : public Fingerprint {
 		explicit FingerprintMODE(FungeRunner& r);
 		virtual ~FingerprintMODE() = default;
 		
-		virtual bool execute(inst_t cmd) override;
+		virtual FungeError execute(inst_t cmd) override;
 };
 
 }

@@ -12,7 +12,8 @@ FingerprintFING::FingerprintFING(FungeRunner& r) :
 	Fingerprint(r, {'X', 'Y', 'Z'})
 {}
 
-bool FingerprintFING::execute(inst_t cmd){
+FungeError FingerprintFING::execute(inst_t cmd){
+	FungeError ret = ERROR_NONE;
 	switch(cmd){
 		case 'X':{
 			stack_t a = stack.top().pop();
@@ -20,7 +21,7 @@ bool FingerprintFING::execute(inst_t cmd){
 				a += 'A';
 			}
 			if(a < 'A' || a > 'Z'){
-				ip.reflect();
+				ret = ERROR_UNSPEC;
 				break;
 			}
 			stack_t b = stack.top().pop();
@@ -39,7 +40,7 @@ bool FingerprintFING::execute(inst_t cmd){
 				runner.pushSemantic(a, semb);
 				runner.pushSemantic(b, sema);
 			}else{
-				ip.reflect();
+				ret = ERROR_UNSPEC;
 			}
 		} break;
 		case 'Y':{
@@ -50,7 +51,7 @@ bool FingerprintFING::execute(inst_t cmd){
 			if(a >= 'A' && a <= 'Z'){
 				runner.popSemantic(a);
 			}else{
-				ip.reflect();
+				ret = ERROR_UNSPEC;
 			}
 		} break;
 		case 'Z':{
@@ -59,7 +60,7 @@ bool FingerprintFING::execute(inst_t cmd){
 				dst += 'A';
 			}
 			if(dst < 'A' || dst > 'Z'){
-				ip.reflect();
+				ret = ERROR_UNSPEC;
 				break;
 			}
 			stack_t src = stack.top().pop();
@@ -73,19 +74,19 @@ bool FingerprintFING::execute(inst_t cmd){
 				}
 				runner.pushSemantic(dst, sem);
 			}else{
-				ip.reflect();
+				ret = ERROR_UNSPEC;
 			}
 		} break;
 		default:
-			return false;
+			ret = ERROR_UNIMP;
 	}
-	return true;
+	return ret;
 }
 
 
-bool FingerprintFING::instructionReflect(){
+FungeError FingerprintFING::instructionReflect(){
 	ip.reflect();
-	return true;
+	return ERROR_NONE;
 }
 
 }

@@ -5,26 +5,48 @@
  */
 
 #include "FungeRunner.h"
+#include "FungeUniverse.h"
 #include "FungeDebugger.h"
 
 namespace Funge {
 
-FungeRunner::FungeRunner(FungeUniverse& uni) :
-	universe(uni),
-	field(uni.getField()),
-	stack(),
-	ip(uni.getField()),
+size_t FungeRunner::count = 0;
+
+FungeRunner::FungeRunner(FungeUniverse& uni, const Vector& pos, const Vector& delta) :
+	id(count++),
+	universe(&uni),
+	stack(new StackStack(*this)),
+	ip(*this),
+	parent(nullptr),
 	normalState(*this),
 	stringState(*this),
 	state(&normalState)
 {
+	ip.setPos(pos);
+	ip.setDelta(delta);
+}
+
+FungeRunner::FungeRunner(FungeUniverse& uni, const Vector& pos, const Vector& delta, FungeRunner& r) :
+	id(count++),
+	universe(&uni),
+	stack(r.stack),
+	ip(*this),
+	parent(&r),
+	normalState(*this),
+	stringState(*this),
+	state(&normalState)
+{
+	stack->setRunner(*this);
+	ip.setPos(pos);
+	ip.setDelta(delta);
 }
 
 FungeRunner::FungeRunner(const FungeRunner& runner) :
+	id(count++),
 	universe(runner.universe),
-	field(runner.field),
-	stack(runner.stack),
-	ip(runner.ip),
+	stack(new StackStack(*runner.stack, *this)),
+	ip(runner.ip, *this),
+	parent(&runner),
 	normalState(runner.normalState, *this),
 	stringState(*this),
 	state(&normalState)
@@ -37,7 +59,7 @@ FungeRunner::~FungeRunner(){
 	ip.stop();
 }
 
-bool FungeRunner::isRunning() const{
+bool FungeRunner::isRunning() const {
 	return !ip.isStopped();
 }
 
@@ -49,20 +71,33 @@ void FungeRunner::operator()(){
 }
 
 void FungeRunner::tick(){
-	bool done = false;
-	while(!done && !ip.isStopped()){
-		FungeDebugger::tick(field, stack, ip);
+	FungeError err = ERROR_UNSPEC;
+	do {
+		getUniverse().getDebugger().tick(*this);
 		inst_t i = ip.get();
-		done = execute(i);
-		if(!done && i != ' '){
-			std::cerr << "Unimplemented instruction " << static_cast<int>(i) << " \'" << static_cast<char>(i) << "\' at " << ip << "." << std::endl;
-			ip.reflect();
+		err = execute(i);
+		switch(err){
+			[[likely]] case ERROR_NONE:
+			[[likely]] case ERROR_SKIP:
+				ip.next();
+				break;
+			case ERROR_BLOCK:
+				break;
+			case ERROR_UNIMP:
+				std::cerr << "Unimplemented instruction " << static_cast<int>(i) << " \'" << static_cast<char>(i) << "\' at " << ip << "." << std::endl;
+				[[fallthrough]];
+			case ERROR_NOTAVAIL:
+			case ERROR_UNSPEC:
+			[[unlikely]] default:
+				getUniverse().getDebugger().trap(*this);
+				ip.reflect();
+				ip.next();
+				break;
 		}
-		ip.next();
-	}
+	} while(err == ERROR_SKIP);
 }
 
-bool FungeRunner::execute(inst_t i){
+FungeError FungeRunner::execute(inst_t i){
 	return state->execute(i);
 }
 
@@ -79,20 +114,36 @@ FungeState& FungeRunner::getStringState(inst_t i){
 	return stringState;
 }
 
+size_t FungeRunner::getID() const{
+	return id;
+}
+
 FungeUniverse& FungeRunner::getUniverse(){
-	return universe;
+	return *universe;
 }
 
 Field& FungeRunner::getField(){
-	return field;
+	return universe->getField();
 }
 
 StackStack& FungeRunner::getStack(){
-	return stack;
+	return *stack;
 }
 
 InstructionPointer& FungeRunner::getIP(){
 	return ip;
+}
+
+const InstructionPointer& FungeRunner::getIP() const{
+	return ip;
+}
+
+bool FungeRunner::isMode(FungeMode m) const {
+	return universe->isMode(m);
+}
+
+stack_t FungeRunner::getMode() const {
+	return universe->getMode();
 }
 
 void FungeRunner::pushSemantic(inst_t i, semantic_t func){
@@ -105,6 +156,14 @@ semantic_t FungeRunner::popSemantic(inst_t i){
 
 semantic_t FungeRunner::getSemantic(inst_t i){
 	return normalState.getSemantic(i);
+}
+
+void FungeRunner::setUniverse(FungeUniverse& other){
+	universe = &other;
+}
+
+const FungeRunner* FungeRunner::getParent(){
+	return parent;
 }
 
 }

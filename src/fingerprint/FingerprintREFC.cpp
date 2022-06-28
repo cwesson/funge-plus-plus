@@ -15,10 +15,10 @@ FingerprintREFC::FingerprintREFC(FungeRunner& r) :
 	Fingerprint(r, {'R', 'D'})
 {}
 
-bool FingerprintREFC::execute(inst_t cmd){
+FungeError FingerprintREFC::execute(inst_t cmd){
 	switch(cmd){
 		case 'R':{
-			Vector v = popVector(stack.top());
+			Vector v = popVector(runner);
 			stack_t r = random();
 			auto find = refc_map.find(r);
 			while(find != refc_map.end()){
@@ -33,13 +33,13 @@ bool FingerprintREFC::execute(inst_t cmd){
 			auto find = refc_map.find(r);
 			if(find != refc_map.end()){
 				Vector v = refc_map[r];
-				pushVector(stack.top(), v);
+				pushVector(runner, v);
 			}
 		} break;
 		default:
-			return false;
+			return ERROR_UNIMP;
 	}
-	return true;
+	return ERROR_NONE;
 }
 
 }
