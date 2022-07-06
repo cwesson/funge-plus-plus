@@ -9,7 +9,7 @@
 #include "FungeConfig.h"
 #include "FungeUtilities.h"
 #include "FungeUniverse.h"
-#include <cstdio>
+#include <unistd.h>
 #include <termios.h>
 
 namespace Funge {
