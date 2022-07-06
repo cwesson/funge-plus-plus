@@ -14,9 +14,11 @@
 namespace Funge {
 
 enum FungeStandard {
+	FUNGE_AUTO = 0,
 	FUNGE_93 = 93,
 	FUNGE_98 = 98,
 	FUNGE_FISH = -1,
+	FUNGE_STARFISH = -2,
 };
 
 /**
@@ -31,6 +33,7 @@ enum FungeMode {
 	FUNGE_MODE_INVERT = 0x04000, ///< Invert mode enabled by MODE `I`
 	FUNGE_MODE_QUEUE  = 0x08000, ///< Queue mode enabled by MODE `Q`
 	FUNGE_MODE_SWITCH = 0x10000, ///< Switch mode enabled by MODE `S`
+	FUNGE_MODE_DIVE   = 0x20000, ///< Switch mode enabled by *><> `u`
 };
 
 /**
@@ -64,7 +67,7 @@ class FungeConfig {
 			env(),
 			fingerprints(),
 			dimensions(0),
-			standard(FUNGE_98),
+			standard(FUNGE_AUTO),
 			topo(TOPO_LAHEY),
 			strings(STRING_SGML),
 			cells(CELL_INT),

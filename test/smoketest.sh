@@ -38,19 +38,6 @@ function test_befunge() {
     assert_equal "$1 output" "$res" "$2"
 }
 
-function test_fish() {
-    echo TEST $1
-    res=`timeout 10 ./bin/funge -std=fish $1`
-    code=$?
-    if [ -z "$3" ]; then
-        expect=0
-    else
-        expect=$code
-    fi
-    assert_equal "$1 exit code" $code $expect
-    assert_equal "$1 output" "$res" "$2"
-}
-
 function test_diff() {
     echo TEST $@
     diff $@
@@ -90,7 +77,6 @@ test_simple test/test_swap.bf "2 3 1 "
 test_simple test/test_get.bf "F1 2 "
 test_simple test/test_put.bf "2 1 "
 test_befunge test/quine.bf `cat test/quine.bf`
-test_simple test/fizzbuzz.bf "1 2 Fizz 4 Buzz Fizz 7 8 Fizz Buzz 11 Fizz 13 14 FizzBuzz 16 17 Fizz 19 Buzz Fizz 22 23 Fizz Buzz 26 Fizz 28 29 FizzBuzz 31 32 Fizz 34 Buzz Fizz 37 38 Fizz Buzz 41 Fizz 43 44 FizzBuzz 46 47 Fizz 49 Buzz Fizz 52 53 Fizz Buzz 56 Fizz 58 59 FizzBuzz 61 62 Fizz 64 Buzz Fizz 67 68 Fizz Buzz 71 Fizz 73 74 FizzBuzz 76 77 Fizz 79 Buzz Fizz 82 83 Fizz Buzz 86 Fizz 88 89 FizzBuzz 91 92 Fizz 94 Buzz Fizz 97 98 Fizz Buzz "
 # Funge-98 Tests
 test_simple test/test_quit.b98 "3 2 1 " 4
 test_simple test/test_clear.b98 "3 2 1 0 0 0 "
@@ -108,6 +94,7 @@ test_simple test/test_under.b98 "5 4 3 1 2 0 0 "
 test_simple test/test_execute.b98 "Hello World!" 1
 test_simple test/test_in.b98 "3 2 1 5 4 6 "
 test_diff test/input.txt test/output.txt
+test_simple test/fizzbuzz.b98 "1 2 Fizz 4 Buzz Fizz 7 8 Fizz Buzz 11 Fizz 13 14 FizzBuzz 16 17 Fizz 19 Buzz Fizz 22 23 Fizz Buzz 26 Fizz 28 29 FizzBuzz 31 32 Fizz 34 Buzz Fizz 37 38 Fizz Buzz 41 Fizz 43 44 FizzBuzz 46 47 Fizz 49 Buzz Fizz 52 53 Fizz Buzz 56 Fizz 58 59 FizzBuzz 61 62 Fizz 64 Buzz Fizz 67 68 Fizz Buzz 71 Fizz 73 74 FizzBuzz 76 77 Fizz 79 Buzz Fizz 82 83 Fizz Buzz 86 Fizz 88 89 FizzBuzz 91 92 Fizz 94 Buzz Fizz 97 98 Fizz Buzz "
 # BeQunge Tests
 test_simple test/example3d.beq "Hello World"
 test_simple test/example5d.beq "Hello World"
@@ -132,12 +119,14 @@ test_simple test/test_fing.b98 "1 5 10 100 100 "
 test_simple test/kk.b98 "!12 "
 test_simple test/k_quote.b98 "2 "
 # Other Standards
-test_fish test/test_fish.fish "1234"
-test_fish test/test_stack.fish "12543"
-test_fish test/test_shift.fish "32141432"
-test_fish test/test_string.fish "hello, world"
-test_fish test/test_fact.fish "3628800"
-test_fish test/test_sqrt.fish "8"
+test_simple test/test_fish.fish "1234"
+test_simple test/test_stack.fish "12543"
+test_simple test/test_shift.fish "32141432"
+test_simple test/test_string.fish "hello, world"
+test_simple test/test_fact.fish "3628800"
+test_simple test/test_sqrt.fish "8"
+test_simple test/test_fisherman.sf "Hi"
+test_simple test/test_dive.sf "Hello, world!"
 # Mycology Tests
 test_simple test/Mycology/sanity.bf "0 1 2 3 4 5 6 7 8 9 "
 test_mycology mycology.b98 15

@@ -68,6 +68,22 @@ int createUniverse(const std::filesystem::path& filepath, FungeConfig& config){
 		return parseFMV(filepath, config);
 	}
 	config.name = filepath;
+
+	if(config.standard == FUNGE_AUTO){
+		if(ext == ".bf"){
+			config.standard = Funge::FUNGE_93;
+		}else if(ext == ".b98"){
+			config.standard = Funge::FUNGE_98;
+		}else if(ext == ".beq"){
+			config.standard = Funge::FUNGE_98;
+		}else if(ext == ".fish"){
+			config.standard = Funge::FUNGE_FISH;
+		}else if(ext == ".sf"){
+			config.standard = Funge::FUNGE_STARFISH;
+		}else{
+			config.standard = Funge::FUNGE_98;
+		}
+	}
 	
 	std::ifstream stream(filepath);
 	if(stream.fail()){
@@ -109,6 +125,9 @@ int fungemain(int argc, char **argv, char **envp){
 			}else if(strcmp(arg, "fish") == 0){
 				funge_config.dimensions = 2;
 				funge_config.standard = Funge::FUNGE_FISH;
+			}else if(strcmp(arg, "sfish") == 0){
+				funge_config.dimensions = 2;
+				funge_config.standard = Funge::FUNGE_STARFISH;
 			}else{
 				std::cerr << "Unsupported standard: " << arg << std::endl;
 				return EINVAL;

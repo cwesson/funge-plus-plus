@@ -265,7 +265,7 @@ FungeError Unefunge93Strategy::instructionPut(){
 	return ERROR_NONE;
 }
 
-void Unefunge93Strategy::errorHandler(FungeError e){
+FungeError Unefunge93Strategy::errorHandler(FungeError e){
 	inst_t i = ip.get();
 	switch(e){
 		[[unlikely]] case ERROR_NONE:
@@ -282,6 +282,7 @@ void Unefunge93Strategy::errorHandler(FungeError e){
 			ip.next();
 			break;
 	}
+	return e;
 }
 
 FungeStrategy* Unefunge93Strategy::clone(FungeRunner& r) const{

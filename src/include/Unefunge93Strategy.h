@@ -50,7 +50,7 @@ class Unefunge93Strategy : public FungeStrategy {
 		FungeError instructionGet();
 		FungeError instructionPut();
 
-		void errorHandler(FungeError e);
+		FungeError errorHandler(FungeError e);
 };
 
 }

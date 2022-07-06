@@ -70,7 +70,7 @@ class FishStrategy : public FungeStrategy {
 		FungeError instructionPut();
 		FungeError instructionEnd();
 
-		void errorHandler(FungeError e);
+		FungeError errorHandler(FungeError e);
 
 		struct reg {
 			bool set;

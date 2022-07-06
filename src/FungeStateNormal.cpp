@@ -12,6 +12,7 @@
 #include "Befunge98Strategy.h"
 #include "Trefunge98Strategy.h"
 #include "FishStrategy.h"
+#include "StarfishStrategy.h"
 #include "FungeUniverse.h"
 
 namespace Funge {
@@ -23,6 +24,8 @@ FungeStateNormal::FungeStateNormal(FungeRunner& r) :
 {
 	if(r.getUniverse().standard() == Funge::FUNGE_FISH){
 		load(new FishStrategy(runner));
+	}else if(r.getUniverse().standard() == Funge::FUNGE_STARFISH){
+		load(new StarfishStrategy(runner));
 	}else{
 		if(r.getUniverse().dimensions() >= 1){
 			if(r.getUniverse().standard() >= Funge::FUNGE_93){

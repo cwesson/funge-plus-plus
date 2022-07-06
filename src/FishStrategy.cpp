@@ -9,6 +9,8 @@
 #include "FungeConfig.h"
 #include "FungeUtilities.h"
 #include "FungeUniverse.h"
+#include <cstdio>
+#include <termios.h>
 
 namespace Funge {
 
@@ -86,6 +88,7 @@ FishStrategy::FishStrategy(FungeRunner& r) :
 	r.setErrorHandler(std::bind(&FishStrategy::errorHandler, this, std::placeholders::_1));
 
 	regs.push({false, 0});
+
 }
 
 FungeError FishStrategy::instructionSkip(){
@@ -93,6 +96,10 @@ FungeError FishStrategy::instructionSkip(){
 }
 
 FungeError FishStrategy::instructionPush(stack_t n){
+	if(runner.isMode(FUNGE_MODE_DIVE)){
+		return ERROR_NONE;
+	}
+
 	stack.top().push(n);
 	return ERROR_NONE;
 }
@@ -161,122 +168,242 @@ FungeError FishStrategy::instructionTrampoline(){
 }
 
 FungeError FishStrategy::instructionConditional(){
-	if(!stack.top().pop()){
-		ip.next();
+	if(runner.isMode(FUNGE_MODE_DIVE)){
+		return ERROR_NONE;
 	}
-	return ERROR_NONE;
+
+	if(stack.top().size() >= 1){
+		if(!stack.top().pop()){
+			ip.next();
+		}
+		return ERROR_NONE;
+	}else{
+		return ERROR_UNSPEC;
+	}
 }
 
 FungeError FishStrategy::instructionJump(){
-	stack_t y = stack.top().pop();
-	stack_t x = stack.top().pop();
-	ip.setPos(Vector{x,y} - ip.getDelta());
-	return ERROR_NONE;
+	if(runner.isMode(FUNGE_MODE_DIVE)){
+		return ERROR_NONE;
+	}
+
+	if(stack.top().size() >= 2){
+		stack_t y = stack.top().pop();
+		stack_t x = stack.top().pop();
+		ip.setPos(Vector{x,y} - ip.getDelta());
+		return ERROR_NONE;
+	}else{
+		return ERROR_UNSPEC;
+	}
 }
 
 FungeError FishStrategy::instructionAdd(){
-	stack_t x = stack.top().pop();
-	stack_t y = stack.top().pop();
-	stack.top().push(y + x);
-	return ERROR_NONE;
+	if(runner.isMode(FUNGE_MODE_DIVE)){
+		return ERROR_NONE;
+	}
+
+	if(stack.top().size() >= 2){
+		stack_t x = stack.top().pop();
+		stack_t y = stack.top().pop();
+		stack.top().push(y + x);
+		return ERROR_NONE;
+	}else{
+		return ERROR_UNSPEC;
+	}
 }
 
 FungeError FishStrategy::instructionSub(){
-	stack_t x = stack.top().pop();
-	stack_t y = stack.top().pop();
-	stack.top().push(y - x);
-	return ERROR_NONE;
+	if(runner.isMode(FUNGE_MODE_DIVE)){
+		return ERROR_NONE;
+	}
+
+	if(stack.top().size() >= 2){
+		stack_t x = stack.top().pop();
+		stack_t y = stack.top().pop();
+		stack.top().push(y - x);
+		return ERROR_NONE;
+	}else{
+		return ERROR_UNSPEC;
+	}
 }
 
 FungeError FishStrategy::instructionMult(){
-	stack_t x = stack.top().pop();
-	stack_t y = stack.top().pop();
-	stack.top().push(y * x);
-	return ERROR_NONE;
+	if(runner.isMode(FUNGE_MODE_DIVE)){
+		return ERROR_NONE;
+	}
+
+	if(stack.top().size() >= 2){
+		stack_t x = stack.top().pop();
+		stack_t y = stack.top().pop();
+		stack.top().push(y * x);
+		return ERROR_NONE;
+	}else{
+		return ERROR_UNSPEC;
+	}
 }
 
 FungeError FishStrategy::instructionDiv(){
-	stack_t x = stack.top().pop();
-	stack_t y = stack.top().pop();
-	if(x == 0){
+	if(runner.isMode(FUNGE_MODE_DIVE)){
+		return ERROR_NONE;
+	}
+
+	if(stack.top().size() >= 2){
+		stack_t x = stack.top().pop();
+		stack_t y = stack.top().pop();
+		if(x == 0){
+			return ERROR_UNSPEC;
+		}
+		stack.top().push(y / x);
+		return ERROR_NONE;
+	}else{
 		return ERROR_UNSPEC;
 	}
-	stack.top().push(y / x);
-	return ERROR_NONE;
 }
 
 FungeError FishStrategy::instructionModu(){
-	stack_t x = stack.top().pop();
-	stack_t y = stack.top().pop();
-	if(x == 0){
+	if(runner.isMode(FUNGE_MODE_DIVE)){
+		return ERROR_NONE;
+	}
+
+	if(stack.top().size() >= 2){
+		stack_t x = stack.top().pop();
+		stack_t y = stack.top().pop();
+		if(x == 0){
+			return ERROR_UNSPEC;
+		}
+		stack.top().push(y % x);
+		return ERROR_NONE;
+	}else{
 		return ERROR_UNSPEC;
 	}
-	stack.top().push(y % x);
-	return ERROR_NONE;
 }
 
 FungeError FishStrategy::instructionEqual(){
-	stack_t x = stack.top().pop();
-	stack_t y = stack.top().pop();
-	stack.top().push(y == x);
-	return ERROR_NONE;
+	if(runner.isMode(FUNGE_MODE_DIVE)){
+		return ERROR_NONE;
+	}
+
+	if(stack.top().size() >= 2){
+		stack_t x = stack.top().pop();
+		stack_t y = stack.top().pop();
+		stack.top().push(y == x);
+		return ERROR_NONE;
+	}else{
+		return ERROR_UNSPEC;
+	}
 }
 
 FungeError FishStrategy::instructionGreater(){
-	stack_t x = stack.top().pop();
-	stack_t y = stack.top().pop();
-	stack.top().push(y > x);
-	return ERROR_NONE;
+	if(runner.isMode(FUNGE_MODE_DIVE)){
+		return ERROR_NONE;
+	}
+
+	if(stack.top().size() >= 2){
+		stack_t x = stack.top().pop();
+		stack_t y = stack.top().pop();
+		stack.top().push(y > x);
+		return ERROR_NONE;
+	}else{
+		return ERROR_UNSPEC;
+	}
 }
 
 FungeError FishStrategy::instructionLess(){
-	stack_t x = stack.top().pop();
-	stack_t y = stack.top().pop();
-	stack.top().push(y < x);
-	return ERROR_NONE;
+	if(runner.isMode(FUNGE_MODE_DIVE)){
+		return ERROR_NONE;
+	}
+
+	if(stack.top().size() >= 2){
+		stack_t x = stack.top().pop();
+		stack_t y = stack.top().pop();
+		stack.top().push(y < x);
+		return ERROR_NONE;
+	}else{
+		return ERROR_UNSPEC;
+	}
 }
 
 FungeError FishStrategy::instructionString(inst_t i){
+	if(runner.isMode(FUNGE_MODE_DIVE)){
+		return ERROR_NONE;
+	}
+
 	runner.setState(runner.getStringState(i));
 	return ERROR_NONE;
 }
 
 FungeError FishStrategy::instructionDuplicate(){
-	stack_t x = stack.top().pop();
-	stack.top().push(x);
-	stack.top().push(x);
-	return ERROR_NONE;
+	if(runner.isMode(FUNGE_MODE_DIVE)){
+		return ERROR_NONE;
+	}
+
+	if(stack.top().size() >= 1){
+		stack_t x = stack.top().pop();
+		stack.top().push(x);
+		stack.top().push(x);
+		return ERROR_NONE;
+	}else{
+		return ERROR_UNSPEC;
+	}
 }
 
 FungeError FishStrategy::instructionRemove(){
-	stack.top().pop();
-	return ERROR_NONE;
+	if(runner.isMode(FUNGE_MODE_DIVE)){
+		return ERROR_NONE;
+	}
+
+	if(stack.top().size() >= 1){
+		stack.top().pop();
+		return ERROR_NONE;
+	}else{
+		return ERROR_UNSPEC;
+	}
 }
 
 FungeError FishStrategy::instructionSwap2(){
-	stack_t x = stack.top().pop();
-	stack_t y = stack.top().pop();
-	stack.top().push(x);
-	stack.top().push(y);
-	return ERROR_NONE;
+	if(stack.top().size() >= 2){
+		stack_t x = stack.top().pop();
+		stack_t y = stack.top().pop();
+		stack.top().push(x);
+		stack.top().push(y);
+		return ERROR_NONE;
+	}else{
+		return ERROR_UNSPEC;
+	}
 }
 
 FungeError FishStrategy::instructionSwap3(){
-	stack_t x = stack.top().pop();
-	stack_t y = stack.top().pop();
-	stack_t z = stack.top().pop();
-	stack.top().push(x);
-	stack.top().push(z);
-	stack.top().push(y);
-	return ERROR_NONE;
+	if(runner.isMode(FUNGE_MODE_DIVE)){
+		return ERROR_NONE;
+	}
+
+	if(stack.top().size() >= 3){
+		stack_t x = stack.top().pop();
+		stack_t y = stack.top().pop();
+		stack_t z = stack.top().pop();
+		stack.top().push(x);
+		stack.top().push(z);
+		stack.top().push(y);
+		return ERROR_NONE;
+	}else{
+		return ERROR_UNSPEC;
+	}
 }
 
 FungeError FishStrategy::instructionLength(){
+	if(runner.isMode(FUNGE_MODE_DIVE)){
+		return ERROR_NONE;
+	}
+
 	stack.top().push(stack.top().size());
 	return ERROR_NONE;
 }
 
 FungeError FishStrategy::instructionShiftLeft(){
+	if(runner.isMode(FUNGE_MODE_DIVE)){
+		return ERROR_NONE;
+	}
+
 	stack_t len = stack.top().size();
 	stack_t temp[len];
 	for(stack_t i = 0; i < len; ++i){
@@ -290,6 +417,10 @@ FungeError FishStrategy::instructionShiftLeft(){
 }
 
 FungeError FishStrategy::instructionShiftRight(){
+	if(runner.isMode(FUNGE_MODE_DIVE)){
+		return ERROR_NONE;
+	}
+
 	stack_t len = stack.top().size();
 	stack_t temp[len];
 	for(stack_t i = 0; i < len; ++i){
@@ -303,6 +434,10 @@ FungeError FishStrategy::instructionShiftRight(){
 }
 
 FungeError FishStrategy::instructionReverse(){
+	if(runner.isMode(FUNGE_MODE_DIVE)){
+		return ERROR_NONE;
+	}
+
 	stack_t len = stack.top().size();
 	stack_t temp[len];
 	for(stack_t i = 0; i < len; ++i){
@@ -315,6 +450,10 @@ FungeError FishStrategy::instructionReverse(){
 }
 
 FungeError FishStrategy::instructionCreateStack(){
+	if(runner.isMode(FUNGE_MODE_DIVE)){
+		return ERROR_NONE;
+	}
+
 	stack_t x = stack.top().pop();
 	stack.push();
 	for(stack_t i = 0; i < x; ++i){
@@ -325,6 +464,10 @@ FungeError FishStrategy::instructionCreateStack(){
 }
 
 FungeError FishStrategy::instructionRemoveStack(){
+	if(runner.isMode(FUNGE_MODE_DIVE)){
+		return ERROR_NONE;
+	}
+
 	while(stack.top().size() > 0){
 		stack.second().push(stack.top().pop());
 	}
@@ -334,19 +477,48 @@ FungeError FishStrategy::instructionRemoveStack(){
 }
 
 FungeError FishStrategy::instructionOutChar(){
-	stack_t x = stack.top().pop();
-	std::cout << static_cast<char>(x);
-	return ERROR_NONE;
+	if(runner.isMode(FUNGE_MODE_DIVE)){
+		return ERROR_NONE;
+	}
+
+	if(stack.top().size() >= 1){
+		stack_t x = stack.top().pop();
+		std::cout << static_cast<char>(x);
+		return ERROR_NONE;
+	}else{
+		return ERROR_UNSPEC;
+	}
 }
 
 FungeError FishStrategy::instructionOutInt(){
-	stack_t x = stack.top().pop();
-	std::cout << x;
-	return ERROR_NONE;
+	if(runner.isMode(FUNGE_MODE_DIVE)){
+		return ERROR_NONE;
+	}
+
+	if(stack.top().size() >= 1){
+		stack_t x = stack.top().pop();
+		std::cout << x;
+		return ERROR_NONE;
+	}else{
+		return ERROR_UNSPEC;
+	}
 }
 
 FungeError FishStrategy::instructionIn(){
+	if(runner.isMode(FUNGE_MODE_DIVE)){
+		return ERROR_NONE;
+	}
+
+	termios oldt;
+	tcgetattr(STDIN_FILENO, &oldt);
+	termios newt = oldt;
+	newt.c_lflag &= ~ECHO;
+	tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+
 	int q = getchar();
+
+	tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+
 	if(q == EOF){
 		q = -1;
 	}
@@ -355,56 +527,91 @@ FungeError FishStrategy::instructionIn(){
 }
 
 FungeError FishStrategy::instructionGet(){
-	const Vector& storage = ip.getStorage();
-	Vector v = popVector(runner);
-	stack.top().push(static_cast<stack_t>(field.get(v+storage)));
-	return ERROR_NONE;
+	if(runner.isMode(FUNGE_MODE_DIVE)){
+		return ERROR_NONE;
+	}
+
+	if(stack.top().size() >= 3){
+		const Vector& storage = ip.getStorage();
+		Vector v = popVector(runner);
+		stack.top().push(static_cast<stack_t>(field.get(v+storage)));
+		return ERROR_NONE;
+	}else{
+		return ERROR_UNSPEC;
+	}
 }
 
 FungeError FishStrategy::instructionPut(){
-	const Vector& storage = ip.getStorage();
-	Vector v = popVector(runner);
-	field.set(v+storage, stack.top().pop());
-	return ERROR_NONE;
+	if(runner.isMode(FUNGE_MODE_DIVE)){
+		return ERROR_NONE;
+	}
+
+	if(stack.top().size() >= 3){
+		const Vector& storage = ip.getStorage();
+		Vector v = popVector(runner);
+		field.set(v+storage, stack.top().pop());
+		return ERROR_NONE;
+	}else{
+		return ERROR_UNSPEC;
+	}
 }
 
 FungeError FishStrategy::instructionEnd(){
+	if(runner.isMode(FUNGE_MODE_DIVE)){
+		return ERROR_NONE;
+	}
+
 	ip.stop();
 	return ERROR_NONE;
 }
 
 FungeError FishStrategy::instructionRegister(){
+	if(runner.isMode(FUNGE_MODE_DIVE)){
+		return ERROR_NONE;
+	}
+
 	reg& top = regs.top();
 
+	FungeError ret = ERROR_UNSPEC;
 	if(top.set){
 		top.value = 0;
 		top.set = false;
+		ret = ERROR_NONE;
 	}else{
-		top.value = stack.top().pop();
-		top.set = true;
+		if(stack.size() >= 1){
+			top.value = stack.top().pop();
+			top.set = true;
+			ret = ERROR_NONE;
+		}
 	}
 
-	return ERROR_NONE;
+	return ret;
 }
 
-void FishStrategy::errorHandler(FungeError e){
+FungeError FishStrategy::errorHandler(FungeError e){
 	switch(e){
 		[[unlikely]] case ERROR_NONE:
 		[[unlikely]] case ERROR_SKIP:
 		[[unlikely]] case ERROR_BLOCK:
 			break;
 		case ERROR_UNIMP:
+			if(runner.isMode(FUNGE_MODE_DIVE)){
+				return ERROR_NONE;
+			}
+			[[fallthrough]];
 		case ERROR_NOTAVAIL:
 		case ERROR_UNSPEC:
 		[[unlikely]] default:
 			std::cerr << "something smells fishy..." << std::endl;
-			ip.next();
+			runner.getUniverse().killAll(1);
+			// Unreachable
 			break;
 	}
+	return e;
 }
 
 FungeStrategy* FishStrategy::clone(FungeRunner& r) const{
 	return new FishStrategy(r);
 }
 
-}
+} // namespace Funge

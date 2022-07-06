@@ -82,7 +82,6 @@ void FungeRunner::tick(){
 		switch(err){
 			[[likely]] case ERROR_NONE:
 			[[likely]] case ERROR_SKIP:
-				ip.next();
 				break;
 			case ERROR_BLOCK:
 				break;
@@ -92,11 +91,14 @@ void FungeRunner::tick(){
 			[[unlikely]] default:
 				getUniverse().getDebugger().trap(*this);
 				if(errorHandler != nullptr){
-					errorHandler(err);
+					err = errorHandler(err);
 				}else{
 					ip.next();
 				}
 				break;
+		}
+		if(err == ERROR_NONE || err == ERROR_SKIP){
+			ip.next();
 		}
 	} while(err == ERROR_SKIP);
 }
@@ -162,7 +164,7 @@ semantic_t FungeRunner::getSemantic(inst_t i){
 	return normalState.getSemantic(i);
 }
 
-void FungeRunner::setErrorHandler(std::function<void(FungeError)> func){
+void FungeRunner::setErrorHandler(std::function<FungeError(FungeError)> func){
 	errorHandler = func;
 }
 

@@ -37,6 +37,7 @@ FingerprintFungeLib* FingerprintFungeLib::factory(FungeRunner& r, std::string& n
 
 		FungeConfig config;
 		config.name = std::filesystem::canonical(fl);
+		config.standard = FUNGE_98;
 		if(r.isMode(FUNGE_MODE_DEBUG)){
 			config.mode |= FUNGE_MODE_DEBUG;
 		}

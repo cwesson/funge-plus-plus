@@ -47,7 +47,7 @@ class FungeRunner {
 		void pushSemantic(inst_t i, semantic_t func);
 		semantic_t popSemantic(inst_t i);
 		semantic_t getSemantic(inst_t i);
-		void setErrorHandler(std::function<void(FungeError)> func);
+		void setErrorHandler(std::function<FungeError(FungeError)> func);
 
 		void shareStack(FungeRunner& other);
 		const FungeRunner* getParent();
@@ -60,7 +60,7 @@ class FungeRunner {
 		std::shared_ptr<StackStack> stack;
 		InstructionPointer ip;
 		const FungeRunner* parent;
-		std::function<void(FungeError)> errorHandler;
+		std::function<FungeError(FungeError)> errorHandler;
 		
 		FungeStateNormal normalState;
 		FungeStateString stringState;
