@@ -9,13 +9,14 @@
 #include "FungeConfig.h"
 #include "FungeUtilities.h"
 #include "FungeUniverse.h"
-#include <unistd.h>
-#include <termios.h>
+#include "FishUtil.h"
+#include "ScopedTermios.h"
 
 namespace Funge {
 
 FishStrategy::FishStrategy(FungeRunner& r) :
 	FungeStrategy(r),
+	selected(0),
 	regs()
 {
 	r.pushSemantic(' ', std::bind(&FishStrategy::instructionSkip, this));
@@ -88,7 +89,6 @@ FishStrategy::FishStrategy(FungeRunner& r) :
 	r.setErrorHandler(std::bind(&FishStrategy::errorHandler, this, std::placeholders::_1));
 
 	regs.push({false, 0});
-
 }
 
 FungeError FishStrategy::instructionSkip(){
@@ -100,7 +100,8 @@ FungeError FishStrategy::instructionPush(stack_t n){
 		return ERROR_NONE;
 	}
 
-	stack.top().push(n);
+	check_selected(selected);
+	stack.at(selected).push(n);
 	return ERROR_NONE;
 }
 
@@ -125,27 +126,42 @@ FungeError FishStrategy::instructionUp(){
 }
 
 FungeError FishStrategy::instructionMirror1(){
-	ip.setDelta(Vector{ip.getDelta().get(1), ip.getDelta().get(0)});
+	Vector v = ip.getDelta();
+	dim_t y = v.get(1);
+	v.set(1, v.get(0));
+	v.set(0, y);
+	ip.setDelta(v);
 	return ERROR_NONE;
 }
 
 FungeError FishStrategy::instructionMirror2(){
-	ip.setDelta(Vector{-ip.getDelta().get(1), -ip.getDelta().get(0)});
+	Vector v = ip.getDelta();
+	dim_t y = v.get(1);
+	v.set(1, -v.get(0));
+	v.set(0, -y);
+	ip.setDelta(v);
 	return ERROR_NONE;
 }
 
 FungeError FishStrategy::instructionMirrorVert(){
-	ip.setDelta(Vector{-ip.getDelta().get(0), ip.getDelta().get(1)});
+	Vector v = ip.getDelta();
+	v.set(0, -v.get(0));
+	ip.setDelta(v);
 	return ERROR_NONE;
 }
 
 FungeError FishStrategy::instructionMirrorHori(){
-	ip.setDelta(Vector{ip.getDelta().get(0), -ip.getDelta().get(1)});
+	Vector v = ip.getDelta();
+	v.set(1, -v.get(1));
+	ip.setDelta(v);
 	return ERROR_NONE;
 }
 
 FungeError FishStrategy::instructionMirrorAll(){
-	ip.setDelta(Vector{-ip.getDelta().get(0), -ip.getDelta().get(1)});
+	Vector v = ip.getDelta();
+	v.set(0, -v.get(0));
+	v.set(1, -v.get(1));
+	ip.setDelta(v);
 	return ERROR_NONE;
 }
 
@@ -172,14 +188,11 @@ FungeError FishStrategy::instructionConditional(){
 		return ERROR_NONE;
 	}
 
-	if(stack.top().size() >= 1){
-		if(!stack.top().pop()){
-			ip.next();
-		}
-		return ERROR_NONE;
-	}else{
-		return ERROR_UNSPEC;
+	check_stack(selected, 1);
+	if(!stack.at(selected).pop()){
+		ip.next();
 	}
+	return ERROR_NONE;
 }
 
 FungeError FishStrategy::instructionJump(){
@@ -187,14 +200,10 @@ FungeError FishStrategy::instructionJump(){
 		return ERROR_NONE;
 	}
 
-	if(stack.top().size() >= 2){
-		stack_t y = stack.top().pop();
-		stack_t x = stack.top().pop();
-		ip.setPos(Vector{x,y} - ip.getDelta());
-		return ERROR_NONE;
-	}else{
-		return ERROR_UNSPEC;
-	}
+	check_stack(selected, runner.getUniverse().dimensions());
+	Vector v = popVector(runner, &stack.at(selected));
+	ip.setPos(v);
+	return ERROR_NONE;	
 }
 
 FungeError FishStrategy::instructionAdd(){
@@ -202,14 +211,11 @@ FungeError FishStrategy::instructionAdd(){
 		return ERROR_NONE;
 	}
 
-	if(stack.top().size() >= 2){
-		stack_t x = stack.top().pop();
-		stack_t y = stack.top().pop();
-		stack.top().push(y + x);
-		return ERROR_NONE;
-	}else{
-		return ERROR_UNSPEC;
-	}
+	check_stack(selected, 2);
+	stack_t x = stack.at(selected).pop();
+	stack_t y = stack.at(selected).pop();
+	stack.at(selected).push(y + x);
+	return ERROR_NONE;
 }
 
 FungeError FishStrategy::instructionSub(){
@@ -217,14 +223,11 @@ FungeError FishStrategy::instructionSub(){
 		return ERROR_NONE;
 	}
 
-	if(stack.top().size() >= 2){
-		stack_t x = stack.top().pop();
-		stack_t y = stack.top().pop();
-		stack.top().push(y - x);
-		return ERROR_NONE;
-	}else{
-		return ERROR_UNSPEC;
-	}
+	check_stack(selected, 2);
+	stack_t x = stack.at(selected).pop();
+	stack_t y = stack.at(selected).pop();
+	stack.at(selected).push(y - x);
+	return ERROR_NONE;
 }
 
 FungeError FishStrategy::instructionMult(){
@@ -232,14 +235,11 @@ FungeError FishStrategy::instructionMult(){
 		return ERROR_NONE;
 	}
 
-	if(stack.top().size() >= 2){
-		stack_t x = stack.top().pop();
-		stack_t y = stack.top().pop();
-		stack.top().push(y * x);
-		return ERROR_NONE;
-	}else{
-		return ERROR_UNSPEC;
-	}
+	check_stack(selected, 2);
+	stack_t x = stack.at(selected).pop();
+	stack_t y = stack.at(selected).pop();
+	stack.at(selected).push(y * x);
+	return ERROR_NONE;
 }
 
 FungeError FishStrategy::instructionDiv(){
@@ -247,17 +247,14 @@ FungeError FishStrategy::instructionDiv(){
 		return ERROR_NONE;
 	}
 
-	if(stack.top().size() >= 2){
-		stack_t x = stack.top().pop();
-		stack_t y = stack.top().pop();
-		if(x == 0){
-			return ERROR_UNSPEC;
-		}
-		stack.top().push(y / x);
-		return ERROR_NONE;
-	}else{
+	check_stack(selected, 2);
+	stack_t x = stack.at(selected).pop();
+	stack_t y = stack.at(selected).pop();
+	if(x == 0){
 		return ERROR_UNSPEC;
 	}
+	stack.at(selected).push(y / x);
+	return ERROR_NONE;
 }
 
 FungeError FishStrategy::instructionModu(){
@@ -265,17 +262,14 @@ FungeError FishStrategy::instructionModu(){
 		return ERROR_NONE;
 	}
 
-	if(stack.top().size() >= 2){
-		stack_t x = stack.top().pop();
-		stack_t y = stack.top().pop();
-		if(x == 0){
-			return ERROR_UNSPEC;
-		}
-		stack.top().push(y % x);
-		return ERROR_NONE;
-	}else{
+	check_stack(selected, 2);
+	stack_t x = stack.at(selected).pop();
+	stack_t y = stack.at(selected).pop();
+	if(x == 0){
 		return ERROR_UNSPEC;
 	}
+	stack.at(selected).push(y % x);
+	return ERROR_NONE;
 }
 
 FungeError FishStrategy::instructionEqual(){
@@ -283,14 +277,11 @@ FungeError FishStrategy::instructionEqual(){
 		return ERROR_NONE;
 	}
 
-	if(stack.top().size() >= 2){
-		stack_t x = stack.top().pop();
-		stack_t y = stack.top().pop();
-		stack.top().push(y == x);
-		return ERROR_NONE;
-	}else{
-		return ERROR_UNSPEC;
-	}
+	check_stack(selected, 2);
+	stack_t x = stack.at(selected).pop();
+	stack_t y = stack.at(selected).pop();
+	stack.at(selected).push(y == x);
+	return ERROR_NONE;
 }
 
 FungeError FishStrategy::instructionGreater(){
@@ -298,14 +289,11 @@ FungeError FishStrategy::instructionGreater(){
 		return ERROR_NONE;
 	}
 
-	if(stack.top().size() >= 2){
-		stack_t x = stack.top().pop();
-		stack_t y = stack.top().pop();
-		stack.top().push(y > x);
-		return ERROR_NONE;
-	}else{
-		return ERROR_UNSPEC;
-	}
+	check_stack(selected, 2);
+	stack_t x = stack.at(selected).pop();
+	stack_t y = stack.at(selected).pop();
+	stack.at(selected).push(y > x);
+	return ERROR_NONE;
 }
 
 FungeError FishStrategy::instructionLess(){
@@ -313,14 +301,11 @@ FungeError FishStrategy::instructionLess(){
 		return ERROR_NONE;
 	}
 
-	if(stack.top().size() >= 2){
-		stack_t x = stack.top().pop();
-		stack_t y = stack.top().pop();
-		stack.top().push(y < x);
-		return ERROR_NONE;
-	}else{
-		return ERROR_UNSPEC;
-	}
+	check_stack(selected, 2);
+	stack_t x = stack.at(selected).pop();
+	stack_t y = stack.at(selected).pop();
+	stack.at(selected).push(y < x);
+	return ERROR_NONE;
 }
 
 FungeError FishStrategy::instructionString(inst_t i){
@@ -337,14 +322,11 @@ FungeError FishStrategy::instructionDuplicate(){
 		return ERROR_NONE;
 	}
 
-	if(stack.top().size() >= 1){
-		stack_t x = stack.top().pop();
-		stack.top().push(x);
-		stack.top().push(x);
-		return ERROR_NONE;
-	}else{
-		return ERROR_UNSPEC;
-	}
+	check_stack(selected, 1);
+	stack_t x = stack.at(selected).pop();
+	stack.at(selected).push(x);
+	stack.at(selected).push(x);
+	return ERROR_NONE;
 }
 
 FungeError FishStrategy::instructionRemove(){
@@ -352,24 +334,22 @@ FungeError FishStrategy::instructionRemove(){
 		return ERROR_NONE;
 	}
 
-	if(stack.top().size() >= 1){
-		stack.top().pop();
-		return ERROR_NONE;
-	}else{
-		return ERROR_UNSPEC;
-	}
+	check_stack(selected, 1);
+	stack.at(selected).pop();
+	return ERROR_NONE;
 }
 
 FungeError FishStrategy::instructionSwap2(){
-	if(stack.top().size() >= 2){
-		stack_t x = stack.top().pop();
-		stack_t y = stack.top().pop();
-		stack.top().push(x);
-		stack.top().push(y);
+	if(runner.isMode(FUNGE_MODE_DIVE)){
 		return ERROR_NONE;
-	}else{
-		return ERROR_UNSPEC;
 	}
+
+	check_stack(selected, 2);
+	stack_t x = stack.at(selected).pop();
+	stack_t y = stack.at(selected).pop();
+	stack.at(selected).push(x);
+	stack.at(selected).push(y);
+	return ERROR_NONE;
 }
 
 FungeError FishStrategy::instructionSwap3(){
@@ -377,17 +357,14 @@ FungeError FishStrategy::instructionSwap3(){
 		return ERROR_NONE;
 	}
 
-	if(stack.top().size() >= 3){
-		stack_t x = stack.top().pop();
-		stack_t y = stack.top().pop();
-		stack_t z = stack.top().pop();
-		stack.top().push(x);
-		stack.top().push(z);
-		stack.top().push(y);
-		return ERROR_NONE;
-	}else{
-		return ERROR_UNSPEC;
-	}
+	check_stack(selected, 3);
+	stack_t x = stack.at(selected).pop();
+	stack_t y = stack.at(selected).pop();
+	stack_t z = stack.at(selected).pop();
+	stack.at(selected).push(x);
+	stack.at(selected).push(z);
+	stack.at(selected).push(y);
+	return ERROR_NONE;
 }
 
 FungeError FishStrategy::instructionLength(){
@@ -395,7 +372,8 @@ FungeError FishStrategy::instructionLength(){
 		return ERROR_NONE;
 	}
 
-	stack.top().push(stack.top().size());
+	check_selected(selected);
+	stack.at(selected).push(stack.at(selected).size());
 	return ERROR_NONE;
 }
 
@@ -404,15 +382,16 @@ FungeError FishStrategy::instructionShiftLeft(){
 		return ERROR_NONE;
 	}
 
-	stack_t len = stack.top().size();
+	check_selected(selected);
+	stack_t len = stack.at(selected).size();
 	stack_t temp[len];
 	for(stack_t i = 0; i < len; ++i){
-		temp[i] = stack.top().pop();
+		temp[i] = stack.at(selected).pop();
 	}
 	for(stack_t i = len-1; i > 0; --i){
-		stack.top().push(temp[i-1]);
+		stack.at(selected).push(temp[i-1]);
 	}
-	stack.top().push(temp[len-1]);
+	stack.at(selected).push(temp[len-1]);
 	return ERROR_NONE;
 }
 
@@ -421,14 +400,15 @@ FungeError FishStrategy::instructionShiftRight(){
 		return ERROR_NONE;
 	}
 
-	stack_t len = stack.top().size();
+	check_selected(selected);
+	stack_t len = stack.at(selected).size();
 	stack_t temp[len];
 	for(stack_t i = 0; i < len; ++i){
-		temp[i] = stack.top().pop();
+		temp[i] = stack.at(selected).pop();
 	}
-	stack.top().push(temp[0]);
+	stack.at(selected).push(temp[0]);
 	for(stack_t i = len-1; i > 0; --i){
-		stack.top().push(temp[i]);
+		stack.at(selected).push(temp[i]);
 	}
 	return ERROR_NONE;
 }
@@ -438,13 +418,14 @@ FungeError FishStrategy::instructionReverse(){
 		return ERROR_NONE;
 	}
 
-	stack_t len = stack.top().size();
+	check_selected(selected);
+	stack_t len = stack.at(selected).size();
 	stack_t temp[len];
 	for(stack_t i = 0; i < len; ++i){
-		temp[i] = stack.top().pop();
+		temp[i] = stack.at(selected).pop();
 	}
 	for(stack_t i = 0; i < len; ++i){
-		stack.top().push(temp[i]);
+		stack.at(selected).push(temp[i]);
 	}
 	return ERROR_NONE;
 }
@@ -454,10 +435,13 @@ FungeError FishStrategy::instructionCreateStack(){
 		return ERROR_NONE;
 	}
 
-	stack_t x = stack.top().pop();
-	stack.push();
-	for(stack_t i = 0; i < x; ++i){
-		stack.top().push(stack.second().pop());
+	check_stack(selected, 1);
+	size_t x = stack.at(selected).pop();
+
+	stack.insert(selected);
+	check_stack(selected+1, x);
+	for(size_t i = 0; i < x; ++i){
+		stack.at(selected).push(stack.at(selected+1).pop());
 	}
 	regs.push({false, 0});
 	return ERROR_NONE;
@@ -468,8 +452,10 @@ FungeError FishStrategy::instructionRemoveStack(){
 		return ERROR_NONE;
 	}
 
-	while(stack.top().size() > 0){
-		stack.second().push(stack.top().pop());
+	check_selected(selected);
+	check_selected(selected+1);
+	while(stack.at(selected).size() > 0){
+		stack.at(selected+1).push(stack.at(selected).pop());
 	}
 	stack.pop();
 	regs.pop();
@@ -481,13 +467,10 @@ FungeError FishStrategy::instructionOutChar(){
 		return ERROR_NONE;
 	}
 
-	if(stack.top().size() >= 1){
-		stack_t x = stack.top().pop();
-		std::cout << static_cast<char>(x);
-		return ERROR_NONE;
-	}else{
-		return ERROR_UNSPEC;
-	}
+	check_stack(selected, 1);
+	stack_t x = stack.at(selected).pop();
+	std::cout << static_cast<char>(x);
+	return ERROR_NONE;
 }
 
 FungeError FishStrategy::instructionOutInt(){
@@ -495,13 +478,10 @@ FungeError FishStrategy::instructionOutInt(){
 		return ERROR_NONE;
 	}
 
-	if(stack.top().size() >= 1){
-		stack_t x = stack.top().pop();
-		std::cout << x;
-		return ERROR_NONE;
-	}else{
-		return ERROR_UNSPEC;
-	}
+	check_stack(selected, 1);
+	stack_t x = stack.at(selected).pop();
+	std::cout << x;
+	return ERROR_NONE;
 }
 
 FungeError FishStrategy::instructionIn(){
@@ -509,20 +489,17 @@ FungeError FishStrategy::instructionIn(){
 		return ERROR_NONE;
 	}
 
-	termios oldt;
-	tcgetattr(STDIN_FILENO, &oldt);
-	termios newt = oldt;
-	newt.c_lflag &= ~ECHO;
-	tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-
-	int q = getchar();
-
-	tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+	int q = EOF;
+	{
+		ScopedTermios term(~(ECHO | ICANON));
+		q = getchar();
+	}
 
 	if(q == EOF){
 		q = -1;
 	}
-	stack.top().push(q);
+	check_selected(selected);
+	stack.at(selected).push(q);
 	return ERROR_NONE;
 }
 
@@ -531,14 +508,11 @@ FungeError FishStrategy::instructionGet(){
 		return ERROR_NONE;
 	}
 
-	if(stack.top().size() >= 3){
-		const Vector& storage = ip.getStorage();
-		Vector v = popVector(runner);
-		stack.top().push(static_cast<stack_t>(field.get(v+storage)));
-		return ERROR_NONE;
-	}else{
-		return ERROR_UNSPEC;
-	}
+	check_stack(selected, runner.getUniverse().dimensions());
+	const Vector& storage = ip.getStorage();
+	Vector v = popVector(runner);
+	stack.at(selected).push(static_cast<stack_t>(field.get(v+storage)));
+	return ERROR_NONE;
 }
 
 FungeError FishStrategy::instructionPut(){
@@ -546,14 +520,11 @@ FungeError FishStrategy::instructionPut(){
 		return ERROR_NONE;
 	}
 
-	if(stack.top().size() >= 3){
-		const Vector& storage = ip.getStorage();
-		Vector v = popVector(runner);
-		field.set(v+storage, stack.top().pop());
-		return ERROR_NONE;
-	}else{
-		return ERROR_UNSPEC;
-	}
+	check_stack(selected, runner.getUniverse().dimensions()+1);
+	const Vector& storage = ip.getStorage();
+	Vector v = popVector(runner);
+	field.set(v+storage, stack.at(selected).pop());
+	return ERROR_NONE;
 }
 
 FungeError FishStrategy::instructionEnd(){
@@ -578,11 +549,10 @@ FungeError FishStrategy::instructionRegister(){
 		top.set = false;
 		ret = ERROR_NONE;
 	}else{
-		if(stack.size() >= 1){
-			top.value = stack.top().pop();
-			top.set = true;
-			ret = ERROR_NONE;
-		}
+		check_stack(selected, 1);
+		top.value = stack.at(selected).pop();
+		top.set = true;
+		ret = ERROR_NONE;
 	}
 
 	return ret;

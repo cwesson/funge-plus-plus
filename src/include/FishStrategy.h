@@ -18,6 +18,9 @@ class FishStrategy : public FungeStrategy {
 		
 		virtual FungeStrategy* clone(FungeRunner& r) const override;
 	
+	protected:
+		size_t selected;
+
 	private:
 		FungeError instructionSkip();
 		FungeError instructionPush(stack_t n);

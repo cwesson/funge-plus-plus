@@ -23,7 +23,7 @@ class StarfishStrategy : public FishStrategy {
 		FungeError instructionReturn();
 		FungeError instructionDive();
 		FungeError instructionRise();
-		// Arithmetic
+		// Stack Manipulation
 		FungeError instructionIncrement();
 		FungeError instructionDecrement();
 		// I/O

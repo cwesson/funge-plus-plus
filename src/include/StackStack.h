@@ -85,6 +85,18 @@ class StackStack {
 		void push();
 
 		/**
+		 * Insert a new empty Stack.
+		 * @param pos Position to insert at.
+		 */
+		void insert(size_t pos);
+
+		/**
+		 * Remove a Stack.
+		 * @param pos Position to remove.
+		 */
+		void remove(size_t pos);
+
+		/**
 		 * Get the number of stacks.
 		 * @return Number of stacks.
 		 */

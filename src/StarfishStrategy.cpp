@@ -7,6 +7,8 @@
 #include "StarfishStrategy.h"
 #include "FungeRunner.h"
 #include "FungeUniverse.h"
+#include "FungeUtilities.h"
+#include "FishUtil.h"
 
 namespace Funge {
 
@@ -15,9 +17,20 @@ StarfishStrategy::StarfishStrategy(FungeRunner& r) :
 	fisherstate(FISHER_UP),
 	fishercache({1, 0})
 {
+	// Movement
 	r.pushSemantic('`', std::bind(&StarfishStrategy::instructionFisherman, this));
+	r.pushSemantic('C', std::bind(&StarfishStrategy::instructionCall, this));
+	r.pushSemantic('R', std::bind(&StarfishStrategy::instructionReturn, this));
 	r.pushSemantic('u', std::bind(&StarfishStrategy::instructionDive, this));
 	r.pushSemantic('O', std::bind(&StarfishStrategy::instructionRise, this));
+	// Stack Manipulation
+	r.pushSemantic('I', std::bind(&StarfishStrategy::instructionIncrement, this));
+	r.pushSemantic('D', std::bind(&StarfishStrategy::instructionDecrement, this));
+	// Miscellaneous
+	r.pushSemantic('S', std::bind(&StarfishStrategy::instructionSleep, this));
+	r.pushSemantic('h', std::bind(&StarfishStrategy::instructionHour, this));
+	r.pushSemantic('m', std::bind(&StarfishStrategy::instructionMinute, this));
+	r.pushSemantic('s', std::bind(&StarfishStrategy::instructionSecond, this));
 }
 
 FungeError StarfishStrategy::instructionFisherman(){
@@ -36,6 +49,32 @@ FungeError StarfishStrategy::instructionFisherman(){
 	return ERROR_NONE;
 }
 
+FungeError StarfishStrategy::instructionCall(){
+	if(runner.isMode(FUNGE_MODE_DIVE)){
+		return ERROR_NONE;
+	}
+
+	stack.insert(selected+1);
+	pushVector(runner, ip.getPos(), &stack.at(selected+1));
+
+	check_stack(selected, runner.getUniverse().dimensions());
+	Vector v = popVector(runner, &stack.at(selected));
+	ip.setPos(v);
+	return ERROR_NONE;
+}
+
+FungeError StarfishStrategy::instructionReturn(){
+	if(runner.isMode(FUNGE_MODE_DIVE)){
+		return ERROR_NONE;
+	}
+
+	check_stack(selected+1, runner.getUniverse().dimensions());
+	Vector v = popVector(runner, &stack.at(selected+1));
+	ip.setPos(v);
+	stack.remove(selected+1);
+	return ERROR_NONE;
+}
+
 FungeError StarfishStrategy::instructionDive(){
 	runner.getUniverse().setMode(FUNGE_MODE_DIVE);
 	return ERROR_NONE;
@@ -43,6 +82,74 @@ FungeError StarfishStrategy::instructionDive(){
 
 FungeError StarfishStrategy::instructionRise(){
 	runner.getUniverse().clearMode(FUNGE_MODE_DIVE);
+	return ERROR_NONE;
+}
+
+FungeError StarfishStrategy::instructionIncrement(){
+	if(runner.isMode(FUNGE_MODE_DIVE)){
+		return ERROR_NONE;
+	}
+
+	--selected;
+	return ERROR_NONE;
+}
+
+FungeError StarfishStrategy::instructionDecrement(){
+	if(runner.isMode(FUNGE_MODE_DIVE)){
+		return ERROR_NONE;
+	}
+
+	++selected;
+	return ERROR_NONE;
+}
+
+FungeError StarfishStrategy::instructionSleep(){
+	if(runner.isMode(FUNGE_MODE_DIVE)){
+		return ERROR_NONE;
+	}
+
+	check_stack(selected, 1);
+	stack_t s = stack.at(selected).pop();
+	std::this_thread::sleep_for(std::chrono::milliseconds(100*s));
+	return ERROR_NONE;
+}
+
+FungeError StarfishStrategy::instructionHour(){
+	if(runner.isMode(FUNGE_MODE_DIVE)){
+		return ERROR_NONE;
+	}
+
+	std::time_t now = std::time(nullptr);
+	std::tm* dt = std::localtime(&now);
+
+	check_selected(selected);
+	stack.at(selected).push(dt->tm_hour);
+	return ERROR_NONE;
+}
+
+FungeError StarfishStrategy::instructionMinute(){
+	if(runner.isMode(FUNGE_MODE_DIVE)){
+		return ERROR_NONE;
+	}
+
+	std::time_t now = std::time(nullptr);
+	std::tm* dt = std::localtime(&now);
+
+	check_selected(selected);
+	stack.at(selected).push(dt->tm_min);
+	return ERROR_NONE;
+}
+
+FungeError StarfishStrategy::instructionSecond(){
+	if(runner.isMode(FUNGE_MODE_DIVE)){
+		return ERROR_NONE;
+	}
+
+	std::time_t now = std::time(nullptr);
+	std::tm* dt = std::localtime(&now);
+
+	check_selected(selected);
+	stack.at(selected).push(dt->tm_sec);
 	return ERROR_NONE;
 }
 

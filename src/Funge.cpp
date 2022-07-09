@@ -77,9 +77,13 @@ int createUniverse(const std::filesystem::path& filepath, FungeConfig& config){
 		}else if(ext == ".beq"){
 			config.standard = Funge::FUNGE_98;
 		}else if(ext == ".fish"){
+			config.dimensions = 2;
 			config.standard = Funge::FUNGE_FISH;
+			config.strings = Funge::STRING_MULTISPACE;
 		}else if(ext == ".sf"){
+			config.dimensions = 2;
 			config.standard = Funge::FUNGE_STARFISH;
+			config.strings = Funge::STRING_MULTISPACE;
 		}else{
 			config.standard = Funge::FUNGE_98;
 		}
@@ -132,7 +136,9 @@ int fungemain(int argc, char **argv, char **envp){
 				std::cerr << "Unsupported standard: " << arg << std::endl;
 				return EINVAL;
 			}
-			if(funge_config.standard == Funge::FUNGE_93 || funge_config.standard == Funge::FUNGE_FISH){
+			if(funge_config.standard == Funge::FUNGE_93
+					|| funge_config.standard == Funge::FUNGE_FISH
+					|| funge_config.standard == Funge::FUNGE_STARFISH){
 				funge_config.topo = Funge::TOPO_TORUS;
 				funge_config.strings = Funge::STRING_MULTISPACE;
 				funge_config.cells = Funge::CELL_CHAR;

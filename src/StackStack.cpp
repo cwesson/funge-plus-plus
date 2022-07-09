@@ -33,7 +33,7 @@ Stack& StackStack::second(){
 }
 
 Stack& StackStack::at(size_t x){
-	return *stack[x];
+	return *stack[stack.size()-x-1];
 }
 
 const Stack& StackStack::top() const{
@@ -56,6 +56,18 @@ void StackStack::pop(){
 
 void StackStack::push(){
 	stack.push_back(new Stack(*this));
+}
+
+void StackStack::insert(size_t pos){
+	auto iter = stack.begin();
+	iter += stack.size()-pos;
+	stack.insert(iter, new Stack(*this));
+}
+
+void StackStack::remove(size_t pos){
+	auto iter = stack.begin();
+	iter += stack.size()-pos;
+	stack.erase(iter);
 }
 
 size_t StackStack::size() const{
