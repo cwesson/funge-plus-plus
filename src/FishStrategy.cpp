@@ -17,6 +17,7 @@ namespace Funge {
 FishStrategy::FishStrategy(FungeRunner& r) :
 	FungeStrategy(r),
 	selected(0),
+	file(nullptr),
 	regs()
 {
 	r.pushSemantic(' ', std::bind(&FishStrategy::instructionSkip, this));
@@ -490,9 +491,13 @@ FungeError FishStrategy::instructionIn(){
 	}
 
 	int q = EOF;
-	{
+	if(file == nullptr){
 		ScopedTermios term(~(ECHO | ICANON));
 		q = getchar();
+	}else{
+		char i;
+		*file >> i;
+		q = i;
 	}
 
 	if(q == EOF){

@@ -8,6 +8,7 @@
 
 #include "FungeStrategy.h"
 #include <stack>
+#include <fstream>
 
 namespace Funge {
 
@@ -20,6 +21,7 @@ class FishStrategy : public FungeStrategy {
 	
 	protected:
 		size_t selected;
+		std::fstream* file;
 
 	private:
 		FungeError instructionSkip();

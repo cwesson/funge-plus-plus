@@ -8,6 +8,7 @@
 #include "FungeRunner.h"
 #include "FungeUtilities.h"
 #include "FungeUniverse.h"
+#include "ScopedTermios.h"
 #include <iostream>
 
 namespace Funge {
@@ -192,6 +193,7 @@ FungeError Unefunge93Strategy::instructionSwap(){
 }
 
 FungeError Unefunge93Strategy::instructionNumIn(){
+	ScopedTermios term(~(ICANON));
 	stack_t num = 0;
 	int c = getchar();
 	if(c == EOF){
@@ -216,6 +218,7 @@ FungeError Unefunge93Strategy::instructionNumIn(){
 }
 
 FungeError Unefunge93Strategy::instructionCharIn(){
+	ScopedTermios term(~(ICANON));
 	int q = getchar();
 	if(q == EOF){
 		return ERROR_UNSPEC;

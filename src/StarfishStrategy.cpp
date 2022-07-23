@@ -26,6 +26,8 @@ StarfishStrategy::StarfishStrategy(FungeRunner& r) :
 	// Stack Manipulation
 	r.pushSemantic('I', std::bind(&StarfishStrategy::instructionIncrement, this));
 	r.pushSemantic('D', std::bind(&StarfishStrategy::instructionDecrement, this));
+	// I/O
+	r.pushSemantic('F', std::bind(&StarfishStrategy::instructionFile, this));
 	// Miscellaneous
 	r.pushSemantic('S', std::bind(&StarfishStrategy::instructionSleep, this));
 	r.pushSemantic('h', std::bind(&StarfishStrategy::instructionHour, this));
@@ -101,6 +103,38 @@ FungeError StarfishStrategy::instructionDecrement(){
 
 	++selected;
 	return ERROR_NONE;
+}
+
+FungeError StarfishStrategy::instructionFile(){
+	if(runner.isMode(FUNGE_MODE_DIVE)){
+		return ERROR_NONE;
+	}
+
+	FungeError ret = ERROR_UNSPEC;
+	if(runner.getUniverse().allowFilesystem()){
+		check_stack(selected, 1);
+		size_t x = stack.at(selected).pop();
+		check_stack(selected, x);
+		if(file == nullptr){
+			std::string str;
+			for (size_t i = 0; i < x; ++i){
+				str += stack.at(selected).pop();
+			}
+			file = new std::fstream(str);
+			ret = ERROR_NONE;
+		}else{
+			for (size_t i = 0; i < x; ++i){
+				*file << static_cast<char>(stack.at(selected).pop());
+			}
+			file->close();
+			delete file;
+			file = nullptr;
+		}
+	}else{
+		std::cerr << "Run with -ffilesystem to enable execution." << std::endl;
+		ret = ERROR_NOTAVAIL;
+	}
+	return ret;
 }
 
 FungeError StarfishStrategy::instructionSleep(){
