@@ -26,7 +26,7 @@ class FungeDebugger {
 		void trap(FungeRunner& runner);
 		void addBreakpoint(const Vector& vec);
 		void addWatchpoint(const Vector& vec);
-		void endThread(FungeRunner& runner);
+		void endThread(const FungeRunner& runner);
 	
 	private:
 		enum State {

@@ -21,7 +21,7 @@ FingerprintFungeLib::FingerprintFungeLib(FungeRunner& r, std::istream& file, Fun
 	}
 }
 
-FingerprintFungeLib* FingerprintFungeLib::factory(FungeRunner& r, std::string& name){
+FingerprintFungeLib* FingerprintFungeLib::factory(FungeRunner& r, const std::string& name){
 	std::filesystem::path fl = std::filesystem::canonical("/proc/self/exe").parent_path();
 	fl /= "..";
 	fl /= "fing";

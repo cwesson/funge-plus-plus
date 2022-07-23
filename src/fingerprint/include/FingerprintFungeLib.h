@@ -17,7 +17,7 @@ class FingerprintFungeLib : public Fingerprint {
 		explicit FingerprintFungeLib(FungeRunner& r, std::istream& file, FungeConfig& cfg);
 		virtual ~FingerprintFungeLib() = default;
 
-		static FingerprintFungeLib* factory(FungeRunner& r, std::string& name);
+		static FingerprintFungeLib* factory(FungeRunner& r, const std::string& name);
 		
 		virtual FungeError execute(inst_t cmd) override;
 	

@@ -63,7 +63,7 @@ FungeUniverse::~FungeUniverse(){
 	delete thread;
 }
 
-void FungeUniverse::cloneRunner(FungeRunner& runner){
+void FungeUniverse::cloneRunner(const FungeRunner& runner){
 	addRunner(new FungeRunner(runner));
 }
 

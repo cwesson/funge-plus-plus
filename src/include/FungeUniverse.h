@@ -71,7 +71,7 @@ class FungeUniverse {
 		 * Clone an existing runner.
 		 * @param runner Runner to clone.
 		 */
-		void cloneRunner(FungeRunner& runner);
+		void cloneRunner(const FungeRunner& runner);
 
 		/**
 		 * Create a new runner.

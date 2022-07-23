@@ -79,7 +79,7 @@ void FungeDebugger::addWatchpoint(const Vector& vec){
 	}
 }
 
-void FungeDebugger::endThread(FungeRunner& runner){
+void FungeDebugger::endThread(const FungeRunner& runner){
 	threads[runner.getID()].state = STATE_END;
 }
 
