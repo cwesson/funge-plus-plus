@@ -21,7 +21,8 @@ class FishStrategy : public FungeStrategy {
 	
 	protected:
 		size_t selected;
-		std::fstream* file;
+		std::ifstream* file;
+		std::string filepath;
 
 	private:
 		FungeError instructionSkip();

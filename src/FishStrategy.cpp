@@ -18,6 +18,7 @@ FishStrategy::FishStrategy(FungeRunner& r) :
 	FungeStrategy(r),
 	selected(0),
 	file(nullptr),
+	filepath(),
 	regs()
 {
 	r.pushSemantic(' ', std::bind(&FishStrategy::instructionSkip, this));
@@ -495,9 +496,7 @@ FungeError FishStrategy::instructionIn(){
 		ScopedTermios term(~(ECHO | ICANON));
 		q = getchar();
 	}else{
-		char i;
-		*file >> i;
-		q = i;
+		q = file->get();
 	}
 
 	if(q == EOF){

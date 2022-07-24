@@ -9,6 +9,7 @@
 #include "FungeUniverse.h"
 #include "FungeUtilities.h"
 #include "FishUtil.h"
+#include <algorithm>
 
 namespace Funge {
 
@@ -120,16 +121,20 @@ FungeError StarfishStrategy::instructionFile(){
 			for (size_t i = 0; i < x; ++i){
 				str += stack.at(selected).pop();
 			}
-			file = new std::fstream(str);
-			ret = ERROR_NONE;
+			std::reverse(str.begin(), str.end());
+			file = new std::ifstream(str);
+			filepath = str;
 		}else{
-			for (size_t i = 0; i < x; ++i){
-				*file << static_cast<char>(stack.at(selected).pop());
-			}
 			file->close();
 			delete file;
 			file = nullptr;
+
+			std::ofstream ofile(filepath);
+			for (size_t i = 0; i < x; ++i){
+				ofile << static_cast<char>(stack.at(selected).pop());
+			}
 		}
+		ret = ERROR_NONE;
 	}else{
 		std::cerr << "Run with -ffilesystem to enable execution." << std::endl;
 		ret = ERROR_NOTAVAIL;

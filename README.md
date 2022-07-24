@@ -45,6 +45,10 @@ to special characters, this allows quotes and ANSI escape codes in strings.
 Funge++ stack and funge-space are 64-bit values.  For that reason, FPDP numbers use a single stack cell, and LONG
 numbers are 128-bit.
 
+### Fish and Starfish
+Funge++ also supports ><> (Fish) and *><> (Starfish).  These can be selected using `-std=fish` or `-std=sfish`
+respectively.  Alternatively, Funge++ will automatically detect the languge if a `.fish` or `.sf` file is loaded.
+
 ## Errata
 ### High/Low
 The Funge-98 specification is inconsistent about the delta of the `h` and `l`  instructions (https://github.com/catseye/Funge-98/issues/10).
