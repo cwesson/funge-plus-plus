@@ -119,6 +119,7 @@ test_simple test/test_fing.b98 "1 5 10 100 100 "
 test_simple test/kk.b98 "!12 "
 test_simple test/k_quote.b98 "2 "
 # Other Standards
+## ><>
 test_simple test/test_fish.fish "1234"
 test_simple test/quine.fish `cat test/quine.fish`
 test_simple test/test_stack.fish "12543"
@@ -126,9 +127,12 @@ test_simple test/test_shift.fish "32141432"
 test_simple test/test_string.fish "hello, world"
 test_simple test/test_fact.fish "3628800"
 test_simple test/test_sqrt.fish "8"
+## *><>
+test_simple test/test_starfish.sf "Hello, world!"
 test_simple test/test_fisherman.sf "Hi"
 test_simple test/test_dive.sf "Hello, world!"
 test_simple test/test_call.sf "It works!"
+test_simple test/test_stack.sf "Hello World"
 # Mycology Tests
 test_simple test/Mycology/sanity.bf "0 1 2 3 4 5 6 7 8 9 "
 test_mycology mycology.b98 15

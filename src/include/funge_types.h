@@ -7,6 +7,7 @@
 #pragma once
 
 #include <cstdint>
+#include <cstdio>
 
 namespace Funge {
 
@@ -75,6 +76,59 @@ enum FungeThread {
 	THREAD_FUNGE,  ///< Funge-style threading, default.
 	THREAD_NATIVE, ///< Native OS threading, Funge++ extension.
 };
+
+/**
+ * Funge execution flags.
+ */
+enum FungeMode {
+	// Suppress Summary 0x00200,
+	FUNGE_MODE_DEBUG  = 0x00400, ///< Debug enabled.
+	// Trace Mode       0x00800,
+	// Rc/Funge-98 y    0x01000,
+	FUNGE_MODE_HOVER  = 0x02000, ///< Hover mode enabled by MODE `H`
+	FUNGE_MODE_INVERT = 0x04000, ///< Invert mode enabled by MODE `I`
+	FUNGE_MODE_QUEUE  = 0x08000, ///< Queue mode enabled by MODE `Q`
+	FUNGE_MODE_SWITCH = 0x10000, ///< Switch mode enabled by MODE `S`
+	FUNGE_MODE_DIVE   = 0x20000, ///< Switch mode enabled by *><> `u`
+};
+
+inline FungeMode operator|(FungeMode a, FungeMode b)
+{
+	return static_cast<FungeMode>(static_cast<unsigned int>(a) | static_cast<unsigned int>(b));
+}
+
+inline FungeMode operator|=(FungeMode& a, FungeMode b)
+{
+	a = a | b;
+	return a;
+}
+
+inline FungeMode operator&(FungeMode a, FungeMode b)
+{
+	return static_cast<FungeMode>(static_cast<unsigned int>(a) & static_cast<unsigned int>(b));
+}
+
+inline FungeMode operator&=(FungeMode& a, FungeMode b)
+{
+	a =  a & b;
+	return a;
+}
+
+inline FungeMode operator^(FungeMode a, FungeMode b)
+{
+	return static_cast<FungeMode>(static_cast<unsigned int>(a) ^ static_cast<unsigned int>(b));
+}
+
+inline FungeMode operator^=(FungeMode& a, FungeMode b)
+{
+	a = a ^ b;
+	return a;
+}
+
+inline FungeMode operator~(FungeMode a)
+{
+	return static_cast<FungeMode>(~static_cast<unsigned int>(a));
+}
 
 /**
  * Error codes.

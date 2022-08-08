@@ -116,7 +116,7 @@ class FungeUniverse {
 		void setMode(FungeMode m);
 		void clearMode(FungeMode m);
 		void toggleMode(FungeMode m);
-		stack_t getMode() const;
+		FungeMode getMode() const;
 		bool isMode(FungeMode m) const;
 		bool allowConcurrent() const;
 		bool allowExecute() const;
@@ -140,6 +140,7 @@ class FungeUniverse {
 		
 		explicit FungeUniverse(const FungeConfig& cfg);
 		void addRunner(FungeRunner* runner);
+		void updateMode();
 
 		friend class FungeMultiverse;
 };

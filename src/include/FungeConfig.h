@@ -22,21 +22,6 @@ enum FungeStandard {
 };
 
 /**
- * Funge execution flags.
- */
-enum FungeMode {
-	// Suppress Summary 0x00200,
-	FUNGE_MODE_DEBUG  = 0x00400, ///< Debug enabled.
-	// Trace Mode       0x00800,
-	// Rc/Funge-98 y    0x01000,
-	FUNGE_MODE_HOVER  = 0x02000, ///< Hover mode enabled by MODE `H`
-	FUNGE_MODE_INVERT = 0x04000, ///< Invert mode enabled by MODE `I`
-	FUNGE_MODE_QUEUE  = 0x08000, ///< Queue mode enabled by MODE `Q`
-	FUNGE_MODE_SWITCH = 0x10000, ///< Switch mode enabled by MODE `S`
-	FUNGE_MODE_DIVE   = 0x20000, ///< Switch mode enabled by *><> `u`
-};
-
-/**
  * Funge configuration.
  */
 class FungeConfig {
@@ -51,7 +36,7 @@ class FungeConfig {
 		FungeString strings;                ///< String mode style.
 		FungeCell cells;                    ///< Fungespace cell type.
 		FungeThread threads;                ///< Threading style.
-		unsigned int mode;                  ///< FungeMode flags.
+		FungeMode mode;                     ///< FungeMode flags.
 		bool concurrent;                    ///< Allow concurrent execution (`t`).
 		bool execute;                       ///< Allow external execution (`=`).
 		bool filesystem;                    ///< Allow filesystem access (`i` and `o`).
@@ -72,7 +57,7 @@ class FungeConfig {
 			strings(STRING_SGML),
 			cells(CELL_INT),
 			threads(THREAD_FUNGE),
-			mode(0),
+			mode(),
 			concurrent(true),
 			execute(true),
 			filesystem(true),

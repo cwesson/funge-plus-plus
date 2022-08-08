@@ -7,6 +7,7 @@
 #pragma once
 
 #include "Stack.h"
+#include "funge_types.h"
 #include <vector>
 
 namespace Funge {
@@ -19,22 +20,19 @@ class StackStack {
 	public:
 		/**
 		 * Constructor.
-		 * @param r Runner the StackStack belongs to.
 		 */
-		explicit StackStack(FungeRunner& r);
-
-		/**
-		 * Copy constructor.
-		 */
-		StackStack(const StackStack& orig) = delete;
-		StackStack(const StackStack&& orig) = delete;
+		explicit StackStack();
 
 		/**
 		 * Copy constructor.
 		 * @param orig Original StackStack.
-		 * @param r Runner the new StackStack belongs to.
 		 */
-		StackStack(const StackStack& orig, FungeRunner& r);
+		StackStack(const StackStack& orig);
+
+		/**
+		 * Copy constructor.
+		 */
+		StackStack(const StackStack&& orig) = delete;
 
 		/**
 		 * Get the top Stack.
@@ -103,19 +101,12 @@ class StackStack {
 		size_t size() const;
 
 		/**
-		 * Get the runner.
-		 * @return Runner the StackStack belongs to.
+		 * Set the stack mode.
+		 * @param m New mode.
 		 */
-		FungeRunner& getRunner();
-
-		/**
-		 * Set the runner.
-		 * @param r New runner.
-		 */
-		void setRunner(FungeRunner& r);
+		void setMode(FungeMode m);
 		
 	private:
-		FungeRunner* runner;
 		std::vector<Stack*> stack;
 };
 

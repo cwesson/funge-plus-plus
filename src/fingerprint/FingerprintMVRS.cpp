@@ -23,7 +23,7 @@ FungeError FingerprintMVRS::execute(inst_t cmd){
 		case 'B':{
 			stack_t dim = stack.top().pop();
 			stack_t lng = stack.top().pop();
-			stack_t flgs = stack.top().pop();
+			FungeMode flgs = static_cast<FungeMode>(stack.top().pop());
 			std::string name = popString(stack.top());
 			if(dim == 0){
 				dim = runner.getUniverse().dimensions();

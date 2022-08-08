@@ -41,7 +41,8 @@ class FungeRunner {
 		InstructionPointer& getIP();
 		const InstructionPointer& getIP()const;
 		bool isMode(FungeMode m) const;
-		stack_t getMode() const;
+		void setMode(FungeMode m);
+		FungeMode getMode() const;
 		void setUniverse(FungeUniverse& other);
 
 		void pushSemantic(inst_t i, semantic_t func);

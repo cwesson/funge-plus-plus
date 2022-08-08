@@ -8,19 +8,17 @@
 
 namespace Funge {
 
-StackStack::StackStack(FungeRunner& r) :
-	runner(&r),
+StackStack::StackStack() :
 	stack()
 {
-	stack.push_back(new Stack(*this));
+	stack.push_back(new Stack());
 }
 
-StackStack::StackStack(const StackStack& orig, FungeRunner& r) :
-	runner(&r),
+StackStack::StackStack(const StackStack& orig) :
 	stack()
 {
 	for(size_t i = 0; i < orig.size(); ++i){
-		stack.push_back(new Stack(orig.at(i), *this));
+		stack.push_back(new Stack(orig.at(i)));
 	}
 }
 
@@ -55,13 +53,13 @@ void StackStack::pop(){
 }
 
 void StackStack::push(){
-	stack.push_back(new Stack(*this));
+	stack.push_back(new Stack());
 }
 
 void StackStack::insert(size_t pos){
 	auto iter = stack.begin();
 	iter += stack.size()-pos;
-	stack.insert(iter, new Stack(*this));
+	stack.insert(iter, new Stack());
 }
 
 void StackStack::remove(size_t pos){
@@ -74,12 +72,10 @@ size_t StackStack::size() const{
 	return stack.size();
 }
 
-FungeRunner& StackStack::getRunner(){
-	return *runner;
-}
-
-void StackStack::setRunner(FungeRunner& r){
-	runner = &r;
+void StackStack::setMode(FungeMode m){
+	for(auto s : stack){
+		s->setMode(m);
+	}
 }
 
 }

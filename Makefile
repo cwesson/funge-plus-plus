@@ -19,7 +19,7 @@ LINTARGS := $(INCLUDES) --enable=all --std=c++20
 LD := g++
 LDARGS := -pthread
 
-.PHONY: all clean realclean build funge test lint doc man ut unittest cpputest
+.PHONY: all clean realclean build funge test lint doc man ut unittest cpputest smoketest
 
 GCOV ?= 0
 ifneq ($(GCOV),0)
@@ -44,7 +44,9 @@ bin/%.o: %.cpp
 
 -include $(DEPS)
 
-test: build ut
+test: ut smoketest
+
+smoketest: $(EXEC)
 	@./test/smoketest.sh
 
 lint:
@@ -62,8 +64,8 @@ bin/funge.1: doc/man.md
 	@pandoc $< -s -t man -o $@
 
 CPPUTESTLIB := test/cpputest/src/CppUTest/libCppUTest.a
-UTCPPARGS := -I src/include -I test/cpputest/include -lpthread -std=c++2a
-UTSRCS := test/ut/unittest.cpp src/Vector.cpp src/VectorRange.cpp
+UTCPPARGS := -I src/include -I test/cpputest/include -lpthread -Wall -Wextra -Werror -std=c++2a
+UTSRCS := test/ut/unittest.cpp test/ut/StackTest.cpp src/Stack.cpp test/ut/VectorTest.cpp src/Vector.cpp src/VectorRange.cpp
 UTBIN := bin/unittest
 
 ut: unittest

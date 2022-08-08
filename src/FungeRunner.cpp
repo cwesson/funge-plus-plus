@@ -15,7 +15,7 @@ size_t FungeRunner::count = 0;
 FungeRunner::FungeRunner(FungeUniverse& uni, const Vector& pos, const Vector& delta) :
 	id(count++),
 	universe(&uni),
-	stack(new StackStack(*this)),
+	stack(new StackStack()),
 	ip(*this),
 	parent(nullptr),
 	errorHandler(nullptr),
@@ -25,6 +25,7 @@ FungeRunner::FungeRunner(FungeUniverse& uni, const Vector& pos, const Vector& de
 {
 	ip.setPos(pos);
 	ip.setDelta(delta);
+	stack->setMode(getMode());
 }
 
 FungeRunner::FungeRunner(FungeUniverse& uni, const Vector& pos, const Vector& delta, FungeRunner& r) :
@@ -38,15 +39,15 @@ FungeRunner::FungeRunner(FungeUniverse& uni, const Vector& pos, const Vector& de
 	stringState(*this),
 	state(&normalState)
 {
-	stack->setRunner(*this);
 	ip.setPos(pos);
 	ip.setDelta(delta);
+	stack->setMode(getMode());
 }
 
 FungeRunner::FungeRunner(const FungeRunner& runner) :
 	id(count++),
 	universe(runner.universe),
-	stack(new StackStack(*runner.stack, *this)),
+	stack(new StackStack(*runner.stack)),
 	ip(runner.ip, *this),
 	parent(&runner),
 	errorHandler(runner.errorHandler),
@@ -56,6 +57,7 @@ FungeRunner::FungeRunner(const FungeRunner& runner) :
 {
 	ip.reflect();
 	ip.next();
+	stack->setMode(getMode());
 }
 
 FungeRunner::~FungeRunner(){
@@ -148,7 +150,11 @@ bool FungeRunner::isMode(FungeMode m) const {
 	return universe->isMode(m);
 }
 
-stack_t FungeRunner::getMode() const {
+void FungeRunner::setMode(FungeMode m){
+	stack->setMode(m);
+}
+
+FungeMode FungeRunner::getMode() const {
 	return universe->getMode();
 }
 
