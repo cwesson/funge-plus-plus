@@ -21,7 +21,7 @@ class FungeDebugger {
 		~FungeDebugger() = default;
 
 		void tick(FungeRunner& runner);
-		void write(Field& field, const Vector& pos, inst_t inst);
+		void write(const Vector& pos, inst_t inst);
 		void swbreak(FungeRunner& runner);
 		void trap(FungeRunner& runner);
 		void addBreakpoint(const Vector& vec);
@@ -48,7 +48,7 @@ class FungeDebugger {
 		};
 		
 		void intro(FungeRunner& runner);
-		void debugWrite(const Field& field, const Vector& pos, inst_t inst);
+		void debugWrite(const Vector& pos, inst_t inst);
 
 		FungeUniverse& universe;
 		std::set<Vector> breakpoints;

@@ -15,7 +15,7 @@ FungeUniverse::FungeUniverse(std::istream& file, Field::FileFormat fmt, const Fu
 	exitcode(0),
 	config(cfg),
 	debug(*this),
-	field(file, fmt, cfg.dimensions, *this),
+	field(file, fmt, cfg.dimensions, cfg.cells, debug),
 	thread(nullptr),
 	threads(),
 	runners(),
@@ -25,6 +25,9 @@ FungeUniverse::FungeUniverse(std::istream& file, Field::FileFormat fmt, const Fu
 	cv()
 {
 	thread = new std::thread(std::ref(*this));
+	if(cfg.dimensions == 0){
+		config.dimensions = field.size();
+	}
 }
 
 FungeUniverse::FungeUniverse(const FungeConfig& cfg):
@@ -32,7 +35,7 @@ FungeUniverse::FungeUniverse(const FungeConfig& cfg):
 	exitcode(0),
 	config(cfg),
 	debug(*this),
-	field(cfg.dimensions, *this),
+	field(cfg.dimensions, cfg.cells, debug),
 	thread(nullptr),
 	threads(),
 	runners(),
@@ -42,6 +45,9 @@ FungeUniverse::FungeUniverse(const FungeConfig& cfg):
 	cv()
 {
 	thread = new std::thread(std::ref(*this));
+	if(cfg.dimensions == 0){
+		config.dimensions = field.size();
+	}
 }
 
 FungeUniverse::~FungeUniverse(){
@@ -224,10 +230,6 @@ FungeTopo FungeUniverse::topology() const {
 
 FungeString FungeUniverse::stringStyle() const {
 	return config.strings;
-}
-
-FungeCell FungeUniverse::cellSize() const {
-	return config.cells;
 }
 
 void FungeUniverse::setMode(FungeMode m){

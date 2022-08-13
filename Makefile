@@ -71,12 +71,12 @@ UTBIN := bin/unittest
 ut: unittest
 
 unittest: $(UTBIN)
-	@$(UTBIN) -c -v -ojunit
 
 $(UTBIN): $(UTSRCS) $(CPPUTESTLIB)
 	@mkdir -p $(dir $@)
 	@echo "LD  " $@
 	@$(CPP) $(UTCPPARGS) -o $@ $^
+	@$(UTBIN) -c -v -ojunit
 
 cpputest: $(CPPUTESTLIB)
 
@@ -84,7 +84,7 @@ $(CPPUTESTLIB):
 	cd test/cpputest; cmake .
 	make -C test/cpputest
 
-.NOTPARALLEL: clean realclean
+.NOTPARALLEL:
 
 clean:
 	@echo CLEAN bin/

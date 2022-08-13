@@ -90,7 +90,6 @@ void Defunge::debug(FungeDebugger* dbg, FungeRunner* run){
 			.backtrace = {},
 			.state = FungeDebugger::STATE_START,
 		}});
-		dbg->intro(*runner);
 		std::cout << "New IP " << id << std::endl;
 	}
 	dbg->lastThread = id;

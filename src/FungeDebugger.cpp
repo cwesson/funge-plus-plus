@@ -25,13 +25,14 @@ FungeDebugger::FungeDebugger(FungeUniverse& uni) :
 
 void FungeDebugger::tick(FungeRunner& runner){
 	if(runner.isMode(FUNGE_MODE_DEBUG)){
+		intro(runner);
 		Defunge::getInstance().debug(this, &runner);
 	}
 }
 
-void FungeDebugger::write(Field& field, const Vector& pos, inst_t inst){
-	if(field.getUniverse().isMode(FUNGE_MODE_DEBUG)){
-		debugWrite(field, pos, inst);
+void FungeDebugger::write(const Vector& pos, inst_t inst){
+	if(universe.isMode(FUNGE_MODE_DEBUG)){
+		debugWrite(pos, inst);
 	}
 }
 
@@ -53,12 +54,12 @@ void FungeDebugger::trap(FungeRunner& runner){
 	}
 }
 
-void FungeDebugger::debugWrite(const Field& field, const Vector& pos, inst_t inst){
+void FungeDebugger::debugWrite(const Vector& pos, inst_t inst){
 	if(watchpoints.contains(pos)){
 		threads[lastThread].state = STATE_BREAK;
 		intro(*threads[lastThread].runner);
 		std::cout << "Watchpoint " << pos << std::endl;
-		inst_t old = field.get(pos);
+		inst_t old = universe.getField().get(pos);
 		std::cout << "Old value = (" << old  << ") \"" << static_cast<char>(old) << "\"" << std::endl;
 		std::cout << "New value = (" << inst << ") \"" << static_cast<char>(inst) << "\"" << std::endl;
 		Defunge::getInstance().debug(this, threads[lastThread].runner);

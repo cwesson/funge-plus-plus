@@ -40,7 +40,7 @@ void InstructionPointer::set(inst_t i){
 }
 
 bool InstructionPointer::inField(const Field& field) const {
-	for(size_t n = 0; n < field.dimensions(); ++n){
+	for(size_t n = 0; n < runner.getUniverse().dimensions(); ++n){
 		if(pos.get(n) < field.min(n) || pos.get(n) > field.max(n)){
 			return false;
 		}
@@ -52,7 +52,7 @@ void InstructionPointer::next(){
 	if(!stopped){
 		pos += delta;
 		const Field& field = runner.getField();
-		if(field.topology() == TOPO_TORUS){
+		if(runner.getUniverse().topology() == TOPO_TORUS){
 			if(pos.get(0) > 80){
 				pos.set(0, 0);
 			}else if(pos.get(0) < 0){

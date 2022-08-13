@@ -112,7 +112,6 @@ class FungeUniverse {
 		FungeStandard standard() const;
 		FungeTopo topology() const;
 		FungeString stringStyle() const;
-		FungeCell cellSize() const;
 		void setMode(FungeMode m);
 		void clearMode(FungeMode m);
 		void toggleMode(FungeMode m);

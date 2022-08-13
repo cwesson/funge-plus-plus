@@ -12,7 +12,7 @@
 #include <map>
 
 namespace Funge {
-class FungeUniverse;
+class FungeDebugger;
 
 /**
  * Stores the state of the fungespace.
@@ -35,16 +35,18 @@ class Field {
 		 * @param file Input file stream.
 		 * @param fmt Input file format.
 		 * @param dim Initial number of dimensions.
-		 * @param uni Universe the Field is part of.
+		 * @param csize Cell size.
+		 * @param dbg Debugger.
 		 */
-		Field(std::istream& file, FileFormat fmt, size_t dim, FungeUniverse& uni);
+		Field(std::istream& file, FileFormat fmt, size_t dim, FungeCell csize, FungeDebugger& dbg);
 
 		/**
 		 * Constructor.
 		 * @param dim Initial number of dimensions.
-		 * @param uni Universe the Field is part of.
+		 * @param csize Cell size.
+		 * @param dbg Debugger.
 		 */
-		Field(size_t dim, FungeUniverse& uni);
+		Field(size_t dim, FungeCell csize, FungeDebugger& dbg);
 		
 		/**
 		 * Set the value at position p.
@@ -79,18 +81,6 @@ class Field {
 		void dump(const Vector& start, const Vector& delta, std::ostream& file, bool binary=false) const;
 
 		/**
-		 * Get the fungespace topology.
-		 * @return Fungespace topology.
-		 */
-		FungeTopo topology() const;
-
-		/**
-		 * Get the number of dimensions of the fungespace.
-		 * @return Number of dimensions.
-		 */
-		size_t dimensions() const;
-
-		/**
 		 * Get the minimum position in dimension d.
 		 * @param d Dimension to check.
 		 * @return Minimum position.
@@ -105,11 +95,11 @@ class Field {
 		dim_t max(size_t d) const;
 
 		/**
-		 * Get the universe the fungespace is in.
-		 * @return Universe.
+		 * Get the number of dimensions in the field.
+		 * @return Number of dimensions.
 		 */
-		FungeUniverse& getUniverse();
-		
+		size_t size() const;
+
 		/**
 		 * Get the value at position v.
 		 * @param v Position to get.
@@ -129,11 +119,13 @@ class Field {
 		friend std::ostream& operator<<(std::ostream& os, const Field& rhs);
 	
 	private:
-		FungeUniverse& universe;
+		FungeDebugger& debugger;
 		std::map<const Vector, inst_t> field;
 		std::vector<dim_t> maxs;
 		std::vector<dim_t> mins;
 		std::vector<inst_t> planes;
+		size_t dimensions;
+		FungeCell cellsize;
 		
 		void parseBeq(std::istream& file);
 		void parseFungeLib(std::istream& file);
