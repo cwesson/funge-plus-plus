@@ -65,7 +65,7 @@ bin/funge.1: doc/man.md
 
 CPPUTESTLIB := test/cpputest/src/CppUTest/libCppUTest.a
 UTCPPARGS := -I src/include -I test/cpputest/include -lpthread -Wall -Wextra -Werror -std=c++2a
-UTSRCS := test/ut/unittest.cpp test/ut/StackTest.cpp src/Stack.cpp test/ut/VectorTest.cpp src/Vector.cpp src/VectorRange.cpp
+UTSRCS := $(shell find test/ut/ -name \*.cpp) src/StackStack.cpp src/Stack.cpp src/Vector.cpp src/VectorRange.cpp
 UTBIN := bin/unittest
 
 ut: unittest

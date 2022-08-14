@@ -35,6 +35,11 @@ class StackStack {
 		StackStack(const StackStack&& orig) = delete;
 
 		/**
+		 * Destructor.
+		 */
+		~StackStack();
+
+		/**
 		 * Get the top Stack.
 		 * @return Top Stack.
 		 */

@@ -14,6 +14,13 @@ StackStack::StackStack() :
 	stack.push_back(new Stack());
 }
 
+StackStack::~StackStack()
+{
+	while(stack.size() > 0){
+		pop();
+	}
+}
+
 StackStack::StackStack(const StackStack& orig) :
 	stack()
 {
