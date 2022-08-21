@@ -120,7 +120,7 @@ void FingerprintMVRS::copySpace(const Field& fsrc, const Vector& src, const Vect
 	VectorRange range(Vector{0}, sz);
 	for(range.begin(); *range != range.end(); ++range){
 		inst_t i = fsrc.get(src + *range);
-		fdest.set(dest + *range, i);
+		fdest.put(dest + *range, i);
 	}
 }
 

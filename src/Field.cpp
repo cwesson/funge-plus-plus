@@ -5,19 +5,18 @@
  */
 
 #include "Field.h"
-#include "FungeDebugger.h"
 #include <limits>
 #include <string>
 #include <sstream>
 
 namespace Funge{
 
-Field::Field(std::istream& file, FileFormat fmt, size_t dim, FungeCell csize, FungeDebugger& dbg) :
-	debugger(dbg),
+Field::Field(std::istream& file, FileFormat fmt, size_t dim, FungeCell csize) :
 	field(),
 	maxs(),
 	mins(),
 	planes(),
+	observers(),
 	dimensions(dim),
 	cellsize(csize)
 {
@@ -38,12 +37,12 @@ Field::Field(std::istream& file, FileFormat fmt, size_t dim, FungeCell csize, Fu
 	}
 }
 
-Field::Field(size_t dim, FungeCell csize, FungeDebugger& dbg) :
-	debugger(dbg),
+Field::Field(size_t dim, FungeCell csize) :
 	field(),
 	maxs(),
 	mins(),
 	planes(),
+	observers(),
 	dimensions(dim),
 	cellsize(csize)
 {
@@ -84,7 +83,7 @@ Vector Field::parse(const Vector& start, std::istream& file, bool binary){
 			}
 		}else{
 			if(i != ' '){
-				set(v, i);
+				put(v, i);
 			}
 			increment(0, v, max); // ++x
 			last = i;
@@ -148,7 +147,7 @@ void Field::parseBeq(std::istream& file){
 			for(size_t i = 0; i < lines; ++i){
 				std::getline(file, line);
 				for(auto c : line){
-					set(pos, c);
+					put(pos, c);
 					pos.set(0, pos.get(0)+1); // ++x
 				}
 				pos.set(0, origin.get(0)); // x=0
@@ -180,7 +179,7 @@ void Field::parseFungeLib(std::istream& file){
 		}
 
 		for(char i : line){
-			set(pos, i);
+			put(pos, i);
 			pos += Vector{1};
 		}
 		pos += Vector{0, 1};  // ++y
@@ -246,14 +245,14 @@ dim_t Field::max(size_t d) const{
 	return ret;
 }
 
-void Field::set(const Vector& p, inst_t v){
+void Field::put(const Vector& p, inst_t v){
 	while(maxs.size() < p.size()){
 		maxs.push_back(0);
 	}
 	while(mins.size() < p.size()){
 		mins.push_back(0);
 	}
-	debugger.write(p, v);
+	callObservers(p, v);
 	if(v == ' '){
 		auto find = field.find(p);
 		if(find != field.end()){
@@ -299,7 +298,11 @@ void Field::set(const Vector& p, inst_t v){
 }
 
 size_t Field::size() const {
-	return dimensions;
+	if(dimensions == 0){
+		return maxs.size();
+	}else{
+		return dimensions;
+	}
 }
 
 inst_t Field::get(const Vector& p) const{
@@ -321,6 +324,16 @@ inst_t Field::operator[](const Vector& v) const{
 
 const std::vector<inst_t>& Field::hasPlanes() const{
 	return planes;
+}
+
+void Field::addObserver(std::function<void(const Vector&, inst_t)> cb){
+	observers.push_back(cb);
+}
+
+void Field::callObservers(const Vector& v, inst_t i) const{
+	for(auto cb : observers){
+		cb(v, i);
+	}
 }
 
 std::ostream& operator<<(std::ostream& os, const Field& rhs){

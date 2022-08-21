@@ -527,7 +527,7 @@ FungeError FishStrategy::instructionPut(){
 	check_stack(selected, runner.getUniverse().dimensions()+1);
 	const Vector& storage = ip.getStorage();
 	Vector v = popVector(runner);
-	field.set(v+storage, stack.at(selected).pop());
+	field.put(v+storage, stack.at(selected).pop());
 	return ERROR_NONE;
 }
 

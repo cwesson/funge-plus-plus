@@ -41,7 +41,7 @@ FungeError FingerprintORTH::execute(inst_t cmd){
 			stack_t y = stack.top().pop();
 			stack_t i = stack.top().pop();
 			Vector v({x, y});
-			field.set(v, static_cast<inst_t>(i));
+			field.put(v, static_cast<inst_t>(i));
 		} break;
 		case 'S':{
 			std::string str = popString(stack.top());

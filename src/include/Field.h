@@ -10,9 +10,10 @@
 #include "funge_types.h"
 #include <iostream>
 #include <map>
+#include <vector>
+#include <functional>
 
 namespace Funge {
-class FungeDebugger;
 
 /**
  * Stores the state of the fungespace.
@@ -36,24 +37,22 @@ class Field {
 		 * @param fmt Input file format.
 		 * @param dim Initial number of dimensions.
 		 * @param csize Cell size.
-		 * @param dbg Debugger.
 		 */
-		Field(std::istream& file, FileFormat fmt, size_t dim, FungeCell csize, FungeDebugger& dbg);
+		Field(std::istream& file, FileFormat fmt, size_t dim, FungeCell csize);
 
 		/**
 		 * Constructor.
 		 * @param dim Initial number of dimensions.
 		 * @param csize Cell size.
-		 * @param dbg Debugger.
 		 */
-		Field(size_t dim, FungeCell csize, FungeDebugger& dbg);
+		Field(size_t dim, FungeCell csize);
 		
 		/**
 		 * Set the value at position p.
 		 * @param p Position to set.
 		 * @param v New value.
 		 */
-		void set(const Vector& p, inst_t v);
+		void put(const Vector& p, inst_t v);
 
 		/**
 		 * Get the value at position p.
@@ -112,18 +111,24 @@ class Field {
 		 * @return List of planes.
 		 */
 		const std::vector<inst_t>& hasPlanes() const;
-		
+
+		/**
+		 * Add a write observer.
+		 * @param cb Function to call on write.
+		 */
+		void addObserver(std::function<void(const Vector&, inst_t)> cb);
+
 		/**
 		 * Output stream operator.
 		 */
 		friend std::ostream& operator<<(std::ostream& os, const Field& rhs);
 	
 	private:
-		FungeDebugger& debugger;
 		std::map<const Vector, inst_t> field;
 		std::vector<dim_t> maxs;
 		std::vector<dim_t> mins;
 		std::vector<inst_t> planes;
+		std::vector<std::function<void(const Vector&, inst_t)>> observers;
 		size_t dimensions;
 		FungeCell cellsize;
 		
@@ -131,6 +136,7 @@ class Field {
 		void parseFungeLib(std::istream& file);
 		void increment(dim_t d, Vector& v, Vector& max);
 		void reset(dim_t d, Vector& v, const Vector& start, Vector& max);
+		void callObservers(const Vector& v, inst_t i) const;
 };
 
 }

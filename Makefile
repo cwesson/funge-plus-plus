@@ -63,9 +63,9 @@ bin/funge.1: doc/man.md
 	@echo "MAN "
 	@pandoc $< -s -t man -o $@
 
-CPPUTESTLIB := test/cpputest/src/CppUTest/libCppUTest.a
-UTCPPARGS := -I src/include -I test/cpputest/include -lpthread -Wall -Wextra -Werror -std=c++2a
-UTSRCS := $(shell find test/ut/ -name \*.cpp) src/StackStack.cpp src/Stack.cpp src/Vector.cpp src/VectorRange.cpp
+CPPUTESTLIB := test/cpputest/src/CppUTest/libCppUTest.a test/cpputest/src/CppUTestExt/libCppUTestExt.a
+UTCPPARGS := -I src/include -I test/cpputest/include -lpthread -Wall -Wextra -Werror -std=c++2a --include test/ut/new_macros.h
+UTSRCS := $(shell find test/ut/ -name \*.cpp) src/Field.cpp src/StackStack.cpp src/Stack.cpp src/Vector.cpp src/VectorRange.cpp
 UTBIN := bin/unittest
 
 ut: unittest
@@ -89,6 +89,7 @@ $(CPPUTESTLIB):
 clean:
 	@echo CLEAN bin/
 	@rm -f $(OBJS) $(DEPS)
+	make -C test/cpputest clean
 
 realclean: clean
 	@echo REALCLEAN

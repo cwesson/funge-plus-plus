@@ -9,6 +9,7 @@
 #include "FungeConfig.h"
 #include "FungeMultiverse.h"
 #include "FungeUniverse.h"
+#include "Field.h"
 #include <iostream>
 
 namespace Funge {
@@ -75,6 +76,9 @@ void FungeDebugger::addBreakpoint(const Vector& vec){
 
 void FungeDebugger::addWatchpoint(const Vector& vec){
 	if(vec.size() > 0){
+		if(watchpoints.empty()){
+			universe.getField().addObserver(std::bind(&FungeDebugger::write, this, std::placeholders::_1, std::placeholders::_2));
+		}
 		std::lock_guard<std::recursive_mutex> guard(mutex);
 		watchpoints.insert(vec);
 	}

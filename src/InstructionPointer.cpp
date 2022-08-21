@@ -36,7 +36,7 @@ inst_t InstructionPointer::get() const{
 }
 
 void InstructionPointer::set(inst_t i){
-	runner.getField().set(pos, i);
+	runner.getField().put(pos, i);
 }
 
 bool InstructionPointer::inField(const Field& field) const {

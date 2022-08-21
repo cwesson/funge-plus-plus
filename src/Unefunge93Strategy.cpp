@@ -264,7 +264,7 @@ FungeError Unefunge93Strategy::instructionGet(){
 FungeError Unefunge93Strategy::instructionPut(){
 	const Vector& storage = ip.getStorage();
 	Vector v = popVector(runner);
-	field.set(v+storage, stack.top().pop());
+	field.put(v+storage, stack.top().pop());
 	return ERROR_NONE;
 }
 

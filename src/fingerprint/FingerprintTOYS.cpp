@@ -60,7 +60,7 @@ FungeError FingerprintTOYS::execute(inst_t cmd){
 			if(sizeToRange(size)){
 				VectorRange range(Vector({0}), size);
 				for(range.begin(); *range != range.end(); ++range){
-					field.set(dest + *range, stack.top().pop());
+					field.put(dest + *range, stack.top().pop());
 				}
 			}
 		} break;
@@ -139,7 +139,7 @@ FungeError FingerprintTOYS::execute(inst_t cmd){
 			delta.reverse();
 			Vector v = ip.getPos() + delta;
 			stack_t a = stack.top().pop();
-			field.set(v, a);
+			field.put(v, a);
 		} break;
 		case 'R':{
 			Vector delta = ip.getDelta();
@@ -155,7 +155,7 @@ FungeError FingerprintTOYS::execute(inst_t cmd){
 			if(sizeToRange(size)){
 				VectorRange range(Vector({0}), size);
 				for(range.begin(); *range != range.end(); ++range){
-					field.set(dest + *range, i);
+					field.put(dest + *range, i);
 				}
 			}
 		} break;
@@ -268,9 +268,9 @@ void FingerprintTOYS::copySpace(const Vector& src, const Vector& sz, const Vecto
 		VectorRange range(start, end);
 		for(range.begin(); *range != range.end(); ++range){
 			inst_t i = field.get(src + *range);
-			field.set(dest + *range, i);
+			field.put(dest + *range, i);
 			if(move){
-				field.set(src + *range, ' ');
+				field.put(src + *range, ' ');
 			}
 		}
 	}
