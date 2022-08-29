@@ -42,7 +42,7 @@ void Unefunge98Strategy::init(){
 	// Flow Control
 	runner.pushSemantic(';', std::bind(&Unefunge98Strategy::instructionJumpOver, this));
 	runner.pushSemantic('j', std::bind(&Unefunge98Strategy::instructionJumpForward, this));
-	runner.pushSemantic('r', std::bind(&Unefunge98Strategy::instructionReflect, this));
+	runner.pushSemantic('r', std::bind(&Unefunge98Strategy::instructionReflect, this), FungeSemantic::MOVEMENT);
 	runner.pushSemantic('x', std::bind(&Unefunge98Strategy::instructionAbsolute, this));
 	runner.pushSemantic('k', std::bind(&Unefunge98Strategy::instructionIterate, this));
 	runner.pushSemantic('q', std::bind(&Unefunge98Strategy::instructionQuit, this));
@@ -202,7 +202,7 @@ FungeError Unefunge98Strategy::instructionBegin(){
 	ip.setStorage(ip.getPos()+ip.getDelta());
 	
 	if(runner.isMode(FUNGE_MODE_SWITCH)){
-		ip.set('}');
+		ip.put('}');
 	}
 	return ERROR_NONE;
 }
@@ -232,7 +232,7 @@ FungeError Unefunge98Strategy::instructionEnd(){
 	}
 	
 	if(runner.isMode(FUNGE_MODE_SWITCH)){
-		ip.set('{');
+		ip.put('{');
 	}
 	return ret;
 }
@@ -302,7 +302,7 @@ FungeError Unefunge98Strategy::instructionFetch(){
 
 FungeError Unefunge98Strategy::instructionStore(){
 	ip.next();
-	ip.set((char)(int)stack.top().pop());
+	ip.put((char)(int)stack.top().pop());
 	return ERROR_NONE;
 }
 
@@ -326,7 +326,7 @@ FungeError Unefunge98Strategy::instructionLoad(){
 	}
 	
 	if(runner.isMode(FUNGE_MODE_SWITCH)){
-		ip.set(')');
+		ip.put(')');
 	}
 	return ret;
 }
@@ -348,7 +348,7 @@ FungeError Unefunge98Strategy::instructionUnload(){
 	}
 	
 	if(runner.isMode(FUNGE_MODE_SWITCH)){
-		ip.set('(');
+		ip.put('(');
 	}
 	return ret;
 }

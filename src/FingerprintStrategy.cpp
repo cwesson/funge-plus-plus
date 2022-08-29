@@ -14,6 +14,7 @@
 #include "FingerprintDIRF.h"
 #include "FingerprintDynamic.h"
 #include "FingerprintFING.h"
+#include "FingerprintFISH.h"
 #include "FingerprintFIXP.h"
 #include "FingerprintFloat.h"
 #include "FingerprintFPRT.h"
@@ -62,10 +63,6 @@ FingerprintStrategy::~FingerprintStrategy(){
 	}
 }
 
-FungeError FingerprintStrategy::execute(Fingerprint* fing, inst_t i){
-	return fing->execute(i);
-}
-
 Fingerprint* FingerprintStrategy::loadBuiltin(uint64_t fingerprint){
 	Fingerprint* fing = nullptr;
 	switch(fingerprint){
@@ -76,6 +73,7 @@ Fingerprint* FingerprintStrategy::loadBuiltin(uint64_t fingerprint){
 		case 0x44425547: fing = new FingerprintDBUG(runner); break;
 		case 0x44495246: fing = new FingerprintDIRF(runner); break;
 		case 0x46494e47: fing = new FingerprintFING(runner); break;
+		case 0x46495348: fing = new FingerprintFISH(runner); break;
 		case 0x46495850: fing = new FingerprintFIXP(runner); break;
 		case 0x46504450: fing = new FingerprintFloat<double>(runner); break;
 		case 0x46505254: fing = new FingerprintFPRT(runner); break;
@@ -126,9 +124,6 @@ bool FingerprintStrategy::load(uint64_t fingerprint){
 	if(fing != nullptr){
 		available[fingerprint] = fing;
 		loaded.push_back(fingerprint);
-		for(auto i : fing->instructions()){
-			runner.pushSemantic(i, std::bind(&FingerprintStrategy::execute, this, fing, i));
-		}
 		fing->activate();
 		//std::cout << "Loaded 0x" << std::hex << fingerprint << std::dec << std::endl;
 		return true;

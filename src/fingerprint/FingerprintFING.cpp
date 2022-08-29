@@ -29,13 +29,13 @@ FungeError FingerprintFING::execute(inst_t cmd){
 				b += 'A';
 			}
 			if(b >= 'A' && b <= 'Z'){
-				semantic_t sema = runner.popSemantic(a);
-				semantic_t semb = runner.popSemantic(b);
+				FungeSemantic* sema = runner.popSemantic(a);
+				FungeSemantic* semb = runner.popSemantic(b);
 				if(sema == nullptr){
-					sema = std::bind(&FingerprintFING::instructionReflect, this);
+					sema = new FungeSemantic(std::bind(&FingerprintFING::instructionReflect, this));
 				}
 				if(semb == nullptr){
-					semb = std::bind(&FingerprintFING::instructionReflect, this);
+					semb = new FungeSemantic(std::bind(&FingerprintFING::instructionReflect, this));
 				}
 				runner.pushSemantic(a, semb);
 				runner.pushSemantic(b, sema);
@@ -68,9 +68,9 @@ FungeError FingerprintFING::execute(inst_t cmd){
 				src += 'A';
 			}
 			if(src >= 'A' && src <= 'Z'){
-				semantic_t sem = runner.getSemantic(src);
+				FungeSemantic* sem = runner.getSemantic(src);
 				if(sem == nullptr){
-					sem = std::bind(&FingerprintFING::instructionReflect, this);
+					sem = new FungeSemantic(std::bind(&FingerprintFING::instructionReflect, this));
 				}
 				runner.pushSemantic(dst, sem);
 			}else{

@@ -158,15 +158,19 @@ FungeMode FungeRunner::getMode() const {
 	return universe->getMode();
 }
 
-void FungeRunner::pushSemantic(inst_t i, semantic_t func){
+void FungeRunner::pushSemantic(inst_t i, FungeSemantic* func){
 	normalState.pushSemantic(i, func);
 }
 
-semantic_t FungeRunner::popSemantic(inst_t i){
+void FungeRunner::pushSemantic(inst_t i, std::function<FungeError()> func, FungeSemantic::SemanticFlags flg){
+	normalState.pushSemantic(i, new FungeSemantic(func, flg));
+}
+
+FungeSemantic* FungeRunner::popSemantic(inst_t i){
 	return normalState.popSemantic(i);
 }
 
-semantic_t FungeRunner::getSemantic(inst_t i){
+FungeSemantic* FungeRunner::getSemantic(inst_t i){
 	return normalState.getSemantic(i);
 }
 

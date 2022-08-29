@@ -12,6 +12,7 @@
 namespace Funge {
 
 InstructionPointer::InstructionPointer(FungeRunner& r) :
+	observers(),
 	runner(r),
 	stopped(false),
 	pos({0}),
@@ -22,6 +23,7 @@ InstructionPointer::InstructionPointer(FungeRunner& r) :
 }
 
 InstructionPointer::InstructionPointer(const InstructionPointer& orig, FungeRunner& r) :
+	observers(),
 	runner(r),
 	stopped(orig.stopped),
 	pos(orig.pos),
@@ -35,7 +37,7 @@ inst_t InstructionPointer::get() const{
 	return runner.getField()[pos];
 }
 
-void InstructionPointer::set(inst_t i){
+void InstructionPointer::put(inst_t i){
 	runner.getField().put(pos, i);
 }
 
@@ -90,6 +92,9 @@ void InstructionPointer::setDelta(const Vector& v){
 	}else{
 		delta = v;
 	}
+	for(auto observer : observers){
+		observer(delta);
+	}
 }
 
 void InstructionPointer::setStorage(const Vector& v){
@@ -126,6 +131,10 @@ const Vector& InstructionPointer::getDelta() const{
 
 const Vector& InstructionPointer::getStorage() const{
 	return storage;
+}
+
+void InstructionPointer::addObserver(std::function<void(const Vector&)> cb){
+	observers.push_back(cb);
 }
 
 std::ostream& operator<<(std::ostream& os, const InstructionPointer& rhs){

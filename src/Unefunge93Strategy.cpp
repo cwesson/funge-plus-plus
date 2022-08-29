@@ -30,8 +30,8 @@ Unefunge93Strategy::Unefunge93Strategy(FungeRunner& r) :
 	r.pushSemantic('8', std::bind(&Unefunge93Strategy::instructionPush, this, 8));
 	r.pushSemantic('9', std::bind(&Unefunge93Strategy::instructionPush, this, 9));
 	// Flow Control
-	r.pushSemantic('<', std::bind(&Unefunge93Strategy::instructionWest, this));
-	r.pushSemantic('>', std::bind(&Unefunge93Strategy::instructionEast, this));
+	r.pushSemantic('<', std::bind(&Unefunge93Strategy::instructionWest, this), FungeSemantic::MOVEMENT);
+	r.pushSemantic('>', std::bind(&Unefunge93Strategy::instructionEast, this), FungeSemantic::MOVEMENT);
 	r.pushSemantic('@', std::bind(&Unefunge93Strategy::instructionStop, this));
 	r.pushSemantic('#', std::bind(&Unefunge93Strategy::instructionTrampoline, this));
 	r.pushSemantic('_', std::bind(&Unefunge93Strategy::instructionIf, this));

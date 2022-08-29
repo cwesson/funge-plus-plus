@@ -73,16 +73,16 @@ bool FungeStateNormal::load(FungeStrategy* strategy){
 	return true;
 }
 
-void FungeStateNormal::pushSemantic(inst_t i, semantic_t func){
+void FungeStateNormal::pushSemantic(inst_t i, FungeSemantic* func){
 	auto exist = semantics.find(i);
 	if(exist == semantics.cend()){
-		semantics[i] = std::stack<semantic_t>();
+		semantics[i] = std::stack<FungeSemantic*>();
 	}
 	semantics[i].push(func);
 }
 
-semantic_t FungeStateNormal::popSemantic(inst_t i){
-	semantic_t ret = nullptr;
+FungeSemantic* FungeStateNormal::popSemantic(inst_t i){
+	FungeSemantic* ret = nullptr;
 	auto exist = semantics.find(i);
 	if(exist != semantics.cend() && semantics[i].size() > 0){
 		ret = semantics[i].top();
@@ -91,8 +91,8 @@ semantic_t FungeStateNormal::popSemantic(inst_t i){
 	return ret;
 }
 
-semantic_t FungeStateNormal::getSemantic(inst_t i){
-	semantic_t ret = nullptr;
+FungeSemantic* FungeStateNormal::getSemantic(inst_t i){
+	FungeSemantic* ret = nullptr;
 	auto exist = semantics.find(i);
 	if(exist != semantics.cend() && semantics[i].size() > 0){
 		ret = semantics[i].top();
@@ -104,7 +104,12 @@ FungeError FungeStateNormal::execute(inst_t i){
 	FungeError done = ERROR_UNIMP;
 	auto found = semantics.find(i);
 	if(found != semantics.cend() && found->second.size() > 0){
-		done = found->second.top()();
+		FungeSemantic& sem = *found->second.top();
+		if(runner.isMode(FUNGE_MODE_DIVE) && !sem.isMovement()){
+			done = ERROR_SKIP;
+		}else{
+			done = sem();
+		}
 	}
 	return done;
 }

@@ -22,16 +22,16 @@ class FungeStateNormal : public FungeState {
 		
 		virtual FungeError execute(inst_t i) override;
 
-		void pushSemantic(inst_t i, semantic_t func);
-		semantic_t popSemantic(inst_t i);
-		semantic_t getSemantic(inst_t i);
+		void pushSemantic(inst_t i, FungeSemantic* func);
+		FungeSemantic* popSemantic(inst_t i);
+		FungeSemantic* getSemantic(inst_t i);
 		
 		FungeStateNormal& operator=(const FungeStateNormal&) = delete;
 		FungeStateNormal(const FungeStateNormal& orig) = delete;
 	
 	protected:
 		std::vector<FungeStrategy*> strategies;
-		std::map<inst_t, std::stack<semantic_t>> semantics;
+		std::map<inst_t, std::stack<FungeSemantic*>> semantics;
 		
 		bool load(FungeStrategy* strategy);
 };

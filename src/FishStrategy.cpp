@@ -39,16 +39,16 @@ FishStrategy::FishStrategy(FungeRunner& r) :
 	r.pushSemantic('e', std::bind(&FishStrategy::instructionPush, this, 14));
 	r.pushSemantic('f', std::bind(&FishStrategy::instructionPush, this, 15));
 	// Directions
-	r.pushSemantic('>', std::bind(&FishStrategy::instructionRight, this));
-	r.pushSemantic('<', std::bind(&FishStrategy::instructionLeft, this));
-	r.pushSemantic('v', std::bind(&FishStrategy::instructionDown, this));
-	r.pushSemantic('^', std::bind(&FishStrategy::instructionUp, this));
+	r.pushSemantic('>', std::bind(&FishStrategy::instructionRight, this), FungeSemantic::MOVEMENT);
+	r.pushSemantic('<', std::bind(&FishStrategy::instructionLeft, this), FungeSemantic::MOVEMENT);
+	r.pushSemantic('v', std::bind(&FishStrategy::instructionDown, this), FungeSemantic::MOVEMENT);
+	r.pushSemantic('^', std::bind(&FishStrategy::instructionUp, this), FungeSemantic::MOVEMENT);
 	// Mirrors
-	r.pushSemantic('\\', std::bind(&FishStrategy::instructionMirror1, this));
-	r.pushSemantic('/', std::bind(&FishStrategy::instructionMirror2, this));
-	r.pushSemantic('|', std::bind(&FishStrategy::instructionMirrorVert, this));
-	r.pushSemantic('_', std::bind(&FishStrategy::instructionMirrorHori, this));
-	r.pushSemantic('#', std::bind(&FishStrategy::instructionMirrorAll, this));
+	r.pushSemantic('\\', std::bind(&FishStrategy::instructionMirror1, this), FungeSemantic::MOVEMENT);
+	r.pushSemantic('/', std::bind(&FishStrategy::instructionMirror2, this), FungeSemantic::MOVEMENT);
+	r.pushSemantic('|', std::bind(&FishStrategy::instructionMirrorVert, this), FungeSemantic::MOVEMENT);
+	r.pushSemantic('_', std::bind(&FishStrategy::instructionMirrorHori, this), FungeSemantic::MOVEMENT);
+	r.pushSemantic('#', std::bind(&FishStrategy::instructionMirrorAll, this), FungeSemantic::MOVEMENT);
 	// Movement
 	r.pushSemantic('x', std::bind(&FishStrategy::instructionRandom, this));
 	r.pushSemantic('!', std::bind(&FishStrategy::instructionTrampoline, this));
@@ -98,10 +98,6 @@ FungeError FishStrategy::instructionSkip(){
 }
 
 FungeError FishStrategy::instructionPush(stack_t n){
-	if(runner.isMode(FUNGE_MODE_DIVE)){
-		return ERROR_NONE;
-	}
-
 	check_selected(selected);
 	stack.at(selected).push(n);
 	return ERROR_NONE;
@@ -186,10 +182,6 @@ FungeError FishStrategy::instructionTrampoline(){
 }
 
 FungeError FishStrategy::instructionConditional(){
-	if(runner.isMode(FUNGE_MODE_DIVE)){
-		return ERROR_NONE;
-	}
-
 	check_stack(selected, 1);
 	if(!stack.at(selected).pop()){
 		ip.next();
@@ -198,10 +190,6 @@ FungeError FishStrategy::instructionConditional(){
 }
 
 FungeError FishStrategy::instructionJump(){
-	if(runner.isMode(FUNGE_MODE_DIVE)){
-		return ERROR_NONE;
-	}
-
 	check_stack(selected, runner.getUniverse().dimensions());
 	Vector v = popVector(runner, &stack.at(selected));
 	ip.setPos(v);
@@ -209,10 +197,6 @@ FungeError FishStrategy::instructionJump(){
 }
 
 FungeError FishStrategy::instructionAdd(){
-	if(runner.isMode(FUNGE_MODE_DIVE)){
-		return ERROR_NONE;
-	}
-
 	check_stack(selected, 2);
 	stack_t x = stack.at(selected).pop();
 	stack_t y = stack.at(selected).pop();
@@ -221,10 +205,6 @@ FungeError FishStrategy::instructionAdd(){
 }
 
 FungeError FishStrategy::instructionSub(){
-	if(runner.isMode(FUNGE_MODE_DIVE)){
-		return ERROR_NONE;
-	}
-
 	check_stack(selected, 2);
 	stack_t x = stack.at(selected).pop();
 	stack_t y = stack.at(selected).pop();
@@ -233,10 +213,6 @@ FungeError FishStrategy::instructionSub(){
 }
 
 FungeError FishStrategy::instructionMult(){
-	if(runner.isMode(FUNGE_MODE_DIVE)){
-		return ERROR_NONE;
-	}
-
 	check_stack(selected, 2);
 	stack_t x = stack.at(selected).pop();
 	stack_t y = stack.at(selected).pop();
@@ -245,10 +221,6 @@ FungeError FishStrategy::instructionMult(){
 }
 
 FungeError FishStrategy::instructionDiv(){
-	if(runner.isMode(FUNGE_MODE_DIVE)){
-		return ERROR_NONE;
-	}
-
 	check_stack(selected, 2);
 	stack_t x = stack.at(selected).pop();
 	stack_t y = stack.at(selected).pop();
@@ -260,10 +232,6 @@ FungeError FishStrategy::instructionDiv(){
 }
 
 FungeError FishStrategy::instructionModu(){
-	if(runner.isMode(FUNGE_MODE_DIVE)){
-		return ERROR_NONE;
-	}
-
 	check_stack(selected, 2);
 	stack_t x = stack.at(selected).pop();
 	stack_t y = stack.at(selected).pop();
@@ -275,10 +243,6 @@ FungeError FishStrategy::instructionModu(){
 }
 
 FungeError FishStrategy::instructionEqual(){
-	if(runner.isMode(FUNGE_MODE_DIVE)){
-		return ERROR_NONE;
-	}
-
 	check_stack(selected, 2);
 	stack_t x = stack.at(selected).pop();
 	stack_t y = stack.at(selected).pop();
@@ -287,10 +251,6 @@ FungeError FishStrategy::instructionEqual(){
 }
 
 FungeError FishStrategy::instructionGreater(){
-	if(runner.isMode(FUNGE_MODE_DIVE)){
-		return ERROR_NONE;
-	}
-
 	check_stack(selected, 2);
 	stack_t x = stack.at(selected).pop();
 	stack_t y = stack.at(selected).pop();
@@ -299,10 +259,6 @@ FungeError FishStrategy::instructionGreater(){
 }
 
 FungeError FishStrategy::instructionLess(){
-	if(runner.isMode(FUNGE_MODE_DIVE)){
-		return ERROR_NONE;
-	}
-
 	check_stack(selected, 2);
 	stack_t x = stack.at(selected).pop();
 	stack_t y = stack.at(selected).pop();
@@ -311,19 +267,11 @@ FungeError FishStrategy::instructionLess(){
 }
 
 FungeError FishStrategy::instructionString(inst_t i){
-	if(runner.isMode(FUNGE_MODE_DIVE)){
-		return ERROR_NONE;
-	}
-
 	runner.setState(runner.getStringState(i));
 	return ERROR_NONE;
 }
 
 FungeError FishStrategy::instructionDuplicate(){
-	if(runner.isMode(FUNGE_MODE_DIVE)){
-		return ERROR_NONE;
-	}
-
 	check_stack(selected, 1);
 	stack_t x = stack.at(selected).pop();
 	stack.at(selected).push(x);
@@ -332,20 +280,12 @@ FungeError FishStrategy::instructionDuplicate(){
 }
 
 FungeError FishStrategy::instructionRemove(){
-	if(runner.isMode(FUNGE_MODE_DIVE)){
-		return ERROR_NONE;
-	}
-
 	check_stack(selected, 1);
 	stack.at(selected).pop();
 	return ERROR_NONE;
 }
 
 FungeError FishStrategy::instructionSwap2(){
-	if(runner.isMode(FUNGE_MODE_DIVE)){
-		return ERROR_NONE;
-	}
-
 	check_stack(selected, 2);
 	stack_t x = stack.at(selected).pop();
 	stack_t y = stack.at(selected).pop();
@@ -355,10 +295,6 @@ FungeError FishStrategy::instructionSwap2(){
 }
 
 FungeError FishStrategy::instructionSwap3(){
-	if(runner.isMode(FUNGE_MODE_DIVE)){
-		return ERROR_NONE;
-	}
-
 	check_stack(selected, 3);
 	stack_t x = stack.at(selected).pop();
 	stack_t y = stack.at(selected).pop();
@@ -370,20 +306,12 @@ FungeError FishStrategy::instructionSwap3(){
 }
 
 FungeError FishStrategy::instructionLength(){
-	if(runner.isMode(FUNGE_MODE_DIVE)){
-		return ERROR_NONE;
-	}
-
 	check_selected(selected);
 	stack.at(selected).push(stack.at(selected).size());
 	return ERROR_NONE;
 }
 
 FungeError FishStrategy::instructionShiftLeft(){
-	if(runner.isMode(FUNGE_MODE_DIVE)){
-		return ERROR_NONE;
-	}
-
 	check_selected(selected);
 	stack_t len = stack.at(selected).size();
 	stack_t temp[len];
@@ -398,10 +326,6 @@ FungeError FishStrategy::instructionShiftLeft(){
 }
 
 FungeError FishStrategy::instructionShiftRight(){
-	if(runner.isMode(FUNGE_MODE_DIVE)){
-		return ERROR_NONE;
-	}
-
 	check_selected(selected);
 	stack_t len = stack.at(selected).size();
 	stack_t temp[len];
@@ -416,10 +340,6 @@ FungeError FishStrategy::instructionShiftRight(){
 }
 
 FungeError FishStrategy::instructionReverse(){
-	if(runner.isMode(FUNGE_MODE_DIVE)){
-		return ERROR_NONE;
-	}
-
 	check_selected(selected);
 	stack_t len = stack.at(selected).size();
 	stack_t temp[len];
@@ -433,10 +353,6 @@ FungeError FishStrategy::instructionReverse(){
 }
 
 FungeError FishStrategy::instructionCreateStack(){
-	if(runner.isMode(FUNGE_MODE_DIVE)){
-		return ERROR_NONE;
-	}
-
 	check_stack(selected, 1);
 	size_t x = stack.at(selected).pop();
 
@@ -450,10 +366,6 @@ FungeError FishStrategy::instructionCreateStack(){
 }
 
 FungeError FishStrategy::instructionRemoveStack(){
-	if(runner.isMode(FUNGE_MODE_DIVE)){
-		return ERROR_NONE;
-	}
-
 	check_selected(selected);
 	check_selected(selected+1);
 	while(stack.at(selected).size() > 0){
@@ -465,10 +377,6 @@ FungeError FishStrategy::instructionRemoveStack(){
 }
 
 FungeError FishStrategy::instructionOutChar(){
-	if(runner.isMode(FUNGE_MODE_DIVE)){
-		return ERROR_NONE;
-	}
-
 	check_stack(selected, 1);
 	stack_t x = stack.at(selected).pop();
 	std::cout << static_cast<char>(x);
@@ -476,10 +384,6 @@ FungeError FishStrategy::instructionOutChar(){
 }
 
 FungeError FishStrategy::instructionOutInt(){
-	if(runner.isMode(FUNGE_MODE_DIVE)){
-		return ERROR_NONE;
-	}
-
 	check_stack(selected, 1);
 	stack_t x = stack.at(selected).pop();
 	std::cout << x;
@@ -487,10 +391,6 @@ FungeError FishStrategy::instructionOutInt(){
 }
 
 FungeError FishStrategy::instructionIn(){
-	if(runner.isMode(FUNGE_MODE_DIVE)){
-		return ERROR_NONE;
-	}
-
 	int q = EOF;
 	if(file == nullptr){
 		ScopedTermios term(~(ECHO | ICANON));
@@ -508,10 +408,6 @@ FungeError FishStrategy::instructionIn(){
 }
 
 FungeError FishStrategy::instructionGet(){
-	if(runner.isMode(FUNGE_MODE_DIVE)){
-		return ERROR_NONE;
-	}
-
 	check_stack(selected, runner.getUniverse().dimensions());
 	const Vector& storage = ip.getStorage();
 	Vector v = popVector(runner);
@@ -520,10 +416,6 @@ FungeError FishStrategy::instructionGet(){
 }
 
 FungeError FishStrategy::instructionPut(){
-	if(runner.isMode(FUNGE_MODE_DIVE)){
-		return ERROR_NONE;
-	}
-
 	check_stack(selected, runner.getUniverse().dimensions()+1);
 	const Vector& storage = ip.getStorage();
 	Vector v = popVector(runner);
@@ -532,19 +424,11 @@ FungeError FishStrategy::instructionPut(){
 }
 
 FungeError FishStrategy::instructionEnd(){
-	if(runner.isMode(FUNGE_MODE_DIVE)){
-		return ERROR_NONE;
-	}
-
 	ip.stop();
 	return ERROR_NONE;
 }
 
 FungeError FishStrategy::instructionRegister(){
-	if(runner.isMode(FUNGE_MODE_DIVE)){
-		return ERROR_NONE;
-	}
-
 	reg& top = regs.top();
 
 	FungeError ret = ERROR_UNSPEC;

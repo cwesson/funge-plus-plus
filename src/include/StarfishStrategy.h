@@ -34,6 +34,8 @@ class StarfishStrategy : public FishStrategy {
 		FungeError instructionMinute();
 		FungeError instructionSecond();
 
+		void fishermanChange(const Vector& delta);
+
 		enum {
 			FISHER_UP,
 			FISHER_DOWN,

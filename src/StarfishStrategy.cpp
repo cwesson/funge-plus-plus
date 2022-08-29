@@ -19,11 +19,11 @@ StarfishStrategy::StarfishStrategy(FungeRunner& r) :
 	fishercache({1, 0})
 {
 	// Movement
-	r.pushSemantic('`', std::bind(&StarfishStrategy::instructionFisherman, this));
+	r.pushSemantic('`', std::bind(&StarfishStrategy::instructionFisherman, this), FungeSemantic::MOVEMENT);
 	r.pushSemantic('C', std::bind(&StarfishStrategy::instructionCall, this));
 	r.pushSemantic('R', std::bind(&StarfishStrategy::instructionReturn, this));
-	r.pushSemantic('u', std::bind(&StarfishStrategy::instructionDive, this));
-	r.pushSemantic('O', std::bind(&StarfishStrategy::instructionRise, this));
+	r.pushSemantic('u', std::bind(&StarfishStrategy::instructionDive, this), FungeSemantic::MOVEMENT);
+	r.pushSemantic('O', std::bind(&StarfishStrategy::instructionRise, this), FungeSemantic::MOVEMENT);
 	// Stack Manipulation
 	r.pushSemantic('I', std::bind(&StarfishStrategy::instructionIncrement, this));
 	r.pushSemantic('D', std::bind(&StarfishStrategy::instructionDecrement, this));
@@ -34,11 +34,12 @@ StarfishStrategy::StarfishStrategy(FungeRunner& r) :
 	r.pushSemantic('h', std::bind(&StarfishStrategy::instructionHour, this));
 	r.pushSemantic('m', std::bind(&StarfishStrategy::instructionMinute, this));
 	r.pushSemantic('s', std::bind(&StarfishStrategy::instructionSecond, this));
+
+	ip.addObserver(std::bind(&StarfishStrategy::fishermanChange, this, std::placeholders::_1));
 }
 
 FungeError StarfishStrategy::instructionFisherman(){
 	if(ip.getDelta().get(1) == 0){
-		fishercache = ip.getDelta();
 		if(fisherstate == FISHER_UP){
 			ip.setDelta(Vector{0, 1});
 			fisherstate = FISHER_DOWN;
@@ -53,10 +54,6 @@ FungeError StarfishStrategy::instructionFisherman(){
 }
 
 FungeError StarfishStrategy::instructionCall(){
-	if(runner.isMode(FUNGE_MODE_DIVE)){
-		return ERROR_NONE;
-	}
-
 	stack.insert(selected+1);
 	pushVector(runner, ip.getPos(), &stack.at(selected+1));
 
@@ -67,10 +64,6 @@ FungeError StarfishStrategy::instructionCall(){
 }
 
 FungeError StarfishStrategy::instructionReturn(){
-	if(runner.isMode(FUNGE_MODE_DIVE)){
-		return ERROR_NONE;
-	}
-
 	check_stack(selected+1, runner.getUniverse().dimensions());
 	Vector v = popVector(runner, &stack.at(selected+1));
 	ip.setPos(v);
@@ -89,28 +82,16 @@ FungeError StarfishStrategy::instructionRise(){
 }
 
 FungeError StarfishStrategy::instructionIncrement(){
-	if(runner.isMode(FUNGE_MODE_DIVE)){
-		return ERROR_NONE;
-	}
-
 	--selected;
 	return ERROR_NONE;
 }
 
 FungeError StarfishStrategy::instructionDecrement(){
-	if(runner.isMode(FUNGE_MODE_DIVE)){
-		return ERROR_NONE;
-	}
-
 	++selected;
 	return ERROR_NONE;
 }
 
 FungeError StarfishStrategy::instructionFile(){
-	if(runner.isMode(FUNGE_MODE_DIVE)){
-		return ERROR_NONE;
-	}
-
 	FungeError ret = ERROR_UNSPEC;
 	if(runner.getUniverse().allowFilesystem()){
 		check_stack(selected, 1);
@@ -143,10 +124,6 @@ FungeError StarfishStrategy::instructionFile(){
 }
 
 FungeError StarfishStrategy::instructionSleep(){
-	if(runner.isMode(FUNGE_MODE_DIVE)){
-		return ERROR_NONE;
-	}
-
 	check_stack(selected, 1);
 	stack_t s = stack.at(selected).pop();
 	std::this_thread::sleep_for(std::chrono::milliseconds(100*s));
@@ -154,10 +131,6 @@ FungeError StarfishStrategy::instructionSleep(){
 }
 
 FungeError StarfishStrategy::instructionHour(){
-	if(runner.isMode(FUNGE_MODE_DIVE)){
-		return ERROR_NONE;
-	}
-
 	std::time_t now = std::time(nullptr);
 	std::tm* dt = std::localtime(&now);
 
@@ -167,10 +140,6 @@ FungeError StarfishStrategy::instructionHour(){
 }
 
 FungeError StarfishStrategy::instructionMinute(){
-	if(runner.isMode(FUNGE_MODE_DIVE)){
-		return ERROR_NONE;
-	}
-
 	std::time_t now = std::time(nullptr);
 	std::tm* dt = std::localtime(&now);
 
@@ -180,16 +149,18 @@ FungeError StarfishStrategy::instructionMinute(){
 }
 
 FungeError StarfishStrategy::instructionSecond(){
-	if(runner.isMode(FUNGE_MODE_DIVE)){
-		return ERROR_NONE;
-	}
-
 	std::time_t now = std::time(nullptr);
 	std::tm* dt = std::localtime(&now);
 
 	check_selected(selected);
 	stack.at(selected).push(dt->tm_sec);
 	return ERROR_NONE;
+}
+
+void StarfishStrategy::fishermanChange(const Vector& delta){
+	if(delta.get(0) != 0 && delta.get(1) == 0){
+		fishercache = delta;
+	}
 }
 
 }; // namespace Funge

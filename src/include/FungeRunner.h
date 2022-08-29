@@ -45,9 +45,10 @@ class FungeRunner {
 		FungeMode getMode() const;
 		void setUniverse(FungeUniverse& other);
 
-		void pushSemantic(inst_t i, semantic_t func);
-		semantic_t popSemantic(inst_t i);
-		semantic_t getSemantic(inst_t i);
+		void pushSemantic(inst_t i, FungeSemantic* func);
+		void pushSemantic(inst_t i, std::function<FungeError()> func, FungeSemantic::SemanticFlags flg = FungeSemantic::NONE);
+		FungeSemantic* popSemantic(inst_t i);
+		FungeSemantic* getSemantic(inst_t i);
 		void setErrorHandler(std::function<FungeError(FungeError)> func);
 
 		void shareStack(FungeRunner& other);

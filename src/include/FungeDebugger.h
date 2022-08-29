@@ -21,7 +21,6 @@ class FungeDebugger {
 		~FungeDebugger() = default;
 
 		void tick(FungeRunner& runner);
-		void write(const Vector& pos, inst_t inst);
 		void swbreak(FungeRunner& runner);
 		void trap(FungeRunner& runner);
 		void addBreakpoint(const Vector& vec);

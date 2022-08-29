@@ -203,7 +203,7 @@ FungeError FingerprintTOYS::execute(inst_t cmd){
 						inst = 'l';
 						break;
 				}
-				ip.set(inst);
+				ip.put(inst);
 				ip.setDelta(v);
 		} break;
 		case 'V':{
