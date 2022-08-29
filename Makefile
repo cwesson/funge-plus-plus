@@ -10,7 +10,7 @@ DEPS := $(OBJS:%.o=%.d)
 
 EXEC := bin/funge
 
-INCLUDES := -I src/include -I src/fingerprint/include -I third_party/bigint/include
+INCLUDES := $(addprefix -I,$(shell find src/ -type d -name include)) -I third_party/bigint/include
 
 CPP := g++
 CPPARGS := $(INCLUDES) -g -Wall -Wextra -Werror -std=c++2a
