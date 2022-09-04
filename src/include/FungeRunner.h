@@ -33,6 +33,7 @@ class FungeRunner {
 		void operator()();
 		void tick();
 		FungeError execute(inst_t i);
+		void push(stack_t n);
 		
 		size_t getID() const;
 		FungeUniverse& getUniverse();
@@ -63,12 +64,15 @@ class FungeRunner {
 		InstructionPointer ip;
 		const FungeRunner* parent;
 		std::function<FungeError(FungeError)> errorHandler;
+		std::vector<FungeStrategy*> strategies;
 		
 		FungeStateNormal normalState;
 		FungeStateString stringState;
 		FungeState* state;
 		
 		void run();
+		void loadStrategies();
+		void load(FungeStrategy* strategy);
 };
 
 }

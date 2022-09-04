@@ -55,17 +55,17 @@ FungeError StarfishStrategy::instructionFisherman(){
 
 FungeError StarfishStrategy::instructionCall(){
 	stack.insert(selected+1);
-	pushVector(runner, ip.getPos(), &stack.at(selected+1));
+	pushVector(selected+1, ip.getPos());
 
 	check_stack(selected, runner.getUniverse().dimensions());
-	Vector v = popVector(runner, &stack.at(selected));
+	Vector v = popVector(selected);
 	ip.setPos(v);
 	return ERROR_NONE;
 }
 
 FungeError StarfishStrategy::instructionReturn(){
 	check_stack(selected+1, runner.getUniverse().dimensions());
-	Vector v = popVector(runner, &stack.at(selected+1));
+	Vector v = popVector(selected+1);
 	ip.setPos(v);
 	stack.remove(selected+1);
 	return ERROR_NONE;
@@ -95,12 +95,12 @@ FungeError StarfishStrategy::instructionFile(){
 	FungeError ret = ERROR_UNSPEC;
 	if(runner.getUniverse().allowFilesystem()){
 		check_stack(selected, 1);
-		size_t x = stack.at(selected).pop();
+		size_t x = pop(selected);
 		check_stack(selected, x);
 		if(file == nullptr){
 			std::string str;
 			for (size_t i = 0; i < x; ++i){
-				str += stack.at(selected).pop();
+				str += pop(selected);
 			}
 			std::reverse(str.begin(), str.end());
 			file = new std::ifstream(str);
@@ -112,7 +112,7 @@ FungeError StarfishStrategy::instructionFile(){
 
 			std::ofstream ofile(filepath);
 			for (size_t i = 0; i < x; ++i){
-				ofile << static_cast<char>(stack.at(selected).pop());
+				ofile << static_cast<char>(pop(selected));
 			}
 		}
 		ret = ERROR_NONE;
@@ -125,8 +125,8 @@ FungeError StarfishStrategy::instructionFile(){
 
 FungeError StarfishStrategy::instructionSleep(){
 	check_stack(selected, 1);
-	stack_t s = stack.at(selected).pop();
-	std::this_thread::sleep_for(std::chrono::milliseconds(100*s));
+	double ms = pop(selected) * 100.0;
+	std::this_thread::sleep_for(std::chrono::microseconds(static_cast<unsigned int>(1000*ms)));
 	return ERROR_NONE;
 }
 

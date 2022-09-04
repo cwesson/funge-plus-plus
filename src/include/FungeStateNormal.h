@@ -17,8 +17,8 @@ namespace Funge {
 class FungeStateNormal : public FungeState {
 	public:
 		explicit FungeStateNormal(FungeRunner& r);
-		FungeStateNormal(const FungeStateNormal& orig, FungeRunner& r);
-		virtual ~FungeStateNormal();
+		FungeStateNormal(const FungeStateNormal& orig) = delete;
+		virtual ~FungeStateNormal() = default;
 		
 		virtual FungeError execute(inst_t i) override;
 
@@ -27,13 +27,9 @@ class FungeStateNormal : public FungeState {
 		FungeSemantic* getSemantic(inst_t i);
 		
 		FungeStateNormal& operator=(const FungeStateNormal&) = delete;
-		FungeStateNormal(const FungeStateNormal& orig) = delete;
 	
 	protected:
-		std::vector<FungeStrategy*> strategies;
 		std::map<inst_t, std::stack<FungeSemantic*>> semantics;
-		
-		bool load(FungeStrategy* strategy);
 };
 
 }

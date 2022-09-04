@@ -5,6 +5,13 @@
  */
 
 #include "FungeRunner.h"
+#include "Unefunge93Strategy.h"
+#include "Unefunge98Strategy.h"
+#include "Befunge93Strategy.h"
+#include "Befunge98Strategy.h"
+#include "Trefunge98Strategy.h"
+#include "FishStrategy.h"
+#include "StarfishStrategy.h"
 #include "FungeUniverse.h"
 #include "FungeDebugger.h"
 
@@ -19,10 +26,12 @@ FungeRunner::FungeRunner(FungeUniverse& uni, const Vector& pos, const Vector& de
 	ip(*this),
 	parent(nullptr),
 	errorHandler(nullptr),
+	strategies(),
 	normalState(*this),
 	stringState(*this),
 	state(&normalState)
 {
+	loadStrategies();
 	ip.setPos(pos);
 	ip.setDelta(delta);
 	stack->setMode(getMode());
@@ -35,10 +44,12 @@ FungeRunner::FungeRunner(FungeUniverse& uni, const Vector& pos, const Vector& de
 	ip(*this),
 	parent(&r),
 	errorHandler(nullptr),
+	strategies(),
 	normalState(*this),
 	stringState(*this),
 	state(&normalState)
 {
+	loadStrategies();
 	ip.setPos(pos);
 	ip.setDelta(delta);
 	stack->setMode(getMode());
@@ -50,11 +61,14 @@ FungeRunner::FungeRunner(const FungeRunner& runner) :
 	stack(new StackStack(*runner.stack)),
 	ip(runner.ip, *this),
 	parent(&runner),
-	errorHandler(runner.errorHandler),
-	normalState(runner.normalState, *this),
+	errorHandler(nullptr),
+	normalState(*this),
 	stringState(*this),
 	state(&normalState)
 {
+	for(auto s : runner.strategies){
+		load(s->clone(*this));
+	}
 	ip.reflect();
 	ip.next();
 	stack->setMode(getMode());
@@ -62,6 +76,46 @@ FungeRunner::FungeRunner(const FungeRunner& runner) :
 
 FungeRunner::~FungeRunner(){
 	ip.stop();
+	while(strategies.size() > 0){
+		delete strategies.back();
+		strategies.pop_back();
+	}
+}
+
+void FungeRunner::loadStrategies(){
+	FungeStandard standard = universe->standard();
+	size_t dimensions = universe->dimensions();
+	if(standard == Funge::FUNGE_FISH){
+		load(new FishStrategy(*this));
+	}else if(standard == Funge::FUNGE_STARFISH){
+		load(new StarfishStrategy(*this));
+	}else{
+		if(dimensions >= 1){
+			if(standard >= Funge::FUNGE_93){
+				load(new Unefunge93Strategy(*this));
+			}
+			if(standard >= Funge::FUNGE_98){
+				load(new Unefunge98Strategy(*this));
+			}
+		}
+		if(dimensions >= 2){
+			if(standard >= Funge::FUNGE_93){
+				load(new Befunge93Strategy(*this));
+			}
+			if(standard >= Funge::FUNGE_98){
+				load(new Befunge98Strategy(*this));
+			}
+		}
+		if(dimensions >= 3){
+			if(standard >= Funge::FUNGE_98){
+				load(new Trefunge98Strategy(*this));
+			}
+		}
+	}
+}
+
+void FungeRunner::load(FungeStrategy* strategy){
+	strategies.push_back(strategy);
 }
 
 bool FungeRunner::isRunning() const {
@@ -107,6 +161,14 @@ void FungeRunner::tick(){
 
 FungeError FungeRunner::execute(inst_t i){
 	return state->execute(i);
+}
+
+void FungeRunner::push(stack_t n){
+	for(auto s : strategies){
+		if(s->push(n) == ERROR_NONE){
+			break;
+		}
+	}
 }
 
 void FungeRunner::setState(FungeState& s){

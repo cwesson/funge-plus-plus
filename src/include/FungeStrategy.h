@@ -22,6 +22,8 @@ class FungeStrategy {
 		virtual ~FungeStrategy() = default;
 		
 		virtual FungeStrategy* clone(FungeRunner& r) const = 0;
+
+		virtual FungeError push(stack_t n);
 	
 	protected:
 		FungeRunner& runner;

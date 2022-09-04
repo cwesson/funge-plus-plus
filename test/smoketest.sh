@@ -122,6 +122,7 @@ test_simple test/k_quote.b98 "2 "
 # Other Standards
 ## ><>
 test_simple test/test_fish.fish "1234"
+test_simple test/test_div.fish "2.25"
 test_simple test/quine.fish `cat test/quine.fish`
 test_simple test/test_stack.fish "12543"
 test_simple test/test_shift.fish "32141432"

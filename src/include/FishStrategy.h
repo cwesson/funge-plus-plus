@@ -18,11 +18,18 @@ class FishStrategy : public FungeStrategy {
 		virtual ~FishStrategy() = default;
 		
 		virtual FungeStrategy* clone(FungeRunner& r) const override;
+
+		virtual FungeError push(stack_t n) override;
 	
 	protected:
 		size_t selected;
 		std::ifstream* file;
 		std::string filepath;
+
+		double pop(size_t index);
+		Vector popVector(size_t index);
+		void push(size_t index, double n);
+		void pushVector(size_t index, const Vector& v);
 
 	private:
 		FungeError instructionSkip();
