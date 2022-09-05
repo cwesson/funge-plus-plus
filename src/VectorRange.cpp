@@ -33,7 +33,7 @@ Vector& VectorRange::operator*(){
 	return current;
 }
 
-Vector& VectorRange::operator++(){
+VectorRange& VectorRange::operator++(){
 	dim_t len = std::max(vbegin.size(), vend.size());
 	for(dim_t i = 0; i < len; ++i){
 		dim_t n;
@@ -60,10 +60,10 @@ Vector& VectorRange::operator++(){
 			}
 		}
 	}
-	return current;
+	return *this;
 }
 
-Vector& VectorRange::operator++(int){
+VectorRange VectorRange::operator++(int){
 	return ++(*this);
 }
 

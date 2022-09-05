@@ -52,6 +52,12 @@ class StackStack {
 		Stack& second();
 
 		/**
+		 * Get the selected Stack.
+		 * @return Selected Stack.
+		 */
+		Stack& selected();
+
+		/**
 		 * Get the Stack at position x.
 		 * @param x Stack to get.
 		 * @return Stack at position x.
@@ -71,8 +77,14 @@ class StackStack {
 		const Stack& second() const;
 
 		/**
+		 * Get the selected Stack.
+		 * @return Selected Stack.
+		 */
+		const Stack& selected() const;
+
+		/**
 		 * Get the Stack at position x.
-		 * @param x Stack to get.
+		 * @param x Stack to get. 0 is top of stack.
 		 * @return Stack at position x.
 		 */
 		const Stack& at(size_t x) const;
@@ -110,8 +122,23 @@ class StackStack {
 		 * @param m New mode.
 		 */
 		void setMode(FungeMode m);
+
+		/**
+		 * Increment the selected stack.
+		 * @retval ERROR_NONE is stack exists.
+		 * @retval ERROR_UNSPEC if stack does not exist.
+		 */
+		FungeError increment();
+
+		/**
+		 * Decrement the selected stack.
+		 * @retval ERROR_NONE is stack exists.
+		 * @retval ERROR_UNSPEC if stack does not exist.
+		 */
+		FungeError decrement();
 		
 	private:
+		size_t select;
 		std::vector<Stack*> stack;
 };
 

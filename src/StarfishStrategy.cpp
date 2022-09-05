@@ -55,17 +55,17 @@ FungeError StarfishStrategy::instructionFisherman(){
 
 FungeError StarfishStrategy::instructionCall(){
 	stack.insert(selected+1);
-	pushVector(selected+1, ip.getPos());
+	pushVector(SECOND, ip.getPos());
 
-	check_stack(selected, runner.getUniverse().dimensions());
-	Vector v = popVector(selected);
+	check_stack(top, runner.getUniverse().dimensions());
+	Vector v = popVector(TOP);
 	ip.setPos(v);
 	return ERROR_NONE;
 }
 
 FungeError StarfishStrategy::instructionReturn(){
-	check_stack(selected+1, runner.getUniverse().dimensions());
-	Vector v = popVector(selected+1);
+	check_stack(second, runner.getUniverse().dimensions());
+	Vector v = popVector(SECOND);
 	ip.setPos(v);
 	stack.remove(selected+1);
 	return ERROR_NONE;
@@ -82,25 +82,23 @@ FungeError StarfishStrategy::instructionRise(){
 }
 
 FungeError StarfishStrategy::instructionIncrement(){
-	--selected;
-	return ERROR_NONE;
+	return stack.increment();
 }
 
 FungeError StarfishStrategy::instructionDecrement(){
-	++selected;
-	return ERROR_NONE;
+	return stack.decrement();
 }
 
 FungeError StarfishStrategy::instructionFile(){
 	FungeError ret = ERROR_UNSPEC;
 	if(runner.getUniverse().allowFilesystem()){
-		check_stack(selected, 1);
-		size_t x = pop(selected);
-		check_stack(selected, x);
+		check_stack(top, 1);
+		size_t x = pop(TOP);
+		check_stack(top, x);
 		if(file == nullptr){
 			std::string str;
 			for (size_t i = 0; i < x; ++i){
-				str += pop(selected);
+				str += pop(TOP);
 			}
 			std::reverse(str.begin(), str.end());
 			file = new std::ifstream(str);
@@ -112,7 +110,7 @@ FungeError StarfishStrategy::instructionFile(){
 
 			std::ofstream ofile(filepath);
 			for (size_t i = 0; i < x; ++i){
-				ofile << static_cast<char>(pop(selected));
+				ofile << static_cast<char>(pop(TOP));
 			}
 		}
 		ret = ERROR_NONE;
@@ -124,8 +122,8 @@ FungeError StarfishStrategy::instructionFile(){
 }
 
 FungeError StarfishStrategy::instructionSleep(){
-	check_stack(selected, 1);
-	double ms = pop(selected) * 100.0;
+	check_stack(top, 1);
+	double ms = pop(TOP) * 100.0;
 	std::this_thread::sleep_for(std::chrono::microseconds(static_cast<unsigned int>(1000*ms)));
 	return ERROR_NONE;
 }
@@ -135,7 +133,7 @@ FungeError StarfishStrategy::instructionHour(){
 	std::tm* dt = std::localtime(&now);
 
 	check_selected(selected);
-	stack.at(selected).push(dt->tm_hour);
+	push(TOP, dt->tm_hour);
 	return ERROR_NONE;
 }
 
@@ -144,7 +142,7 @@ FungeError StarfishStrategy::instructionMinute(){
 	std::tm* dt = std::localtime(&now);
 
 	check_selected(selected);
-	stack.at(selected).push(dt->tm_min);
+	push(TOP, dt->tm_min);
 	return ERROR_NONE;
 }
 
@@ -153,7 +151,7 @@ FungeError StarfishStrategy::instructionSecond(){
 	std::tm* dt = std::localtime(&now);
 
 	check_selected(selected);
-	stack.at(selected).push(dt->tm_sec);
+	push(TOP, dt->tm_sec);
 	return ERROR_NONE;
 }
 

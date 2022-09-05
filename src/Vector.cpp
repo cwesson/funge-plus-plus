@@ -9,15 +9,21 @@
 
 namespace Funge {
 
-Vector::Vector(){
+Vector::Vector() :
+	values()
+{
 	
 }
 
-Vector::Vector(const Vector& orig) : values(orig.values){
+Vector::Vector(const Vector& orig) :
+	values(orig.values)
+{
 	normalize();
 }
 
-Vector::Vector(std::initializer_list<dim_t> v) : values(v){
+Vector::Vector(std::initializer_list<dim_t> v) :
+	values(v)
+{
 	normalize();
 }
 

@@ -15,23 +15,23 @@ TEST(VectorTestGroup, VectorRangeTestMP)
 	CHECK(range.begin() == a);
 	CHECK(range.end()   != b);
 	CHECK(*range == a);
-	CHECK(++range == Funge::Vector({2,2}));
+	CHECK(*(++range) == Funge::Vector({2,2}));
 	CHECK( *range == Funge::Vector({2,2}));
-	CHECK(++range == Funge::Vector({1,2}));
+	CHECK(*(++range) == Funge::Vector({1,2}));
 	CHECK( *range == Funge::Vector({1,2}));
-	CHECK(++range == Funge::Vector({3,3}));
-	CHECK(++range == Funge::Vector({2,3}));
-	CHECK(++range == Funge::Vector({1,3}));
-	CHECK(++range == Funge::Vector({3,4}));
-	CHECK(++range == Funge::Vector({2,4}));
-	CHECK(++range == Funge::Vector({1,4}));
-	CHECK(++range == Funge::Vector({3,5}));
-	CHECK(++range == Funge::Vector({2,5}));
-	CHECK(++range == Funge::Vector({1,5}));
-	CHECK(++range == Funge::Vector({3,6}));
-	CHECK(++range == Funge::Vector({2,6}));
-	CHECK(++range == Funge::Vector({1,6}));
-	CHECK(++range == range.end());
+	CHECK(*(++range) == Funge::Vector({3,3}));
+	CHECK(*(++range) == Funge::Vector({2,3}));
+	CHECK(*(++range) == Funge::Vector({1,3}));
+	CHECK(*(++range) == Funge::Vector({3,4}));
+	CHECK(*(++range) == Funge::Vector({2,4}));
+	CHECK(*(++range) == Funge::Vector({1,4}));
+	CHECK(*(++range) == Funge::Vector({3,5}));
+	CHECK(*(++range) == Funge::Vector({2,5}));
+	CHECK(*(++range) == Funge::Vector({1,5}));
+	CHECK(*(++range) == Funge::Vector({3,6}));
+	CHECK(*(++range) == Funge::Vector({2,6}));
+	CHECK(*(++range) == Funge::Vector({1,6}));
+	CHECK(*(++range) == range.end());
 }
 
 TEST(VectorTestGroup, VectorRangeTestPM)
@@ -42,23 +42,23 @@ TEST(VectorTestGroup, VectorRangeTestPM)
 	CHECK(range.begin() == a);
 	CHECK(range.end()   != b);
 	CHECK(*range == a);
-	CHECK(++range == Funge::Vector({2,6}));
+	CHECK(*(++range) == Funge::Vector({2,6}));
 	CHECK( *range == Funge::Vector({2,6}));
-	CHECK(++range == Funge::Vector({3,6}));
+	CHECK(*(++range) == Funge::Vector({3,6}));
 	CHECK( *range == Funge::Vector({3,6}));
-	CHECK(++range == Funge::Vector({1,5}));
-	CHECK(++range == Funge::Vector({2,5}));
-	CHECK(++range == Funge::Vector({3,5}));
-	CHECK(++range == Funge::Vector({1,4}));
-	CHECK(++range == Funge::Vector({2,4}));
-	CHECK(++range == Funge::Vector({3,4}));
-	CHECK(++range == Funge::Vector({1,3}));
-	CHECK(++range == Funge::Vector({2,3}));
-	CHECK(++range == Funge::Vector({3,3}));
-	CHECK(++range == Funge::Vector({1,2}));
-	CHECK(++range == Funge::Vector({2,2}));
-	CHECK(++range == Funge::Vector({3,2}));
-	CHECK(++range == range.end());
+	CHECK(*(++range) == Funge::Vector({1,5}));
+	CHECK(*(++range) == Funge::Vector({2,5}));
+	CHECK(*(++range) == Funge::Vector({3,5}));
+	CHECK(*(++range) == Funge::Vector({1,4}));
+	CHECK(*(++range) == Funge::Vector({2,4}));
+	CHECK(*(++range) == Funge::Vector({3,4}));
+	CHECK(*(++range) == Funge::Vector({1,3}));
+	CHECK(*(++range) == Funge::Vector({2,3}));
+	CHECK(*(++range) == Funge::Vector({3,3}));
+	CHECK(*(++range) == Funge::Vector({1,2}));
+	CHECK(*(++range) == Funge::Vector({2,2}));
+	CHECK(*(++range) == Funge::Vector({3,2}));
+	CHECK(*(++range) == range.end());
 }
 
 TEST(VectorTestGroup, VectorRangeTestPP)
@@ -69,24 +69,24 @@ TEST(VectorTestGroup, VectorRangeTestPP)
 	CHECK(range.begin() == a);
 	CHECK(range.end()   != b);
 	CHECK(*range == a);
-	CHECK(++range == Funge::Vector({2,2}));
+	CHECK(*(++range) == Funge::Vector({2,2}));
 	CHECK( *range == Funge::Vector({2,2}));
-	CHECK(++range == Funge::Vector({3,2}));
+	CHECK(*(++range) == Funge::Vector({3,2}));
 	CHECK( *range == Funge::Vector({3,2}));
-	CHECK(++range == Funge::Vector({1,3}));
+	CHECK(*(++range) == Funge::Vector({1,3}));
 	CHECK( *range == Funge::Vector({1,3}));
-	CHECK(++range == Funge::Vector({2,3}));
-	CHECK(++range == Funge::Vector({3,3}));
-	CHECK(++range == Funge::Vector({1,4}));
-	CHECK(++range == Funge::Vector({2,4}));
-	CHECK(++range == Funge::Vector({3,4}));
-	CHECK(++range == Funge::Vector({1,5}));
-	CHECK(++range == Funge::Vector({2,5}));
-	CHECK(++range == Funge::Vector({3,5}));
-	CHECK(++range == Funge::Vector({1,6}));
-	CHECK(++range == Funge::Vector({2,6}));
-	CHECK(++range == Funge::Vector({3,6}));
-	CHECK(++range == range.end());
+	CHECK(*(++range) == Funge::Vector({2,3}));
+	CHECK(*(++range) == Funge::Vector({3,3}));
+	CHECK(*(++range) == Funge::Vector({1,4}));
+	CHECK(*(++range) == Funge::Vector({2,4}));
+	CHECK(*(++range) == Funge::Vector({3,4}));
+	CHECK(*(++range) == Funge::Vector({1,5}));
+	CHECK(*(++range) == Funge::Vector({2,5}));
+	CHECK(*(++range) == Funge::Vector({3,5}));
+	CHECK(*(++range) == Funge::Vector({1,6}));
+	CHECK(*(++range) == Funge::Vector({2,6}));
+	CHECK(*(++range) == Funge::Vector({3,6}));
+	CHECK(*(++range) == range.end());
 }
 
 TEST(VectorTestGroup, VectorTest)

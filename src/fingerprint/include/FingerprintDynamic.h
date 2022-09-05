@@ -12,6 +12,8 @@ namespace Funge {
 class FingerprintDynamic : public Fingerprint {
 	public:
 		explicit FingerprintDynamic(FungeRunner& r, FungeRunner* c);
+		FingerprintDynamic(const FingerprintDynamic& orig) = delete;
+		FingerprintDynamic operator=(const FingerprintDynamic& orig) = delete;
 		virtual ~FingerprintDynamic() = default;
 		
 		virtual FungeError execute(inst_t cmd) override;

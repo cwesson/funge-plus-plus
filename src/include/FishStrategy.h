@@ -15,6 +15,8 @@ namespace Funge {
 class FishStrategy : public FungeStrategy {
 	public:
 		explicit FishStrategy(FungeRunner& r);
+		FishStrategy(const FishStrategy& orig) = delete;
+		FishStrategy operator=(const FishStrategy& orig) = delete;
 		virtual ~FishStrategy() = default;
 		
 		virtual FungeStrategy* clone(FungeRunner& r) const override;
@@ -26,10 +28,14 @@ class FishStrategy : public FungeStrategy {
 		std::ifstream* file;
 		std::string filepath;
 
-		double pop(size_t index);
-		Vector popVector(size_t index);
-		void push(size_t index, double n);
-		void pushVector(size_t index, const Vector& v);
+		enum StackIndex {
+			TOP,
+			SECOND,
+		};
+		double pop(StackIndex index);
+		Vector popVector(StackIndex index);
+		void push(StackIndex index, double n);
+		void pushVector(StackIndex index, const Vector& v);
 
 	private:
 		FungeError instructionSkip();

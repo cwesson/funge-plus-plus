@@ -20,4 +20,4 @@
  * @param _n Number of elements.
  * @warning Returns ERROR_UNSPEC from the current function if the check fails.
  */
-#define check_stack(_s, _n) if((_s) >= stack.size() || stack.at(_s).size() < (_n)) { return ERROR_UNSPEC; }
+#define check_stack(_s, _n) if(stack._s().size() < (_n)) { return ERROR_UNSPEC; }

@@ -20,8 +20,8 @@ class VectorRange {
 		const Vector& end();
 		
 		Vector& operator*();
-		Vector& operator++();
-		Vector& operator++(int);
+		VectorRange& operator++();
+		VectorRange operator++(int);
 	
 	private:
 		const Vector vbegin;

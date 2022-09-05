@@ -36,6 +36,10 @@ FungeError FingerprintFISH::execute(inst_t cmd){
 				ip.next();
 			}
 		} break;
+		// Decrement Stack
+		case 'D':{
+			ret = stack.decrement();
+		} break;
 		// Fisherman
 		case 'F':{
 			if(ip.getDelta().get(1) == 0){
@@ -55,6 +59,10 @@ FungeError FingerprintFISH::execute(inst_t cmd){
 			Vector v = ip.getDelta();
 			v.set(1, -v.get(1));
 			ip.setDelta(v);
+		} break;
+		// Increment Stack
+		case 'I':{
+			ret = stack.increment();
 		} break;
 		// Shift Stack Left
 		case 'L':{

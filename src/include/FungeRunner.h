@@ -22,6 +22,7 @@ class FungeRunner {
 		FungeRunner(FungeUniverse& uni, const Vector& pos, const Vector& delta);
 		FungeRunner(FungeUniverse& uni, const Vector& pos, const Vector& delta, FungeRunner& r);
 		FungeRunner(const FungeRunner& runner);
+		FungeRunner operator=(const FungeRunner& orig) = delete;
 		virtual ~FungeRunner();
 		
 		bool isRunning() const;

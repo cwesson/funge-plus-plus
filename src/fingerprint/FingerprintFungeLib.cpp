@@ -13,7 +13,8 @@
 namespace Funge {
 
 FingerprintFungeLib::FingerprintFungeLib(FungeRunner& r, std::istream& file, FungeConfig& cfg) :
-	Fingerprint(r, {})
+	Fingerprint(r, {}),
+	dynamic(nullptr)
 {
 	dynamic = FungeMultiverse::getInstance().create(file, Field::FORMAT_FL, cfg, &r);
 	for(auto i : dynamic->getField().hasPlanes()){
