@@ -9,7 +9,7 @@
 namespace Funge {
 
 FingerprintBOOL::FingerprintBOOL(FungeRunner& r) :
-	Fingerprint(r, {'A', 'L', 'N', 'O', 'R', 'X'})
+	Fingerprint(r, {'A', 'N', 'O', 'X'})
 {}
 
 FungeError FingerprintBOOL::execute(inst_t cmd){

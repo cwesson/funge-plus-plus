@@ -78,6 +78,8 @@ Instructions from dynamic Funges run with the same stack as the IP that called t
 
 `FING` [Operate on single fingerprint semantics](http://www.rcfunge98.com/rcfunge2_manual.html#FING).
 
+`FISH` [><> and *><> commands](doc/FISH.md).
+
 `FIXP` [Fixed point math functions](http://www.rcfunge98.com/rcfunge2_manual.html#FIXP).
 
 `FPDP` [Double precision floating point](http://www.rcfunge98.com/rcfunge2_manual.html#FPDP).

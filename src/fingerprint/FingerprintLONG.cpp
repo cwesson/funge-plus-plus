@@ -5,6 +5,7 @@
  */
 
 #include "FingerprintLONG.h"
+#include "FungeUtilities.h"
 
 namespace Funge {
 
@@ -87,6 +88,15 @@ FungeError FingerprintLONG::execute(inst_t cmd){
 			fungelong_t a = popLong();
 			fungelong_t r = a + b;
 			pushLong(r);
+		} break;
+		case 'Z':{
+			std::string str = popString(stack.top());
+			fungelong_t l = 0;
+			for(auto a : str){
+				l *= 10;
+				l += (a - '0');
+			}
+			pushLong(l);
 		} break;
 		default:
 			return ERROR_UNIMP;

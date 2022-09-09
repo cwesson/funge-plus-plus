@@ -25,7 +25,6 @@
 #include "FingerprintJSTR.h"
 #include "FingerprintLONG.h"
 #include "FingerprintMODE.h"
-#include "FingerprintMODU.h"
 #include "FingerprintMVRS.h"
 #include "FingerprintNFUN.h"
 #include "FingerprintORTH.h"
@@ -84,7 +83,6 @@ Fingerprint* FingerprintStrategy::loadBuiltin(uint64_t fingerprint){
 		case 0x4A535452: fing = new FingerprintJSTR(runner); break;
 		case 0x4C4F4E47: fing = new FingerprintLONG(runner); break;
 		case 0x4D4F4445: fing = new FingerprintMODE(runner); break;
-		case 0x4D4F4455: fing = new FingerprintMODU(runner); break;
 		case 0x4D565253: fing = new FingerprintMVRS(runner); break;
 		case 0x4E46554E: fing = new FingerprintNFUN(runner); break;
 		case 0x4F525448: fing = new FingerprintORTH(runner); break;

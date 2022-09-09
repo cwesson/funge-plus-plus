@@ -11,7 +11,7 @@ namespace Funge {
 
 FingerprintNFUN::FingerprintNFUN(FungeRunner& r) :
 	Fingerprint(r,
-			{'A', 'B', 'H', 'I', 'L', 'M', 'Q', 'T', 'U', 'V', 'X', 'Y', 'Z'})
+			{'A', 'B', 'C', 'D', 'H', 'I', 'L', 'M', 'R', 'V', 'X', 'Y', 'Z'})
 {}
 
 FungeError FingerprintNFUN::execute(inst_t cmd){
