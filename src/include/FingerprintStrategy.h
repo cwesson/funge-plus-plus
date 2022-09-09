@@ -24,7 +24,6 @@ class FingerprintStrategy : public FungeStrategy {
 		bool unload(uint64_t fingerprint);
 	
 	protected:
-		FungeError execute(Fingerprint* fing, inst_t i);
 		Fingerprint* loadBuiltin(uint64_t fingerprint);
 		Fingerprint* loadFL(uint64_t fingerprint);
 

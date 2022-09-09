@@ -16,9 +16,12 @@ class FungeStateString : public FungeState {
 		virtual ~FungeStateString() = default;
 		
 		virtual FungeError execute(inst_t i) override;
+
+		void setEnd(inst_t i);
 	private:
 		void escape(inst_t i);
 		
+		inst_t end;
 		inst_t previous;
 };
 

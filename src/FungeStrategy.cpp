@@ -25,4 +25,9 @@ stack_t FungeStrategy::random(stack_t min, stack_t max){
 	return dis(gen);
 }
 
+FungeError FungeStrategy::push(stack_t n){
+	stack.top().push(n);
+	return ERROR_NONE;
+}
+
 }

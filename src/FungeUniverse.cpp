@@ -15,7 +15,7 @@ FungeUniverse::FungeUniverse(std::istream& file, Field::FileFormat fmt, const Fu
 	exitcode(0),
 	config(cfg),
 	debug(*this),
-	field(file, fmt, cfg.dimensions, *this),
+	field(file, fmt, cfg.dimensions, cfg.cells),
 	thread(nullptr),
 	threads(),
 	runners(),
@@ -25,6 +25,9 @@ FungeUniverse::FungeUniverse(std::istream& file, Field::FileFormat fmt, const Fu
 	cv()
 {
 	thread = new std::thread(std::ref(*this));
+	if(cfg.dimensions == 0){
+		config.dimensions = field.size();
+	}
 }
 
 FungeUniverse::FungeUniverse(const FungeConfig& cfg):
@@ -32,7 +35,7 @@ FungeUniverse::FungeUniverse(const FungeConfig& cfg):
 	exitcode(0),
 	config(cfg),
 	debug(*this),
-	field(cfg.dimensions, *this),
+	field(cfg.dimensions, cfg.cells),
 	thread(nullptr),
 	threads(),
 	runners(),
@@ -42,6 +45,9 @@ FungeUniverse::FungeUniverse(const FungeConfig& cfg):
 	cv()
 {
 	thread = new std::thread(std::ref(*this));
+	if(cfg.dimensions == 0){
+		config.dimensions = field.size();
+	}
 }
 
 FungeUniverse::~FungeUniverse(){
@@ -63,7 +69,7 @@ FungeUniverse::~FungeUniverse(){
 	delete thread;
 }
 
-void FungeUniverse::cloneRunner(FungeRunner& runner){
+void FungeUniverse::cloneRunner(const FungeRunner& runner){
 	addRunner(new FungeRunner(runner));
 }
 
@@ -80,6 +86,7 @@ void FungeUniverse::transferRunner(FungeRunner* runner){
 	if(&runner->getUniverse() != this){
 		std::lock_guard<std::mutex> guard(mutex);
 		runner->setUniverse(*this);
+		runner->setMode(config.mode);
 		runners.push_back(runner);
 		semaphore.release();
 	}
@@ -87,6 +94,7 @@ void FungeUniverse::transferRunner(FungeRunner* runner){
 
 void FungeUniverse::addRunner(FungeRunner* runner){
 	std::lock_guard<std::mutex> guard(mutex);
+	runner->setMode(config.mode);
 	if(config.threads == THREAD_NATIVE){
 		std::thread* thread = new std::thread(std::ref(*runner));
 		threads.push(thread);
@@ -212,7 +220,7 @@ size_t FungeUniverse::dimensions(size_t d){
 	return config.dimensions;
 }
 
-unsigned int FungeUniverse::standard() const {
+FungeStandard FungeUniverse::standard() const {
 	return config.standard;
 }
 
@@ -224,28 +232,33 @@ FungeString FungeUniverse::stringStyle() const {
 	return config.strings;
 }
 
-FungeCell FungeUniverse::cellSize() const {
-	return config.cells;
-}
-
 void FungeUniverse::setMode(FungeMode m){
 	config.mode |= m;
+	updateMode();
 }
 
 void FungeUniverse::clearMode(FungeMode m){
 	config.mode &= ~m;
+	updateMode();
 }
 
 void FungeUniverse::toggleMode(FungeMode m){
 	config.mode ^= m;
+	updateMode();
 }
 
-stack_t FungeUniverse::getMode() const {
+FungeMode FungeUniverse::getMode() const {
 	return config.mode;
 }
 
 bool FungeUniverse::isMode(FungeMode m) const {
 	return !!(config.mode & m);
+}
+
+void FungeUniverse::updateMode(){
+	for(auto r : runners){
+		r->setMode(config.mode);
+	}
 }
 
 bool FungeUniverse::allowConcurrent() const {

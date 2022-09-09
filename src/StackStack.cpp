@@ -8,40 +8,47 @@
 
 namespace Funge {
 
-StackStack::StackStack(FungeRunner& r) :
-	runner(&r),
+StackStack::StackStack() :
+	select(0),
 	stack()
 {
-	stack.push_back(new Stack(*this));
+	stack.push_back(new Stack());
 }
 
-StackStack::StackStack(const StackStack& orig, FungeRunner& r) :
-	runner(&r),
+StackStack::~StackStack()
+{
+	while(stack.size() > 0){
+		pop();
+	}
+}
+
+StackStack::StackStack(const StackStack& orig) :
+	select(orig.select),
 	stack()
 {
 	for(size_t i = 0; i < orig.size(); ++i){
-		stack.push_back(new Stack(orig.at(i), *this));
+		stack.push_back(new Stack(orig.at(i)));
 	}
 }
 
 Stack& StackStack::top(){
-	return *stack.back();
+	return at(select);
 }
 
 Stack& StackStack::second(){
-	return *stack[stack.size()-2];
+	return at(select+1);
 }
 
 Stack& StackStack::at(size_t x){
-	return *stack[x];
+	return *stack[stack.size()-x-1];
 }
 
 const Stack& StackStack::top() const{
-	return *stack.back();
+	return at(select);
 }
 
 const Stack& StackStack::second() const{
-	return *stack[stack.size()-2];
+	return at(select+1);
 }
 
 const Stack& StackStack::at(size_t x) const{
@@ -55,19 +62,47 @@ void StackStack::pop(){
 }
 
 void StackStack::push(){
-	stack.push_back(new Stack(*this));
+	stack.push_back(new Stack());
+}
+
+void StackStack::insert(size_t pos){
+	auto iter = stack.begin();
+	iter += stack.size()-pos-select;
+	stack.insert(iter, new Stack());
+}
+
+void StackStack::remove(size_t pos){
+	auto iter = stack.begin();
+	iter += stack.size()-pos-select;
+	stack.erase(iter);
 }
 
 size_t StackStack::size() const{
 	return stack.size();
 }
 
-FungeRunner& StackStack::getRunner(){
-	return *runner;
+void StackStack::setMode(FungeMode m){
+	for(auto s : stack){
+		s->setMode(m);
+	}
 }
 
-void StackStack::setRunner(FungeRunner& r){
-	runner = &r;
+FungeError StackStack::increment(){
+	if(select > 0){
+		--select;
+		return ERROR_NONE;
+	}else{
+		return ERROR_UNSPEC;
+	}
+}
+
+FungeError StackStack::decrement(){
+	if(select < stack.size()-1){
+		++select;
+		return ERROR_NONE;
+	}else{
+		return ERROR_UNSPEC;
+	}
 }
 
 }

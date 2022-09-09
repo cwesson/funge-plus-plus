@@ -21,8 +21,8 @@ FungeError FingerprintFPRT::execute(inst_t cmd){
 			std::string fmt = popString(stack.top());
 			double f = *reinterpret_cast<double*>(&n);
 			char str[1024];
-			int ret = snprintf(str, sizeof(str), fmt.c_str(), f);
-			if(ret < 0){
+			int cnt = snprintf(str, sizeof(str), fmt.c_str(), f);
+			if(cnt < 0){
 				ret = ERROR_UNSPEC;
 				break;
 			}
@@ -33,8 +33,8 @@ FungeError FingerprintFPRT::execute(inst_t cmd){
 			std::string fmt = popString(stack.top());
 			double f = *reinterpret_cast<float*>(&n);
 			char str[1024];
-			int ret = snprintf(str, sizeof(str), fmt.c_str(), f);
-			if(ret < 0){
+			int cnt = snprintf(str, sizeof(str), fmt.c_str(), f);
+			if(cnt < 0){
 				ret = ERROR_UNSPEC;
 				break;
 			}
@@ -44,8 +44,8 @@ FungeError FingerprintFPRT::execute(inst_t cmd){
 			stack_t i = stack.top().pop();
 			std::string fmt = popString(stack.top());
 			char str[1024];
-			int ret = snprintf(str, sizeof(str), fmt.c_str(), i);
-			if(ret < 0){
+			int cnt = snprintf(str, sizeof(str), fmt.c_str(), i);
+			if(cnt < 0){
 				ret = ERROR_UNSPEC;
 				break;
 			}
@@ -57,8 +57,8 @@ FungeError FingerprintFPRT::execute(inst_t cmd){
 			std::string fmt = popString(stack.top());
 			stack_t n = (h << 32) | (l & 0xFFFFFFFF);
 			char str[1024];
-			int ret = snprintf(str, sizeof(str), fmt.c_str(), n);
-			if(ret < 0){
+			int cnt = snprintf(str, sizeof(str), fmt.c_str(), n);
+			if(cnt < 0){
 				ret = ERROR_UNSPEC;
 				break;
 			}
@@ -68,8 +68,8 @@ FungeError FingerprintFPRT::execute(inst_t cmd){
 			std::string s = popString(stack.top());
 			std::string fmt = popString(stack.top());
 			char str[1024];
-			int ret = snprintf(str, sizeof(str), fmt.c_str(), s.c_str());
-			if(ret < 0){
+			int cnt = snprintf(str, sizeof(str), fmt.c_str(), s.c_str());
+			if(cnt < 0){
 				ret = ERROR_UNSPEC;
 				break;
 			}

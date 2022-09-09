@@ -80,33 +80,8 @@ void Defunge::debug(FungeDebugger* dbg, FungeRunner* run){
 	std::lock_guard<std::recursive_mutex> guard(mutex);
 	debugger = dbg;
 	runner = run;
-	const InstructionPointer& ip = runner->getIP();
-
-	size_t id = runner->getID();
-	auto found = dbg->threads.find(id);
-	if(found == dbg->threads.end()){
-		dbg->threads.insert({id, {
-			.runner = run,
-			.backtrace = {},
-			.state = FungeDebugger::STATE_START,
-		}});
-		dbg->intro(*runner);
-		std::cout << "New IP " << id << std::endl;
-	}
-	dbg->lastThread = id;
 	
-	if(dbg->breakpoints.contains(ip.getPos())){
-		dbg->intro(*runner);
-		std::cout << "Breakpoint " << ip.getPos() << std::endl;
-		dbg->threads[id].state = FungeDebugger::STATE_BREAK;
-	}
-	
-	if(dbg->threads[id].backtrace.size() >= FungeDebugger::MAX_BACKTRACE){
-		dbg->threads[id].backtrace.pop_back();
-	}
-	dbg->threads[id].backtrace.push_front(ip.getPos());
-	
-	switch(dbg->threads[id].state){
+	switch(dbg->threads[dbg->lastThread].state){
 		case FungeDebugger::STATE_RUN:
 			return;
 		case FungeDebugger::STATE_START:

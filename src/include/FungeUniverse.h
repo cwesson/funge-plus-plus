@@ -71,7 +71,7 @@ class FungeUniverse {
 		 * Clone an existing runner.
 		 * @param runner Runner to clone.
 		 */
-		void cloneRunner(FungeRunner& runner);
+		void cloneRunner(const FungeRunner& runner);
 
 		/**
 		 * Create a new runner.
@@ -109,14 +109,13 @@ class FungeUniverse {
 		const std::vector<uint64_t>& fingerprints() const;
 		FungeRunner* getRunner(size_t id);
 		size_t dimensions(size_t d=0);
-		unsigned int standard() const;
+		FungeStandard standard() const;
 		FungeTopo topology() const;
 		FungeString stringStyle() const;
-		FungeCell cellSize() const;
 		void setMode(FungeMode m);
 		void clearMode(FungeMode m);
 		void toggleMode(FungeMode m);
-		stack_t getMode() const;
+		FungeMode getMode() const;
 		bool isMode(FungeMode m) const;
 		bool allowConcurrent() const;
 		bool allowExecute() const;
@@ -140,6 +139,7 @@ class FungeUniverse {
 		
 		explicit FungeUniverse(const FungeConfig& cfg);
 		void addRunner(FungeRunner* runner);
+		void updateMode();
 
 		friend class FungeMultiverse;
 };

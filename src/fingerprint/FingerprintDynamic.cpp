@@ -89,7 +89,7 @@ FungeError FingerprintDynamic::execute(inst_t cmd){
 				Vector v = popVector(runner, &stack.top());
 				stack_t n = stack.top().pop();
 				Field& f = caller->getField();
-				f.set(v, n);
+				f.put(v, n);
 			} break;
 			case 'Q':{
 				InstructionPointer& cip = caller->getIP();

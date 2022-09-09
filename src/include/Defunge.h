@@ -14,6 +14,8 @@ namespace Funge {
 class Defunge {
 	public:
 		static Defunge& getInstance();
+		Defunge(const Defunge& orig) = delete;
+		Defunge operator=(const Defunge& orig) = delete;
 		virtual ~Defunge() = default;
 
 		void debug(FungeDebugger* dbg, FungeRunner* run);

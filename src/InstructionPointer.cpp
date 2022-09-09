@@ -12,6 +12,7 @@
 namespace Funge {
 
 InstructionPointer::InstructionPointer(FungeRunner& r) :
+	observers(),
 	runner(r),
 	stopped(false),
 	pos({0}),
@@ -22,6 +23,7 @@ InstructionPointer::InstructionPointer(FungeRunner& r) :
 }
 
 InstructionPointer::InstructionPointer(const InstructionPointer& orig, FungeRunner& r) :
+	observers(),
 	runner(r),
 	stopped(orig.stopped),
 	pos(orig.pos),
@@ -35,12 +37,12 @@ inst_t InstructionPointer::get() const{
 	return runner.getField()[pos];
 }
 
-void InstructionPointer::set(inst_t i){
-	runner.getField().set(pos, i);
+void InstructionPointer::put(inst_t i){
+	runner.getField().put(pos, i);
 }
 
 bool InstructionPointer::inField(const Field& field) const {
-	for(size_t n = 0; n < field.dimensions(); ++n){
+	for(size_t n = 0; n < runner.getUniverse().dimensions(); ++n){
 		if(pos.get(n) < field.min(n) || pos.get(n) > field.max(n)){
 			return false;
 		}
@@ -52,7 +54,7 @@ void InstructionPointer::next(){
 	if(!stopped){
 		pos += delta;
 		const Field& field = runner.getField();
-		if(field.topology() == TOPO_TORUS){
+		if(runner.getUniverse().topology() == TOPO_TORUS){
 			if(pos.get(0) > 80){
 				pos.set(0, 0);
 			}else if(pos.get(0) < 0){
@@ -90,6 +92,9 @@ void InstructionPointer::setDelta(const Vector& v){
 	}else{
 		delta = v;
 	}
+	for(auto observer : observers){
+		observer(delta);
+	}
 }
 
 void InstructionPointer::setStorage(const Vector& v){
@@ -126,6 +131,10 @@ const Vector& InstructionPointer::getDelta() const{
 
 const Vector& InstructionPointer::getStorage() const{
 	return storage;
+}
+
+void InstructionPointer::addObserver(std::function<void(const Vector&)> cb){
+	observers.push_back(cb);
 }
 
 std::ostream& operator<<(std::ostream& os, const InstructionPointer& rhs){

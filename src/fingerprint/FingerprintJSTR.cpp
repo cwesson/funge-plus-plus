@@ -32,7 +32,7 @@ FungeError FingerprintJSTR::execute(inst_t cmd){
 			Vector vd = popVector(runner);
 			Vector pos = va + ip.getStorage();
 			for( ; n > 0; --n){
-				field.set(pos, stack.top().pop());
+				field.put(pos, stack.top().pop());
 				pos += vd;
 			}
 		} break;

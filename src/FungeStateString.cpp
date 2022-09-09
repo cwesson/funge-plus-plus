@@ -12,6 +12,7 @@ namespace Funge {
 
 FungeStateString::FungeStateString(FungeRunner& r) :
 	FungeState(r),
+	end('\"'),
 	previous('\0')
 {
 	
@@ -51,21 +52,21 @@ void FungeStateString::escape(inst_t i){
 			code = i;
 			break;
 	}
-	stack.top().push(code);
+	runner.push(code);
 }
 
 FungeError FungeStateString::execute(inst_t i){
-	if(i == '\"'){
+	if(i == end){
 		previous = '\0';
 		runner.setState(runner.getNormalState());
 	}else{
 		switch(runner.getUniverse().stringStyle()){
 			case STRING_MULTISPACE:
-				stack.top().push(static_cast<stack_t>(i));
+				runner.push(static_cast<stack_t>(i));
 				break;
 			case STRING_SGML:
-				if(i != ' ' || previous != ' '){
-					stack.top().push(static_cast<stack_t>(i));
+				if(!isspace(i) || !isspace(previous)){
+					runner.push(static_cast<stack_t>(i));
 					previous = i;
 				}else{
 					return ERROR_SKIP;
@@ -76,7 +77,7 @@ FungeError FungeStateString::execute(inst_t i){
 					ip.next();
 					escape(ip.get());
 				}else{
-					stack.top().push(static_cast<stack_t>(i));
+					runner.push(static_cast<stack_t>(i));
 				}
 				break;
 			default:
@@ -84,6 +85,10 @@ FungeError FungeStateString::execute(inst_t i){
 		}
 	}
 	return ERROR_NONE;
+}
+
+void FungeStateString::setEnd(inst_t i){
+	end = i;
 }
 
 }

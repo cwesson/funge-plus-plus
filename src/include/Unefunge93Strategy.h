@@ -49,6 +49,8 @@ class Unefunge93Strategy : public FungeStrategy {
 		// Self-Modifying
 		FungeError instructionGet();
 		FungeError instructionPut();
+
+		FungeError errorHandler(FungeError e);
 };
 
 }

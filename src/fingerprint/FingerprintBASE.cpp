@@ -5,6 +5,7 @@
  */
 
 #include "FingerprintBASE.h"
+#include <algorithm>
 #include <iostream>
 
 namespace Funge {
@@ -140,6 +141,9 @@ stack_t FingerprintBASE::readNum(unsigned int base) const{
 bool FingerprintBASE::readBase(std::string str, stack_t* num, unsigned int base) const{
 	char digit = str[0];
 	bool found = false;
+	if(base <= 36){
+		std::transform(str.begin(), str.end(), str.begin(), ::toupper);
+	}
 	for(size_t i = 0; i <= base; ++i){
 		if(digit_map[i] == digit){
 			*num = (*num*base) + i;

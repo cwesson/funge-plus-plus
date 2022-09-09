@@ -7,6 +7,7 @@
 #pragma once
 
 #include "Stack.h"
+#include "funge_types.h"
 #include <vector>
 
 namespace Funge {
@@ -19,22 +20,24 @@ class StackStack {
 	public:
 		/**
 		 * Constructor.
-		 * @param r Runner the StackStack belongs to.
 		 */
-		explicit StackStack(FungeRunner& r);
-
-		/**
-		 * Copy constructor.
-		 */
-		StackStack(const StackStack& orig) = delete;
-		StackStack(const StackStack&& orig) = delete;
+		explicit StackStack();
 
 		/**
 		 * Copy constructor.
 		 * @param orig Original StackStack.
-		 * @param r Runner the new StackStack belongs to.
 		 */
-		StackStack(const StackStack& orig, FungeRunner& r);
+		StackStack(const StackStack& orig);
+
+		/**
+		 * Copy constructor.
+		 */
+		StackStack(const StackStack&& orig) = delete;
+
+		/**
+		 * Destructor.
+		 */
+		~StackStack();
 
 		/**
 		 * Get the top Stack.
@@ -47,6 +50,12 @@ class StackStack {
 		 * @return Second Stack.
 		 */
 		Stack& second();
+
+		/**
+		 * Get the selected Stack.
+		 * @return Selected Stack.
+		 */
+		Stack& selected();
 
 		/**
 		 * Get the Stack at position x.
@@ -68,8 +77,14 @@ class StackStack {
 		const Stack& second() const;
 
 		/**
+		 * Get the selected Stack.
+		 * @return Selected Stack.
+		 */
+		const Stack& selected() const;
+
+		/**
 		 * Get the Stack at position x.
-		 * @param x Stack to get.
+		 * @param x Stack to get. 0 is top of stack.
 		 * @return Stack at position x.
 		 */
 		const Stack& at(size_t x) const;
@@ -85,25 +100,45 @@ class StackStack {
 		void push();
 
 		/**
+		 * Insert a new empty Stack.
+		 * @param pos Position to insert at.
+		 */
+		void insert(size_t pos);
+
+		/**
+		 * Remove a Stack.
+		 * @param pos Position to remove.
+		 */
+		void remove(size_t pos);
+
+		/**
 		 * Get the number of stacks.
 		 * @return Number of stacks.
 		 */
 		size_t size() const;
 
 		/**
-		 * Get the runner.
-		 * @return Runner the StackStack belongs to.
+		 * Set the stack mode.
+		 * @param m New mode.
 		 */
-		FungeRunner& getRunner();
+		void setMode(FungeMode m);
 
 		/**
-		 * Set the runner.
-		 * @param r New runner.
+		 * Increment the selected stack.
+		 * @retval ERROR_NONE is stack exists.
+		 * @retval ERROR_UNSPEC if stack does not exist.
 		 */
-		void setRunner(FungeRunner& r);
+		FungeError increment();
+
+		/**
+		 * Decrement the selected stack.
+		 * @retval ERROR_NONE is stack exists.
+		 * @retval ERROR_UNSPEC if stack does not exist.
+		 */
+		FungeError decrement();
 		
 	private:
-		FungeRunner* runner;
+		size_t select;
 		std::vector<Stack*> stack;
 };
 

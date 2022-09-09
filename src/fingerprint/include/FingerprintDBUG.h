@@ -14,6 +14,8 @@ namespace Funge {
 class FingerprintDBUG : public Fingerprint {
 	public:
 		explicit FingerprintDBUG(FungeRunner& r);
+		FingerprintDBUG(const FingerprintDBUG& orig) = delete;
+		FingerprintDBUG operator=(const FingerprintDBUG& orig) = delete;
 		virtual ~FingerprintDBUG() = default;
 		
 		virtual FungeError execute(inst_t cmd) override;

@@ -5,6 +5,13 @@
  */
 
 #include "FungeRunner.h"
+#include "Unefunge93Strategy.h"
+#include "Unefunge98Strategy.h"
+#include "Befunge93Strategy.h"
+#include "Befunge98Strategy.h"
+#include "Trefunge98Strategy.h"
+#include "FishStrategy.h"
+#include "StarfishStrategy.h"
 #include "FungeUniverse.h"
 #include "FungeDebugger.h"
 
@@ -15,15 +22,19 @@ size_t FungeRunner::count = 0;
 FungeRunner::FungeRunner(FungeUniverse& uni, const Vector& pos, const Vector& delta) :
 	id(count++),
 	universe(&uni),
-	stack(new StackStack(*this)),
+	stack(new StackStack()),
 	ip(*this),
 	parent(nullptr),
+	errorHandler(nullptr),
+	strategies(),
 	normalState(*this),
 	stringState(*this),
 	state(&normalState)
 {
+	loadStrategies();
 	ip.setPos(pos);
 	ip.setDelta(delta);
+	stack->setMode(getMode());
 }
 
 FungeRunner::FungeRunner(FungeUniverse& uni, const Vector& pos, const Vector& delta, FungeRunner& r) :
@@ -32,31 +43,79 @@ FungeRunner::FungeRunner(FungeUniverse& uni, const Vector& pos, const Vector& de
 	stack(r.stack),
 	ip(*this),
 	parent(&r),
+	errorHandler(nullptr),
+	strategies(),
 	normalState(*this),
 	stringState(*this),
 	state(&normalState)
 {
-	stack->setRunner(*this);
+	loadStrategies();
 	ip.setPos(pos);
 	ip.setDelta(delta);
+	stack->setMode(getMode());
 }
 
 FungeRunner::FungeRunner(const FungeRunner& runner) :
 	id(count++),
 	universe(runner.universe),
-	stack(new StackStack(*runner.stack, *this)),
+	stack(new StackStack(*runner.stack)),
 	ip(runner.ip, *this),
 	parent(&runner),
-	normalState(runner.normalState, *this),
+	errorHandler(nullptr),
+	normalState(*this),
 	stringState(*this),
 	state(&normalState)
 {
+	for(auto s : runner.strategies){
+		load(s->clone(*this));
+	}
 	ip.reflect();
 	ip.next();
+	stack->setMode(getMode());
 }
 
 FungeRunner::~FungeRunner(){
 	ip.stop();
+	while(strategies.size() > 0){
+		delete strategies.back();
+		strategies.pop_back();
+	}
+}
+
+void FungeRunner::loadStrategies(){
+	FungeStandard standard = universe->standard();
+	size_t dimensions = universe->dimensions();
+	if(standard == Funge::FUNGE_FISH){
+		load(new FishStrategy(*this));
+	}else if(standard == Funge::FUNGE_STARFISH){
+		load(new StarfishStrategy(*this));
+	}else{
+		if(dimensions >= 1){
+			if(standard >= Funge::FUNGE_93){
+				load(new Unefunge93Strategy(*this));
+			}
+			if(standard >= Funge::FUNGE_98){
+				load(new Unefunge98Strategy(*this));
+			}
+		}
+		if(dimensions >= 2){
+			if(standard >= Funge::FUNGE_93){
+				load(new Befunge93Strategy(*this));
+			}
+			if(standard >= Funge::FUNGE_98){
+				load(new Befunge98Strategy(*this));
+			}
+		}
+		if(dimensions >= 3){
+			if(standard >= Funge::FUNGE_98){
+				load(new Trefunge98Strategy(*this));
+			}
+		}
+	}
+}
+
+void FungeRunner::load(FungeStrategy* strategy){
+	strategies.push_back(strategy);
 }
 
 bool FungeRunner::isRunning() const {
@@ -79,26 +138,37 @@ void FungeRunner::tick(){
 		switch(err){
 			[[likely]] case ERROR_NONE:
 			[[likely]] case ERROR_SKIP:
-				ip.next();
 				break;
 			case ERROR_BLOCK:
 				break;
 			case ERROR_UNIMP:
-				std::cerr << "Unimplemented instruction " << static_cast<int>(i) << " \'" << static_cast<char>(i) << "\' at " << ip << "." << std::endl;
-				[[fallthrough]];
 			case ERROR_NOTAVAIL:
 			case ERROR_UNSPEC:
 			[[unlikely]] default:
 				getUniverse().getDebugger().trap(*this);
-				ip.reflect();
-				ip.next();
+				if(errorHandler != nullptr){
+					err = errorHandler(err);
+				}else{
+					ip.next();
+				}
 				break;
+		}
+		if(err == ERROR_NONE || err == ERROR_SKIP){
+			ip.next();
 		}
 	} while(err == ERROR_SKIP);
 }
 
 FungeError FungeRunner::execute(inst_t i){
 	return state->execute(i);
+}
+
+void FungeRunner::push(stack_t n){
+	for(auto s : strategies){
+		if(s->push(n) == ERROR_NONE){
+			break;
+		}
+	}
 }
 
 void FungeRunner::setState(FungeState& s){
@@ -109,7 +179,8 @@ FungeState& FungeRunner::getNormalState(){
 	return normalState;
 }
 
-FungeState& FungeRunner::getStringState(){
+FungeState& FungeRunner::getStringState(inst_t i){
+	stringState.setEnd(i);
 	return stringState;
 }
 
@@ -141,20 +212,32 @@ bool FungeRunner::isMode(FungeMode m) const {
 	return universe->isMode(m);
 }
 
-stack_t FungeRunner::getMode() const {
+void FungeRunner::setMode(FungeMode m){
+	stack->setMode(m);
+}
+
+FungeMode FungeRunner::getMode() const {
 	return universe->getMode();
 }
 
-void FungeRunner::pushSemantic(inst_t i, semantic_t func){
+void FungeRunner::pushSemantic(inst_t i, FungeSemantic* func){
 	normalState.pushSemantic(i, func);
 }
 
-semantic_t FungeRunner::popSemantic(inst_t i){
+void FungeRunner::pushSemantic(inst_t i, std::function<FungeError()> func, FungeSemantic::SemanticFlags flg){
+	normalState.pushSemantic(i, new FungeSemantic(func, flg));
+}
+
+FungeSemantic* FungeRunner::popSemantic(inst_t i){
 	return normalState.popSemantic(i);
 }
 
-semantic_t FungeRunner::getSemantic(inst_t i){
+FungeSemantic* FungeRunner::getSemantic(inst_t i){
 	return normalState.getSemantic(i);
+}
+
+void FungeRunner::setErrorHandler(std::function<FungeError(FungeError)> func){
+	errorHandler = func;
 }
 
 void FungeRunner::setUniverse(FungeUniverse& other){

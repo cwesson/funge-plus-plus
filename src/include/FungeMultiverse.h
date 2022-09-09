@@ -23,6 +23,9 @@ class FungeMultiverse {
 		 */
 		static FungeMultiverse& getInstance();
 
+		FungeMultiverse(const FungeMultiverse& orig) = delete;
+		FungeMultiverse operator=(const FungeMultiverse& orig) = delete;
+
 		/**
 		 * Create a new universe.
 		 * @param file Fungespace input file.

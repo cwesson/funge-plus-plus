@@ -23,7 +23,7 @@ FungeError FingerprintMVRS::execute(inst_t cmd){
 		case 'B':{
 			stack_t dim = stack.top().pop();
 			stack_t lng = stack.top().pop();
-			stack_t flgs = stack.top().pop();
+			FungeMode flgs = static_cast<FungeMode>(stack.top().pop());
 			std::string name = popString(stack.top());
 			if(dim == 0){
 				dim = runner.getUniverse().dimensions();
@@ -34,15 +34,16 @@ FungeError FingerprintMVRS::execute(inst_t cmd){
 				ret = ERROR_UNSPEC;
 				break;
 			}
+			FungeStandard stand;
 			switch(lng){
 				case 0:
-					lng = runner.getUniverse().standard();
+					stand = runner.getUniverse().standard();
 					break;
 				case 1:
-					lng = 93;
+					stand = FUNGE_93;
 					break;
 				case 2:
-					lng = 98;
+					stand = FUNGE_98;
 					break;
 				default:
 					ret = ERROR_UNSPEC;
@@ -52,7 +53,7 @@ FungeError FingerprintMVRS::execute(inst_t cmd){
 				FungeConfig config;
 				config.name = name;
 				config.dimensions = dim;
-				config.standard = lng;
+				config.standard = stand;
 				config.mode = flgs;
 				multi.create(config);
 			}
@@ -119,7 +120,7 @@ void FingerprintMVRS::copySpace(const Field& fsrc, const Vector& src, const Vect
 	VectorRange range(Vector{0}, sz);
 	for(range.begin(); *range != range.end(); ++range){
 		inst_t i = fsrc.get(src + *range);
-		fdest.set(dest + *range, i);
+		fdest.put(dest + *range, i);
 	}
 }
 

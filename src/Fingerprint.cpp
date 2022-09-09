@@ -23,4 +23,10 @@ const std::vector<inst_t>& Fingerprint::instructions() const{
 	return inst;
 }
 
+void Fingerprint::activate(){
+	for(auto i : inst){
+		runner.pushSemantic(i, std::bind(&Fingerprint::execute, this, i));
+	}
+}
+
 }

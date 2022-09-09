@@ -18,7 +18,7 @@ class Fingerprint {
 		
 		virtual FungeError execute(inst_t cmd) = 0;
 
-		virtual void activate(){}
+		virtual void activate();
 		
 		const std::vector<inst_t>& instructions() const;
 	

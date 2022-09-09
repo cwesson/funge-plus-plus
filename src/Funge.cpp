@@ -68,6 +68,26 @@ int createUniverse(const std::filesystem::path& filepath, FungeConfig& config){
 		return parseFMV(filepath, config);
 	}
 	config.name = filepath;
+
+	if(config.standard == FUNGE_AUTO){
+		if(ext == ".bf"){
+			config.standard = Funge::FUNGE_93;
+		}else if(ext == ".b98"){
+			config.standard = Funge::FUNGE_98;
+		}else if(ext == ".beq"){
+			config.standard = Funge::FUNGE_98;
+		}else if(ext == ".fish"){
+			config.dimensions = 2;
+			config.standard = Funge::FUNGE_FISH;
+			config.strings = Funge::STRING_MULTISPACE;
+		}else if(ext == ".sf"){
+			config.dimensions = 2;
+			config.standard = Funge::FUNGE_STARFISH;
+			config.strings = Funge::STRING_MULTISPACE;
+		}else{
+			config.standard = Funge::FUNGE_98;
+		}
+	}
 	
 	std::ifstream stream(filepath);
 	if(stream.fail()){
@@ -93,27 +113,35 @@ int fungemain(int argc, char **argv, char **envp){
 			char* arg = std::strtok(NULL, "=");
 			if(strcmp(arg, "une93") == 0){
 				funge_config.dimensions = 1;
-				funge_config.standard = 93;
+				funge_config.standard = Funge::FUNGE_93;
 			}else if(strcmp(arg, "une98") == 0){
 				funge_config.dimensions = 1;
-				funge_config.standard = 98;
+				funge_config.standard = Funge::FUNGE_98;
 			}else if(strcmp(arg, "be93") == 0){
 				funge_config.dimensions = 2;
-				funge_config.standard = 93;
+				funge_config.standard = Funge::FUNGE_93;
 			}else if(strcmp(arg, "be98") == 0){
 				funge_config.dimensions = 2;
-				funge_config.standard = 98;
+				funge_config.standard = Funge::FUNGE_98;
 			}else if(strcmp(arg, "tre98") == 0){
 				funge_config.dimensions = 3;
-				funge_config.standard = 98;
+				funge_config.standard = Funge::FUNGE_98;
+			}else if(strcmp(arg, "fish") == 0){
+				funge_config.dimensions = 2;
+				funge_config.standard = Funge::FUNGE_FISH;
+			}else if(strcmp(arg, "sfish") == 0){
+				funge_config.dimensions = 2;
+				funge_config.standard = Funge::FUNGE_STARFISH;
 			}else{
 				std::cerr << "Unsupported standard: " << arg << std::endl;
 				return EINVAL;
 			}
-			if(funge_config.standard == 93){
-				funge_config.topo = TOPO_TORUS;
-				funge_config.strings = STRING_MULTISPACE;
-				funge_config.cells = CELL_CHAR;
+			if(funge_config.standard == Funge::FUNGE_93
+					|| funge_config.standard == Funge::FUNGE_FISH
+					|| funge_config.standard == Funge::FUNGE_STARFISH){
+				funge_config.topo = Funge::TOPO_TORUS;
+				funge_config.strings = Funge::STRING_MULTISPACE;
+				funge_config.cells = Funge::CELL_CHAR;
 			}else{
 				funge_config.topo = TOPO_LAHEY;
 				funge_config.strings = STRING_SGML;

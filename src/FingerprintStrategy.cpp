@@ -14,6 +14,7 @@
 #include "FingerprintDIRF.h"
 #include "FingerprintDynamic.h"
 #include "FingerprintFING.h"
+#include "FingerprintFISH.h"
 #include "FingerprintFIXP.h"
 #include "FingerprintFloat.h"
 #include "FingerprintFPRT.h"
@@ -24,7 +25,6 @@
 #include "FingerprintJSTR.h"
 #include "FingerprintLONG.h"
 #include "FingerprintMODE.h"
-#include "FingerprintMODU.h"
 #include "FingerprintMVRS.h"
 #include "FingerprintNFUN.h"
 #include "FingerprintORTH.h"
@@ -62,10 +62,6 @@ FingerprintStrategy::~FingerprintStrategy(){
 	}
 }
 
-FungeError FingerprintStrategy::execute(Fingerprint* fing, inst_t i){
-	return fing->execute(i);
-}
-
 Fingerprint* FingerprintStrategy::loadBuiltin(uint64_t fingerprint){
 	Fingerprint* fing = nullptr;
 	switch(fingerprint){
@@ -76,6 +72,7 @@ Fingerprint* FingerprintStrategy::loadBuiltin(uint64_t fingerprint){
 		case 0x44425547: fing = new FingerprintDBUG(runner); break;
 		case 0x44495246: fing = new FingerprintDIRF(runner); break;
 		case 0x46494e47: fing = new FingerprintFING(runner); break;
+		case 0x46495348: fing = new FingerprintFISH(runner); break;
 		case 0x46495850: fing = new FingerprintFIXP(runner); break;
 		case 0x46504450: fing = new FingerprintFloat<double>(runner); break;
 		case 0x46505254: fing = new FingerprintFPRT(runner); break;
@@ -86,7 +83,6 @@ Fingerprint* FingerprintStrategy::loadBuiltin(uint64_t fingerprint){
 		case 0x4A535452: fing = new FingerprintJSTR(runner); break;
 		case 0x4C4F4E47: fing = new FingerprintLONG(runner); break;
 		case 0x4D4F4445: fing = new FingerprintMODE(runner); break;
-		case 0x4D4F4455: fing = new FingerprintMODU(runner); break;
 		case 0x4D565253: fing = new FingerprintMVRS(runner); break;
 		case 0x4E46554E: fing = new FingerprintNFUN(runner); break;
 		case 0x4F525448: fing = new FingerprintORTH(runner); break;
@@ -126,9 +122,6 @@ bool FingerprintStrategy::load(uint64_t fingerprint){
 	if(fing != nullptr){
 		available[fingerprint] = fing;
 		loaded.push_back(fingerprint);
-		for(auto i : fing->instructions()){
-			runner.pushSemantic(i, std::bind(&FingerprintStrategy::execute, this, fing, i));
-		}
 		fing->activate();
 		//std::cout << "Loaded 0x" << std::hex << fingerprint << std::dec << std::endl;
 		return true;

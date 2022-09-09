@@ -10,7 +10,8 @@
 namespace Funge {
 
 FingerprintHRTI::FingerprintHRTI(FungeRunner& r) :
-	Fingerprint(r, {'E', 'G', 'M', 'S', 'T'})
+	Fingerprint(r, {'E', 'G', 'M', 'S', 'T'}),
+	hrti_mark(std::chrono::steady_clock::time_point())
 {}
 
 FungeError FingerprintHRTI::execute(inst_t cmd){

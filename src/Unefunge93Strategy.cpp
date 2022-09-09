@@ -8,6 +8,7 @@
 #include "FungeRunner.h"
 #include "FungeUtilities.h"
 #include "FungeUniverse.h"
+#include "ScopedTermios.h"
 #include <iostream>
 
 namespace Funge {
@@ -29,8 +30,8 @@ Unefunge93Strategy::Unefunge93Strategy(FungeRunner& r) :
 	r.pushSemantic('8', std::bind(&Unefunge93Strategy::instructionPush, this, 8));
 	r.pushSemantic('9', std::bind(&Unefunge93Strategy::instructionPush, this, 9));
 	// Flow Control
-	r.pushSemantic('<', std::bind(&Unefunge93Strategy::instructionWest, this));
-	r.pushSemantic('>', std::bind(&Unefunge93Strategy::instructionEast, this));
+	r.pushSemantic('<', std::bind(&Unefunge93Strategy::instructionWest, this), FungeSemantic::MOVEMENT);
+	r.pushSemantic('>', std::bind(&Unefunge93Strategy::instructionEast, this), FungeSemantic::MOVEMENT);
 	r.pushSemantic('@', std::bind(&Unefunge93Strategy::instructionStop, this));
 	r.pushSemantic('#', std::bind(&Unefunge93Strategy::instructionTrampoline, this));
 	r.pushSemantic('_', std::bind(&Unefunge93Strategy::instructionIf, this));
@@ -57,6 +58,8 @@ Unefunge93Strategy::Unefunge93Strategy(FungeRunner& r) :
 	// Self-Modifying
 	r.pushSemantic('g', std::bind(&Unefunge93Strategy::instructionGet, this));
 	r.pushSemantic('p', std::bind(&Unefunge93Strategy::instructionPut, this));
+
+	r.setErrorHandler(std::bind(&Unefunge93Strategy::errorHandler, this, std::placeholders::_1));
 }
 
 FungeError Unefunge93Strategy::instructionSkip(){
@@ -190,6 +193,7 @@ FungeError Unefunge93Strategy::instructionSwap(){
 }
 
 FungeError Unefunge93Strategy::instructionNumIn(){
+	ScopedTermios term(~(ICANON));
 	stack_t num = 0;
 	int c = getchar();
 	if(c == EOF){
@@ -214,6 +218,7 @@ FungeError Unefunge93Strategy::instructionNumIn(){
 }
 
 FungeError Unefunge93Strategy::instructionCharIn(){
+	ScopedTermios term(~(ICANON));
 	int q = getchar();
 	if(q == EOF){
 		return ERROR_UNSPEC;
@@ -259,8 +264,28 @@ FungeError Unefunge93Strategy::instructionGet(){
 FungeError Unefunge93Strategy::instructionPut(){
 	const Vector& storage = ip.getStorage();
 	Vector v = popVector(runner);
-	field.set(v+storage, stack.top().pop());
+	field.put(v+storage, stack.top().pop());
 	return ERROR_NONE;
+}
+
+FungeError Unefunge93Strategy::errorHandler(FungeError e){
+	inst_t i = ip.get();
+	switch(e){
+		[[unlikely]] case ERROR_NONE:
+		[[unlikely]] case ERROR_SKIP:
+		[[unlikely]] case ERROR_BLOCK:
+			break;
+		case ERROR_UNIMP:
+			std::cerr << "Unimplemented instruction " << static_cast<int>(i) << " \'" << static_cast<char>(i) << "\' at " << ip << "." << std::endl;
+			[[fallthrough]];
+		case ERROR_NOTAVAIL:
+		case ERROR_UNSPEC:
+		[[unlikely]] default:
+			ip.reflect();
+			ip.next();
+			break;
+	}
+	return e;
 }
 
 FungeStrategy* Unefunge93Strategy::clone(FungeRunner& r) const{

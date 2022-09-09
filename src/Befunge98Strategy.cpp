@@ -21,7 +21,7 @@ Befunge98Strategy::Befunge98Strategy(FungeRunner& r) :
 FungeError Befunge98Strategy::instructionLeft(){
 	ip.left();
 	if(runner.isMode(FUNGE_MODE_SWITCH)){
-		ip.set(']');
+		ip.put(']');
 	}
 	return ERROR_NONE;
 }
@@ -29,7 +29,7 @@ FungeError Befunge98Strategy::instructionLeft(){
 FungeError Befunge98Strategy::instructionRight(){
 	ip.right();
 	if(runner.isMode(FUNGE_MODE_SWITCH)){
-		ip.set('[');
+		ip.put('[');
 	}
 	return ERROR_NONE;
 }

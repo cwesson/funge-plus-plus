@@ -87,10 +87,10 @@ FungeError FingerprintSTRN::execute(inst_t cmd){
 			va += ip.getStorage();
 			std::string str = popString(stack.top());
 			for(char c : str){
-				field.set(va, c);
+				field.put(va, c);
 				va += Vector{1};
 			}
-			field.set(va, 0);
+			field.put(va, 0);
 		} break;
 		case 'R':{
 			stack_t n = stack.top().pop();

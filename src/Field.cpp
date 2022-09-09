@@ -5,19 +5,20 @@
  */
 
 #include "Field.h"
-#include "FungeUniverse.h"
 #include <limits>
 #include <string>
 #include <sstream>
 
 namespace Funge{
 
-Field::Field(std::istream& file, FileFormat fmt, size_t dim, FungeUniverse& uni) :
-	universe(uni),
+Field::Field(std::istream& file, FileFormat fmt, size_t dim, FungeCell csize) :
 	field(),
 	maxs(),
 	mins(),
-	planes()
+	planes(),
+	observers(),
+	dimensions(dim),
+	cellsize(csize)
 {
 	switch(fmt){
 		default:
@@ -32,24 +33,20 @@ Field::Field(std::istream& file, FileFormat fmt, size_t dim, FungeUniverse& uni)
 			break;
 	}
 	if(dim == 0){
-		universe.dimensions(maxs.size());
-	}else{
-		universe.dimensions(dim);
+		dimensions = maxs.size();
 	}
 }
 
-Field::Field(size_t dim, FungeUniverse& uni) :
-	universe(uni),
+Field::Field(size_t dim, FungeCell csize) :
 	field(),
 	maxs(),
 	mins(),
-	planes()
+	planes(),
+	observers(),
+	dimensions(dim),
+	cellsize(csize)
 {
-	if(dim == 0){
-		universe.dimensions(maxs.size());
-	}else{
-		universe.dimensions(dim);
-	}
+
 }
 
 Vector Field::parse(const Vector& start, std::istream& file, bool binary){
@@ -57,7 +54,7 @@ Vector Field::parse(const Vector& start, std::istream& file, bool binary){
 	Vector max(start);
 	int last = 0;
 	for(int i = file.get(); !file.eof(); i = file.get()) {
-		size_t dimensions = universe.dimensions();
+		size_t dims = dimensions;
 		if((i == '\n' || i == '\r') && !binary){
 			if(i == '\r'){
 				int j = file.peek();
@@ -70,14 +67,14 @@ Vector Field::parse(const Vector& start, std::istream& file, bool binary){
 				reset(0, v, start, max); // x = 0
 			}
 		}else if((i == '\f') && !binary){
-			if(dimensions == 0 || dimensions >= 3){
+			if(dims == 0 || dims >= 3){
 				reset(0, v, start, max); // x = 0
 				reset(1, v, start, max); // y = 0
 				increment(2, v, max);    // ++z
 				last = '\f';
 			}
 		}else if((i == '\v') && !binary){
-			if(dimensions == 0 || dimensions >= 3){
+			if(dims == 0 || dims >= 3){
 				reset(0, v, start, max); // x = 0
 				reset(1, v, start, max); // y = 0
 				reset(2, v, start, max); // z = 0
@@ -86,11 +83,14 @@ Vector Field::parse(const Vector& start, std::istream& file, bool binary){
 			}
 		}else{
 			if(i != ' '){
-				set(v, i);
+				put(v, i);
 			}
 			increment(0, v, max); // ++x
 			last = i;
 		}
+	}
+	if(dimensions == 0){
+		dimensions = maxs.size();
 	}
 	return max-start;
 }
@@ -147,7 +147,7 @@ void Field::parseBeq(std::istream& file){
 			for(size_t i = 0; i < lines; ++i){
 				std::getline(file, line);
 				for(auto c : line){
-					set(pos, c);
+					put(pos, c);
 					pos.set(0, pos.get(0)+1); // ++x
 				}
 				pos.set(0, origin.get(0)); // x=0
@@ -155,16 +155,16 @@ void Field::parseBeq(std::istream& file){
 			}
 		}
 	}
-	if(universe.dimensions() == 0){
+	if(dimensions == 0){
 		if(dims == 0){
 			dims = maxs.size();
 		}
-		universe.dimensions(dims);
+		dimensions = dims;
 	}
 }
 
 void Field::parseFungeLib(std::istream& file){
-	universe.dimensions(3);
+	dimensions = 3;
 	Vector pos;
 	while(file.good()){
 		std::string line;
@@ -179,7 +179,7 @@ void Field::parseFungeLib(std::istream& file){
 		}
 
 		for(char i : line){
-			set(pos, i);
+			put(pos, i);
 			pos += Vector{1};
 		}
 		pos += Vector{0, 1};  // ++y
@@ -229,14 +229,6 @@ void Field::reset(dim_t d, Vector& v, const Vector& start, Vector& max){
 	v.set(d, start[d]);
 }
 
-FungeTopo Field::topology() const{
-	return universe.topology();
-}
-
-size_t Field::dimensions() const{
-	return universe.dimensions();
-}
-
 dim_t Field::min(size_t d) const{
 	dim_t ret = 0;
 	if(d < mins.size()){
@@ -253,18 +245,14 @@ dim_t Field::max(size_t d) const{
 	return ret;
 }
 
-FungeUniverse& Field::getUniverse(){
-	return universe;
-}
-
-void Field::set(const Vector& p, inst_t v){
+void Field::put(const Vector& p, inst_t v){
 	while(maxs.size() < p.size()){
 		maxs.push_back(0);
 	}
 	while(mins.size() < p.size()){
 		mins.push_back(0);
 	}
-	universe.getDebugger().write(*this, p, v);
+	callObservers(p, v);
 	if(v == ' '){
 		auto find = field.find(p);
 		if(find != field.end()){
@@ -301,11 +289,19 @@ void Field::set(const Vector& p, inst_t v){
 				mins[i] = p[i];
 			}
 		}
-		if(universe.cellSize() == CELL_CHAR){
+		if(cellsize == CELL_CHAR){
 			field[p] = static_cast<char>(v);
 		}else{
 			field[p] = v;
 		}
+	}
+}
+
+size_t Field::size() const {
+	if(dimensions == 0){
+		return maxs.size();
+	}else{
+		return dimensions;
 	}
 }
 
@@ -315,7 +311,7 @@ inst_t Field::get(const Vector& p) const{
 	if(find != field.end()){
 		ret = find->second;
 	}
-	if(universe.cellSize() == CELL_CHAR){
+	if(cellsize == CELL_CHAR){
 		return static_cast<char>(ret);
 	}else{
 		return ret;
@@ -328,6 +324,16 @@ inst_t Field::operator[](const Vector& v) const{
 
 const std::vector<inst_t>& Field::hasPlanes() const{
 	return planes;
+}
+
+void Field::addObserver(std::function<void(const Vector&, inst_t)> cb){
+	observers.push_back(cb);
+}
+
+void Field::callObservers(const Vector& v, inst_t i) const{
+	for(auto cb : observers){
+		cb(v, i);
+	}
 }
 
 std::ostream& operator<<(std::ostream& os, const Field& rhs){

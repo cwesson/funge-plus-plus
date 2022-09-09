@@ -13,7 +13,8 @@
 namespace Funge {
 
 FingerprintFungeLib::FingerprintFungeLib(FungeRunner& r, std::istream& file, FungeConfig& cfg) :
-	Fingerprint(r, {})
+	Fingerprint(r, {}),
+	dynamic(nullptr)
 {
 	dynamic = FungeMultiverse::getInstance().create(file, Field::FORMAT_FL, cfg, &r);
 	for(auto i : dynamic->getField().hasPlanes()){
@@ -21,7 +22,7 @@ FingerprintFungeLib::FingerprintFungeLib(FungeRunner& r, std::istream& file, Fun
 	}
 }
 
-FingerprintFungeLib* FingerprintFungeLib::factory(FungeRunner& r, std::string& name){
+FingerprintFungeLib* FingerprintFungeLib::factory(FungeRunner& r, const std::string& name){
 	std::filesystem::path fl = std::filesystem::canonical("/proc/self/exe").parent_path();
 	fl /= "..";
 	fl /= "fing";
@@ -37,6 +38,7 @@ FingerprintFungeLib* FingerprintFungeLib::factory(FungeRunner& r, std::string& n
 
 		FungeConfig config;
 		config.name = std::filesystem::canonical(fl);
+		config.standard = FUNGE_98;
 		if(r.isMode(FUNGE_MODE_DEBUG)){
 			config.mode |= FUNGE_MODE_DEBUG;
 		}
@@ -51,7 +53,7 @@ FungeError FingerprintFungeLib::execute(inst_t cmd){
 	dynamic->createRunner(Vector{0, 0, (cmd - 'A')}, Vector{1}, runner);
 	dynamic->wait();
 	StackStack& transstack = runner.getStack();
-	transstack.setRunner(runner);
+	transstack.setMode(runner.getMode());
 	return ERROR_NONE;
 }
 

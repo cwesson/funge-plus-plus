@@ -10,7 +10,7 @@ DEPS := $(OBJS:%.o=%.d)
 
 EXEC := bin/funge
 
-INCLUDES := -I src/include -I src/fingerprint/include -I third_party/bigint/include
+INCLUDES := $(addprefix -I,$(shell find src/ -type d -name include)) -I third_party/bigint/include
 
 CPP := g++
 CPPARGS := $(INCLUDES) -g -Wall -Wextra -Werror -std=c++2a
@@ -19,7 +19,7 @@ LINTARGS := $(INCLUDES) --enable=all --std=c++20
 LD := g++
 LDARGS := -pthread
 
-.PHONY: all clean realclean build funge test lint doc man ut unittest cpputest
+.PHONY: all clean realclean build funge test lint doc man ut unittest cpputest smoketest
 
 GCOV ?= 0
 ifneq ($(GCOV),0)
@@ -44,7 +44,9 @@ bin/%.o: %.cpp
 
 -include $(DEPS)
 
-test: build ut
+test: ut smoketest
+
+smoketest: $(EXEC)
 	@./test/smoketest.sh
 
 lint:
@@ -61,20 +63,20 @@ bin/funge.1: doc/man.md
 	@echo "MAN "
 	@pandoc $< -s -t man -o $@
 
-CPPUTESTLIB := test/cpputest/src/CppUTest/libCppUTest.a
-UTCPPARGS := -I src/include -I test/cpputest/include -lpthread -std=c++2a
-UTSRCS := test/ut/unittest.cpp src/Vector.cpp src/VectorRange.cpp
+CPPUTESTLIB := test/cpputest/src/CppUTest/libCppUTest.a test/cpputest/src/CppUTestExt/libCppUTestExt.a
+UTCPPARGS := -I src/include -I test/cpputest/include -lpthread -Wall -Wextra -Werror -std=c++2a --include test/ut/new_macros.h
+UTSRCS := $(shell find test/ut/ -name \*.cpp) src/Field.cpp src/StackStack.cpp src/Stack.cpp src/Vector.cpp src/VectorRange.cpp
 UTBIN := bin/unittest
 
 ut: unittest
 
 unittest: $(UTBIN)
-	@$(UTBIN) -c -v -ojunit
 
 $(UTBIN): $(UTSRCS) $(CPPUTESTLIB)
 	@mkdir -p $(dir $@)
 	@echo "LD  " $@
 	@$(CPP) $(UTCPPARGS) -o $@ $^
+	@$(UTBIN) -c -v -ojunit
 
 cpputest: $(CPPUTESTLIB)
 
@@ -82,11 +84,12 @@ $(CPPUTESTLIB):
 	cd test/cpputest; cmake .
 	make -C test/cpputest
 
-.NOTPARALLEL: clean realclean
+.NOTPARALLEL:
 
 clean:
 	@echo CLEAN bin/
 	@rm -f $(OBJS) $(DEPS)
+	make -C test/cpputest clean
 
 realclean: clean
 	@echo REALCLEAN
