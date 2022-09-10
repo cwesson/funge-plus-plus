@@ -62,5 +62,5 @@ print the entire stack stack.
 The **get** and **list** command display the current state of fungespace.  The center cell of the requested range is
 underlined.
 
-If terminal colors are available, the position current IP is highlight in green, the position of other IPs
+If terminal colors are available, the position of the current IP is highlight in green, the position of other IPs
 are highlighted yellow.  The position of breakpoints are highlighted red, and watchpoints blue.

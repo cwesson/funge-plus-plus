@@ -19,7 +19,7 @@ FingerprintFISH::FingerprintFISH(FungeRunner& r) :
 
 void FingerprintFISH::activate(){
 	for(auto i : inst){
-		if(i == 'U' || i == 'O'){
+		if(i == 'U' || i == 'O' || i == 'M' || i == 'N' || i == 'H' || i == 'V'){
 			runner.pushSemantic(i, std::bind(&Fingerprint::execute, this, i), FungeSemantic::MOVEMENT);
 		}else{
 			runner.pushSemantic(i, std::bind(&Fingerprint::execute, this, i));

@@ -16,6 +16,8 @@ class FingerprintNFUN : public Fingerprint {
 		virtual ~FingerprintNFUN() = default;
 		
 		virtual FungeError execute(inst_t cmd) override;
+
+		virtual void activate() override;
 };
 
 }

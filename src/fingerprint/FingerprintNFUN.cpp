@@ -14,6 +14,16 @@ FingerprintNFUN::FingerprintNFUN(FungeRunner& r) :
 			{'A', 'B', 'C', 'D', 'H', 'I', 'L', 'M', 'R', 'V', 'X', 'Y', 'Z'})
 {}
 
+void FingerprintNFUN::activate(){
+	for(auto i : inst){
+		if(i == 'I' || i == 'M' || i == 'R' || i == 'X' || i == 'Y' || i == 'Z'){
+			runner.pushSemantic(i, std::bind(&Fingerprint::execute, this, i));
+		}else{
+			runner.pushSemantic(i, std::bind(&Fingerprint::execute, this, i), FungeSemantic::MOVEMENT);
+		}
+	}
+}
+
 FungeError FingerprintNFUN::execute(inst_t cmd){
 	size_t dim = 0;
 	switch(cmd){

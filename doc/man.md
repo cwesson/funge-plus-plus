@@ -59,6 +59,10 @@ file.  Each line of an FMV file consists of a path to a Funge file to load as a
 universe, followed by yargs for that universe.  The yargs specified in the FMV
 file are append to the yargs specified on the command line.
 
+If the file path ends in **.fish** the file is interpretted as a ><> file.
+
+If the file path ends in **.sf** the file is interpretted as a *><> file.
+
 # YARGS
 Any arguments following the Funge file are passed to the Funge program. These
 arguments are available to the program using the `y` instruction.
