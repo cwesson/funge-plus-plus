@@ -13,6 +13,7 @@
 #include "FungeStateString.h"
 #include "FungeConfig.h"
 #include <memory>
+#include <mutex>
 
 namespace Funge {
 class FungeUniverse;
@@ -66,6 +67,7 @@ class FungeRunner {
 		const FungeRunner* parent;
 		std::function<FungeError(FungeError)> errorHandler;
 		std::vector<FungeStrategy*> strategies;
+		std::mutex mutex;
 		
 		FungeStateNormal normalState;
 		FungeStateString stringState;

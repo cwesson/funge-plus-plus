@@ -129,8 +129,22 @@ void Defunge::printIP(const FungeRunner& r){
 }
 
 void Defunge::printField(FungeDebugger* dbg, const Field& field, const Vector& center, const Vector& size, const Vector& dim, const InstructionPointer* ip){
-	const Vector start = center-size;
-	const Vector end = center+size;
+	Vector start = center-size;
+	Vector end = center+size;
+	const dim_t x = dim[0];
+	const dim_t y = dim[1];
+	if(start.get(x) < field.min(x)){
+		start.set(x, field.min(x));
+	}
+	if(start.get(y) < field.min(y)){
+		start.set(y, field.min(y));
+	}
+	if(end.get(x) > field.max(x)){
+		end.set(x, field.max(x));
+	}
+	if(end.get(y) > field.max(y)){
+		end.set(y, field.max(y));
+	}
 	Vector pos = start;
 	while(pos <= end){
 		inst_t i = field.get(pos);
@@ -162,10 +176,10 @@ void Defunge::printField(FungeDebugger* dbg, const Field& field, const Vector& c
 		if(color){
 			std::cout << "\e[0m";
 		}
-		pos.set(dim[0], pos[dim[0]]+1); // ++x
-		if(pos[dim[0]] > end[dim[0]]){
-			pos.set(dim[1], pos[dim[1]]+1); // ++y
-			pos.set(dim[0], start[dim[0]]); // x = 0
+		pos.set(x, pos[x]+1); // ++x
+		if(pos[x] > end[x]){
+			pos.set(y, pos[y]+1); // ++y
+			pos.set(x, start[x]); // x = 0
 			std::cout << std::endl;
 		}
 	}
@@ -294,7 +308,7 @@ Defunge::Error Defunge::backtraceCommand(std::istringstream& iss){
 	std::cout << "Backtrace" << std::endl;
 	size_t i = 0;
 	size_t tid = runner->getID();
-	const Field& field = runner->getUniverse().getField();
+	const Field& field = debugger->universe.getField();
 	for(auto b : debugger->threads[tid].backtrace){
 		std::cout << "#" << i++ << "  " << b << " \"" << static_cast<char>(field.get(b)) << "\"" << std::endl;
 	}
@@ -368,7 +382,7 @@ Defunge::Error Defunge::listCommand(std::istringstream& iss){
 	Vector s;
 	iss >> s;
 	if(s.size() == 0){
-		s = {3,3};
+		s = {35,10};
 	}
 	Vector d;
 	iss >> d;

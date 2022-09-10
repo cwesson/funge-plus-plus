@@ -82,9 +82,9 @@ FungeError FingerprintMVRS::execute(inst_t cmd){
 				ret = ERROR_UNSPEC;
 				break;
 			}
-			other->transferRunner(&runner);
 			ip.setPos(pos);
 			ip.setDelta(delta);
+			other->transferRunner(&runner);
 		}break;
 		case 'J':{
 			std::string name = popString(stack.top());

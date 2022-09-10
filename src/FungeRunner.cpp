@@ -27,6 +27,7 @@ FungeRunner::FungeRunner(FungeUniverse& uni, const Vector& pos, const Vector& de
 	parent(nullptr),
 	errorHandler(nullptr),
 	strategies(),
+	mutex(),
 	normalState(*this),
 	stringState(*this),
 	state(&normalState)
@@ -45,6 +46,7 @@ FungeRunner::FungeRunner(FungeUniverse& uni, const Vector& pos, const Vector& de
 	parent(&r),
 	errorHandler(nullptr),
 	strategies(),
+	mutex(),
 	normalState(*this),
 	stringState(*this),
 	state(&normalState)
@@ -62,6 +64,8 @@ FungeRunner::FungeRunner(const FungeRunner& runner) :
 	ip(runner.ip, *this),
 	parent(&runner),
 	errorHandler(nullptr),
+	strategies(),
+	mutex(),
 	normalState(*this),
 	stringState(*this),
 	state(&normalState)
@@ -130,9 +134,10 @@ void FungeRunner::operator()(){
 }
 
 void FungeRunner::tick(){
+	std::lock_guard<std::mutex> guard(mutex);
 	FungeError err = ERROR_UNSPEC;
 	do {
-		getUniverse().getDebugger().tick(*this);
+		universe->getDebugger().tick(*this);
 		inst_t i = ip.get();
 		err = execute(i);
 		switch(err){
