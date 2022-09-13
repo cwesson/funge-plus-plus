@@ -74,11 +74,15 @@ FungeError FingerprintDynamic::execute(inst_t cmd){
 					pops[i] = stack.top().pop();
 				}
 				if(u < 0){
+					// a b c d e f g
+					// g a b c d e f
 					stack.top().push(pops[0]);
 					for(stack_t i = count; i > 0; --i){
 						stack.top().push(pops[i]);
 					}
 				}else{
+					// a b c d e f g
+					// g f e d c b a
 					for(stack_t i = count-1; i >= 0; --i){
 						stack.top().push(pops[i]);
 					}

@@ -116,6 +116,7 @@ test_simple test/test_subr.b98 "7 6 5 4 3 2 1 362880 "
 test_simple test/test_mvrs.b98 "1 Hello test2 3 "
 test_simple test/test_fing.b98 "1 5 10 100 100 "
 test_simple test/test_fish.b98 "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 5 4 3 2 1 "
+test_simple test/test_imth.b98 "5 0 4 3 0 1500 -1500 2 -2 0 150000 -150000 3628800 0 1 -1 0 15000 -15000 5 -5 80 10 1 640 1 9 6 0 150 -150 6 -44 3603600 "
 # Edge Cases
 test_simple test/kk.b98 "!12 "
 test_simple test/k_quote.b98 "2 "
