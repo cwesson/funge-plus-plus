@@ -144,7 +144,7 @@ int fungemain(int argc, char **argv, char **envp){
 					|| funge_config.standard == Funge::FUNGE_STARFISH){
 				funge_config.topo = Funge::TOPO_LAHEY;
 				funge_config.strings = Funge::STRING_MULTISPACE;
-				funge_config.cells = Funge::CELL_CHAR;
+				funge_config.cells = Funge::CELL_INT;
 			}else{
 				funge_config.topo = TOPO_LAHEY;
 				funge_config.strings = STRING_SGML;
