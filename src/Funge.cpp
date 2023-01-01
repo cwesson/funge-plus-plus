@@ -136,10 +136,13 @@ int fungemain(int argc, char **argv, char **envp){
 				std::cerr << "Unsupported standard: " << arg << std::endl;
 				return EINVAL;
 			}
-			if(funge_config.standard == Funge::FUNGE_93
-					|| funge_config.standard == Funge::FUNGE_FISH
-					|| funge_config.standard == Funge::FUNGE_STARFISH){
+			if(funge_config.standard == Funge::FUNGE_93){
 				funge_config.topo = Funge::TOPO_TORUS;
+				funge_config.strings = Funge::STRING_MULTISPACE;
+				funge_config.cells = Funge::CELL_CHAR;
+			}else if(funge_config.standard == Funge::FUNGE_FISH
+					|| funge_config.standard == Funge::FUNGE_STARFISH){
+				funge_config.topo = Funge::TOPO_LAHEY;
 				funge_config.strings = Funge::STRING_MULTISPACE;
 				funge_config.cells = Funge::CELL_CHAR;
 			}else{
