@@ -16,7 +16,7 @@ Vertical Tabs in the file represent 4D+1 and reset X, Y, and Z to zero.  Carriag
 following a vertical tab are ignored.  This is not part of the Funge-98 specification, but provides a simple way to
 create 4-dimensional funges.
 
-Trefunge frunges can be loaded as funge-lib formatted `.fl` files.
+Trefunge funges can be loaded as funge-lib formatted `.fl` files.
 
 Higher dimension funges can be loaded as BeQunge formatted `.beq` files.  Loading a `.beq` file implies `-lNFUN`.
 
@@ -27,7 +27,7 @@ The split instruction `t` can use native threads rather than the tick mechanism 
 specification.  This mode can be enabled with `-fthreads=native`.
 
 ### Auto-Dimensions
-The dimensionality (up to 4D) is determined automatically based on the file contents.  This can be overriden with
+The dimensionality (up to 4D) is determined automatically based on the file contents.  This can be overridden with
 the `-std` argument.  Funge-lib formatted files are 3D.  Higher dimensions can be determined automatically from BeQunge
 formatted files with or without the `Dimensions` directive.
 
@@ -37,8 +37,8 @@ example, in 4D mode, `?` will change the delta to one of 8 possible directions, 
 directions.
 
 ### C-Style Strings
-C-style strings can be enabled with `-fstrings=c`.  In this mode, backslashes in strings are not pused to the stack,
-instead, it and the following character are interpretted as an escape sequence.  This happens in one tick.  In addition
+C-style strings can be enabled with `-fstrings=c`.  In this mode, backslashes in strings are not pushed to the stack,
+instead, it and the following character are interpreted as an escape sequence.  This happens in one tick.  In addition
 to special characters, this allows quotes and ANSI escape codes in strings.
 
 ### 64-bit
@@ -128,3 +128,8 @@ Instructions from dynamic Funges run with the same stack as the IP that called t
 The Funge++ debugger, known as defunge, can be run on any Befunge program by specifying the `-g` command line argument.
 
 See [Defunge](doc/defunge.md) for details.
+
+## Contributing
+Please submit bug reports and feature requests on [GitHub Issues](https://github.com/cwesson/funge-plus-plus/issues).
+
+Pull requests are also welcome.  For details of how Funge++ works, review the [software design](doc/design.md).

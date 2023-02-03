@@ -9,13 +9,17 @@
 #include <iostream>
 
 namespace Funge {
-
 const char FingerprintBASE::digit_map[32] = {
 	'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
 	'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K',
 	'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'X',
 	'Y', 'Z'
 };
+
+const char FingerprintBASE::base12[12] = {
+	'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'X', 'E'
+};
+
 
 const char FingerprintBASE::base36[36] = {
 	'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
@@ -56,6 +60,7 @@ FingerprintBASE::FingerprintBASE(FungeRunner& r) :
 	Fingerprint(r, {'B', 'H', 'I', 'N', 'O'}),
 	base_map()
 {
+	base_map[12] = &base12[0];
 	base_map[36] = &base36[0];
 	base_map[58] = &base58[0];
 	base_map[64] = &base64[0];
@@ -111,17 +116,15 @@ void FingerprintBASE::printBase(stack_t num, unsigned int base, bool low) const{
 	if(next > 0){
 		printBase(next, base, false);
 	}
-	if(base <= sizeof(digit_map)){
+	auto found = base_map.find(base);
+	if(found != base_map.end()){
+		std::cout << found->second[digit];
+	}else if(base <= sizeof(digit_map)){
 		std::cout << digit_map[digit];
 	}else{
-		auto found = base_map.find(base);
-		if(found != base_map.end()){
-			std::cout << found->second[digit];
-		}else{
-			std::cout << digit;
-			if(!low){
-				std::cout << ",";
-			}
+		std::cout << digit;
+		if(!low){
+			std::cout << ",";
 		}
 	}
 }
@@ -132,20 +135,26 @@ stack_t FingerprintBASE::readNum(unsigned int base) const{
 	stack_t num = 0;
 	if(base <= 1){
 		num = str.size();
+	}
+	const char* map = digit_map;
+	auto found = base_map.find(base);
+	if(found != base_map.end()){
+		map = found->second;
+		readBase(str, &num, base, map);
 	}else if(base <= sizeof(digit_map)){
-		readBase(str, &num, base);
+		readBase(str, &num, base, map);
 	}
 	return num;
 }
 
-bool FingerprintBASE::readBase(std::string str, stack_t* num, unsigned int base) const{
+bool FingerprintBASE::readBase(std::string str, stack_t* num, unsigned int base, const char* map) const{
 	char digit = str[0];
-	bool found = false;
 	if(base <= 36){
 		std::transform(str.begin(), str.end(), str.begin(), ::toupper);
 	}
+	bool found = false;
 	for(size_t i = 0; i <= base; ++i){
-		if(digit_map[i] == digit){
+		if(map[i] == digit){
 			*num = (*num*base) + i;
 			found = true;
 			break;
@@ -153,7 +162,7 @@ bool FingerprintBASE::readBase(std::string str, stack_t* num, unsigned int base)
 	}
 	if(found && str.size() > 1){
 		str.erase(0, 1);
-		readBase(str, num, base);
+		readBase(str, num, base, map);
 	}
 	return true;
 }

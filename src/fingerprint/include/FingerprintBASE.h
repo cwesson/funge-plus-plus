@@ -20,6 +20,7 @@ class FingerprintBASE : public Fingerprint {
 	
 	private:
 		static const char digit_map[32];
+		static const char base12[12];
 		static const char base36[36];
 		static const char base58[58];
 		static const char base64[64];
@@ -30,7 +31,7 @@ class FingerprintBASE : public Fingerprint {
 		void printNum(stack_t num, unsigned int base) const;
 		void printBase(stack_t num, unsigned int base, bool low) const;
 		stack_t readNum(unsigned int base) const;
-		bool readBase(std::string str, stack_t* num, unsigned int base) const;
+		bool readBase(std::string str, stack_t* num, unsigned int base, const char* map) const;
 };
 
 }

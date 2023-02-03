@@ -53,7 +53,7 @@ print the entire stack stack.
 : Set the delta of the current IP to vector *v*.
 
 **setpos *v***
-: Set the postion of the current IP to vector *v*.
+: Set the position of the current IP to vector *v*.
 
 **universe**, **u**
 : Print a list universe names.
