@@ -7,6 +7,7 @@
 #pragma once
 
 #include "Fingerprint.h"
+#include <map>
 #include <string>
 
 namespace Funge {

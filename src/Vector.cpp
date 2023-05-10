@@ -208,4 +208,12 @@ std::istream& operator>>(std::istream& is, Vector& rhs){
 	return is;
 }
 
+size_t Vector::hash::operator()(const Funge::Vector& v) const noexcept{
+	size_t hash = 0;
+	for(dim_t i : v.values){
+		hash = (hash << 8) ^ i;
+	}
+	return hash;
+}
+
 }

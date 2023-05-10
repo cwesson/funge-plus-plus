@@ -9,7 +9,7 @@
 #include "Vector.h"
 #include "funge_types.h"
 #include <iostream>
-#include <map>
+#include <unordered_map>
 #include <vector>
 #include <functional>
 
@@ -124,7 +124,7 @@ class Field {
 		friend std::ostream& operator<<(std::ostream& os, const Field& rhs);
 	
 	private:
-		std::map<const Vector, inst_t> field;
+		std::unordered_map<const Vector, inst_t, Vector::hash> field;
 		std::vector<dim_t> maxs;
 		std::vector<dim_t> mins;
 		std::vector<inst_t> planes;
