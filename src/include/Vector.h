@@ -119,6 +119,11 @@ class Vector {
 		 * Input stream operator.
 		 */
 		friend std::istream& operator>>(std::istream& is, Vector& rhs);
+
+		struct hash{
+			size_t operator()(const Funge::Vector& v) const noexcept;
+		};
+
 	
 	private:
 		std::vector<dim_t> values;

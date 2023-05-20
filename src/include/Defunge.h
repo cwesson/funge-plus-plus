@@ -32,7 +32,7 @@ class Defunge {
 		std::recursive_mutex mutex;
 		FungeDebugger* debugger;
 		FungeRunner* runner;
-		std::map<std::string, debugger_command_t> cmdMap;
+		std::unordered_map<std::string, debugger_command_t> cmdMap;
 
 		Defunge();
 

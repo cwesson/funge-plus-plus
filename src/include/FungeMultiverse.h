@@ -7,7 +7,7 @@
 #pragma once
 
 #include "FungeUniverse.h"
-#include <map>
+#include <unordered_map>
 #include <mutex>
 
 namespace Funge {
@@ -62,8 +62,8 @@ class FungeMultiverse {
 		 */
 		FungeUniverse* operator[](std::string name);
 
-		std::map<std::string, FungeUniverse*>::const_iterator cbegin() const;
-		std::map<std::string, FungeUniverse*>::const_iterator cend() const;
+		std::unordered_map<std::string, FungeUniverse*>::const_iterator cbegin() const;
+		std::unordered_map<std::string, FungeUniverse*>::const_iterator cend() const;
 
 		/**
 		 * Get the size of the multiverse.
@@ -73,7 +73,7 @@ class FungeMultiverse {
 	
 	private:
 		FungeUniverse* prime;
-		std::map<std::string, FungeUniverse*> universes;
+		std::unordered_map<std::string, FungeUniverse*> universes;
 		mutable std::mutex mutex;
 
 		FungeMultiverse();

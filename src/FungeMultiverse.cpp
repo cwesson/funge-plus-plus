@@ -92,10 +92,10 @@ FungeUniverse* FungeMultiverse::operator[](std::string name){
 	return nullptr;
 }
 
-std::map<std::string, FungeUniverse*>::const_iterator FungeMultiverse::cbegin() const{
+std::unordered_map<std::string, FungeUniverse*>::const_iterator FungeMultiverse::cbegin() const{
 	return universes.cbegin();
 }
-std::map<std::string, FungeUniverse*>::const_iterator FungeMultiverse::cend() const{
+std::unordered_map<std::string, FungeUniverse*>::const_iterator FungeMultiverse::cend() const{
 	return universes.cend();
 }
 
