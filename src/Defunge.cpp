@@ -211,11 +211,7 @@ Defunge::Error Defunge::peekCommand(std::istringstream& iss){
 	iss >> c;
 	if(c == 0){
 		for(size_t j = 0; j < stack->size(); ++j){
-			std::cout << "[0] ";
-			for(size_t i = stack->at(j).size(); i > 0; --i){
-				std::cout << stack->at(j).get(i) << " ";
-			}
-			std::cout << std::endl;
+			std::cout << stack->at(j) << std::endl;
 		}
 	}else{
 		size_t s = 0;

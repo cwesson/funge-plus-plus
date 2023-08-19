@@ -225,7 +225,7 @@ FungeError FishStrategy::instructionDiv(){
 	double x = pop(TOP);
 	double y = pop(TOP);
 	if(x == 0){
-		return ERROR_UNSPEC;
+		return ERROR_DIV0;
 	}
 	push(TOP, y / x);
 	return ERROR_NONE;
@@ -236,7 +236,7 @@ FungeError FishStrategy::instructionModu(){
 	stack_t x = pop(TOP);
 	stack_t y = pop(TOP);
 	if(x == 0){
-		return ERROR_UNSPEC;
+		return ERROR_DIV0;
 	}
 	push(TOP, y % x);
 	return ERROR_NONE;
@@ -511,8 +511,6 @@ FungeError FishStrategy::errorHandler(FungeError e){
 				return ERROR_NONE;
 			}
 			[[fallthrough]];
-		case ERROR_NOTAVAIL:
-		case ERROR_UNSPEC:
 		[[unlikely]] default:
 			std::cerr << "something smells fishy..." << std::endl;
 			runner.getUniverse().killAll(1);

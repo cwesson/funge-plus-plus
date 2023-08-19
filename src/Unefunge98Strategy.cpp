@@ -176,7 +176,7 @@ FungeError Unefunge98Strategy::instructionUnder(){
 			}
 		}
 	}else{
-		ret = ERROR_UNSPEC;
+		ret = ERROR_NOSTACK;
 	}
 	return ret;
 }
@@ -228,7 +228,7 @@ FungeError Unefunge98Strategy::instructionEnd(){
 		}
 		stack.pop();
 	}else{
-		ret = ERROR_UNSPEC;
+		ret = ERROR_NOSTACK;
 	}
 	
 	if(runner.isMode(FUNGE_MODE_SWITCH)){

@@ -3,8 +3,8 @@
 "Take one down and pass it around, "<v   
 0g00"bottle" <  v" of beer."+55      < v
 0g00"bottle"< v" of beer on the wall, "<v |#
- v <_v#`1g00  < >200g`#v_> v    > v,_v#:< >v
- >"s">      ^^         <"s"<    . >     ^ #n
+ v <_v#`1g00  < >200g`#v_> v    > v,_v#:< >_v
+ >"s">      ^^         <"s"<    . >     ^ #v<
    Written by Conlan Wesson     | :$ <    p
    Version 1.0 Aug. 01, 2009    >$00g1-:00^
 "99 bottles of beer on the wall."+91       <v

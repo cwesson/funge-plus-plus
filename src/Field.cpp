@@ -259,25 +259,20 @@ void Field::put(const Vector& p, inst_t v){
 			field.erase(find);
 		}
 		for(size_t i = 0; i < p.size(); ++i){
-			if(maxs[i] == p[i]){
-				// scan for new max
-				dim_t max = std::numeric_limits<dim_t>::min() ;
-				for(auto s = field.cbegin(); s != field.cend(); ++s){
-					if(s->first[i] > max){
-						max = s->first[i];
-					}
-				}
-				maxs[i] = max;
-			}
-			if(mins[i] == p[i]){
-				// scan for new min
+			if(maxs[i] == p[i] || mins[i] == p[i]){
+				// scan for new min/max
 				dim_t min = std::numeric_limits<dim_t>::max();
+				dim_t max = std::numeric_limits<dim_t>::min() ;
 				for(auto s = field.cbegin(); s != field.cend(); ++s){
 					if(s->first[i] < min){
 						min = s->first[i];
 					}
+					if(s->first[i] > max){
+						max = s->first[i];
+					}
 				}
 				mins[i] = min;
+				maxs[i] = max;
 			}
 		}
 	}else{

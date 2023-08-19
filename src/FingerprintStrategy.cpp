@@ -33,6 +33,7 @@
 #include "FingerprintSTRN.h"
 #include "FingerprintSUBR.h"
 #include "FingerprintTOYS.h"
+#include "FingerprintTRDS.h"
 #include "FungeUniverse.h"
 #include <filesystem>
 
@@ -91,6 +92,7 @@ Fingerprint* FingerprintStrategy::loadBuiltin(uint64_t fingerprint){
 		case 0x5354524E: fing = new FingerprintSTRN(runner); break;
 		case 0x53554252: fing = new FingerprintSUBR(runner); break;
 		case 0x544F5953: fing = new FingerprintTOYS(runner); break;
+		case 0x54524453: fing = new FingerprintTRDS(runner); break;
 		case FingerprintDynamic::ID:
 			if(runner.getUniverse().getCreator() != nullptr){
 				fing = new FingerprintDynamic(runner, runner.getUniverse().getCreator());

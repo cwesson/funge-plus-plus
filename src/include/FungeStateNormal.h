@@ -9,7 +9,7 @@
 #include "FungeState.h"
 #include "FungeStrategy.h"
 #include "FungeSemantic.h"
-#include <map>
+#include <unordered_map>
 #include <stack>
 
 namespace Funge {
@@ -29,7 +29,7 @@ class FungeStateNormal : public FungeState {
 		FungeStateNormal& operator=(const FungeStateNormal&) = delete;
 	
 	protected:
-		std::map<inst_t, std::stack<FungeSemantic*>> semantics;
+		std::unordered_map<inst_t, std::stack<FungeSemantic*>> semantics;
 };
 
 }

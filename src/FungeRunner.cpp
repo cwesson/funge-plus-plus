@@ -141,9 +141,6 @@ void FungeRunner::tick(){
 				break;
 			case ERROR_BLOCK:
 				break;
-			case ERROR_UNIMP:
-			case ERROR_NOTAVAIL:
-			case ERROR_UNSPEC:
 			[[unlikely]] default:
 				getUniverse().getDebugger().trap(*this);
 				if(errorHandler != nullptr){

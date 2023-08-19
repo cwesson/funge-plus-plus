@@ -116,6 +116,7 @@ class FungeUniverse {
 		void clearMode(FungeMode m);
 		void toggleMode(FungeMode m);
 		FungeMode getMode() const;
+		size_t getAge() const;
 		bool isMode(FungeMode m) const;
 		bool allowConcurrent() const;
 		bool allowExecute() const;
@@ -124,6 +125,7 @@ class FungeUniverse {
 		bool invertHL() const;
 	
 	private:
+		size_t age;
 		bool running;
 		int exitcode;
 		FungeConfig config;

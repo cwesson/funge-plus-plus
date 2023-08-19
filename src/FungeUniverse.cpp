@@ -11,6 +11,7 @@
 namespace Funge {
 
 FungeUniverse::FungeUniverse(std::istream& file, Field::FileFormat fmt, const FungeConfig& cfg):
+	age(0),
 	running(true),
 	exitcode(0),
 	config(cfg),
@@ -31,6 +32,7 @@ FungeUniverse::FungeUniverse(std::istream& file, Field::FileFormat fmt, const Fu
 }
 
 FungeUniverse::FungeUniverse(const FungeConfig& cfg):
+	age(0),
 	running(true),
 	exitcode(0),
 	config(cfg),
@@ -56,9 +58,9 @@ FungeUniverse::~FungeUniverse(){
 
 	std::lock_guard<std::mutex> guard(mutex);
 	while(threads.size() > 0){
-		std::thread* thread = threads.front();
-		thread->join();
-		delete thread;
+		std::thread* native = threads.front();
+		native->join();
+		delete native;
 	}
 	while(runners.size() > 0){
 		FungeRunner* runner = runners.front();
@@ -96,8 +98,8 @@ void FungeUniverse::addRunner(FungeRunner* runner){
 	std::lock_guard<std::mutex> guard(mutex);
 	runner->setMode(config.mode);
 	if(config.threads == THREAD_NATIVE){
-		std::thread* thread = new std::thread(std::ref(*runner));
-		threads.push(thread);
+		std::thread* native = new std::thread(std::ref(*runner));
+		threads.push(native);
 	}
 	runners.push_back(runner);
 	semaphore.release();
@@ -109,40 +111,42 @@ void FungeUniverse::operator()(){
 		if(config.threads == THREAD_NATIVE){
 			mutex.lock();
 			while(threads.size() > 0){
-				std::thread* thread = threads.front();
-				if(thread->joinable()){
+				std::thread* native = threads.front();
+				if(native->joinable()){
 					mutex.unlock();
-					thread->join();
+					native->join();
 					mutex.lock();
 				}
 				threads.pop();
-				delete thread;
+				delete native;
 			}
 			mutex.unlock();
 		}else{
 			mutex.lock();
 			while(runners.size() > 0){
-				FungeRunner* thread = runners.front();
+				for(auto it = runners.begin(); it != runners.end(); ){
+					FungeRunner* runner = *it;
 
-				mutex.unlock();
-				if(thread->isRunning()){
-					thread->tick();
-				}
-				mutex.lock();
-
-				runners.pop_front();
-				if(&thread->getUniverse() == this){
-					if(thread->isRunning()){
-						runners.push_back(thread);
-					}else{
-						debug.endThread(*thread);
-						delete thread;
-						cv.notify_all();
+					mutex.unlock();
+					if(runner->isRunning()){
+						runner->tick();
 					}
-				}else{
-					cv.notify_all();
+					mutex.lock();
+
+					if(&runner->getUniverse() == this){
+						if(runner->isRunning()){
+							++it;
+						}else{
+							debug.endThread(*runner);
+							it = runners.erase(it);
+						}
+					}else{
+						it = runners.erase(it);
+					}
 				}
+				++age;
 			}
+			cv.notify_all();
 			mutex.unlock();
 		}
 	}
@@ -249,6 +253,10 @@ void FungeUniverse::toggleMode(FungeMode m){
 
 FungeMode FungeUniverse::getMode() const {
 	return config.mode;
+}
+
+size_t FungeUniverse::getAge() const {
+	return age;
 }
 
 bool FungeUniverse::isMode(FungeMode m) const {

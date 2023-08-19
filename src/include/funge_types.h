@@ -137,9 +137,12 @@ enum FungeError {
 	ERROR_NONE,     ///< No error.
 	ERROR_SKIP,     ///< Skip instruction.
 	ERROR_BLOCK,    ///< Instruction blocked.
-	ERROR_UNIMP,    ///< Unimplemented unstruction.
+	ERROR_UNIMP,    ///< Unimplemented instruction.
 	ERROR_NOTAVAIL, ///< Feature not available.
 	ERROR_UNSPEC,   ///< General execution error.
+	ERROR_DIV0,     ///< Divide by zero.
+	ERROR_EMPTY,    ///< Not enough elements in stack.
+	ERROR_NOSTACK,  ///< Stack does not exist.
 };
 
 }

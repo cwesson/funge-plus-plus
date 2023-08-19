@@ -10,6 +10,7 @@
 #include <cstddef>
 #include <list>
 #include <mutex>
+#include <ostream>
 
 namespace Funge {
 class StackStack;
@@ -85,6 +86,11 @@ class Stack {
 		 * @note FUNGE_MODE_INVERT pushes to the bottom of the stack.
 		 */
 		void setMode(FungeMode m);
+
+		/**
+		 * Output stream operator.
+		 */
+		friend std::ostream& operator<<(std::ostream& os, const Stack& rhs);
 	
 	private:
 		FungeMode mode;

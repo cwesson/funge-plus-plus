@@ -111,4 +111,12 @@ void Stack::setMode(FungeMode m){
 	mode = m;
 }
 
+std::ostream& operator<<(std::ostream& os, const Stack& rhs){
+	os << "[0] ";
+	for(auto i : rhs.stack){
+		os << i << " ";
+	}
+	return os;
+}
+
 }

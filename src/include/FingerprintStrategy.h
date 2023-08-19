@@ -8,7 +8,7 @@
 
 #include "FungeStrategy.h"
 #include "Fingerprint.h"
-#include <map>
+#include <unordered_map>
 #include <stack>
 
 namespace Funge {
@@ -30,7 +30,7 @@ class FingerprintStrategy : public FungeStrategy {
 		std::string intToStr(uint64_t i);
 		void activate(Fingerprint* fing);
 
-		std::map<uint64_t, Fingerprint*> available;
+		std::unordered_map<uint64_t, Fingerprint*> available;
 		std::vector<uint64_t> loaded;
 };
 
