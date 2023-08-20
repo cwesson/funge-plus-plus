@@ -13,6 +13,7 @@ namespace Funge {
 FungeUniverse::FungeUniverse(std::istream& file, Field::FileFormat fmt, const FungeConfig& cfg):
 	age(0),
 	running(true),
+	locked(false),
 	exitcode(0),
 	config(cfg),
 	debug(*this),
@@ -34,6 +35,7 @@ FungeUniverse::FungeUniverse(std::istream& file, Field::FileFormat fmt, const Fu
 FungeUniverse::FungeUniverse(const FungeConfig& cfg):
 	age(0),
 	running(true),
+	locked(false),
 	exitcode(0),
 	config(cfg),
 	debug(*this),
@@ -128,9 +130,11 @@ void FungeUniverse::operator()(){
 					FungeRunner* runner = *it;
 
 					mutex.unlock();
-					if(runner->isRunning()){
-						runner->tick();
-					}
+					do {
+						if(runner->isRunning()){
+							runner->tick();
+						}
+					} while(locked);
 					mutex.lock();
 
 					if(&runner->getUniverse() == this){
@@ -178,6 +182,14 @@ bool FungeUniverse::isRunning() const{
 		alive = (threads.size() > 0);
 	}
 	return running && alive;
+}
+
+void FungeUniverse::lock(){
+	locked = true;
+}
+
+void FungeUniverse::unlock(){
+	locked = false;
 }
 
 Field& FungeUniverse::getField(){

@@ -102,6 +102,16 @@ class FungeUniverse {
 
 		void operator()();
 
+		/**
+		 * Lock universe to current runner.
+		 */
+		void lock();
+
+		/**
+		 * Unlock universe.
+		 */
+		void unlock();
+
 		FungeDebugger& getDebugger();
 		const std::string& getName() const;
 		const std::vector<std::string>& arguments() const;
@@ -127,6 +137,7 @@ class FungeUniverse {
 	private:
 		size_t age;
 		bool running;
+		bool locked;
 		int exitcode;
 		FungeConfig config;
 		FungeDebugger debug;

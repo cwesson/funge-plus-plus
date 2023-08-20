@@ -16,6 +16,24 @@ class FingerprintTRDS : public Fingerprint {
 		virtual ~FingerprintTRDS() = default;
 		
 		virtual FungeError execute(inst_t cmd) override;
+	
+	private:
+		enum relativity {
+			NONE,
+			ABSOLUTE,
+			RELATIVE
+		};
+
+		Vector space;
+		relativity space_rel;
+		ssize_t time;
+		relativity time_rel;
+		Vector vec;
+		relativity vec_rel;
+		Vector jump_space;
+		ssize_t jump_time;
+		Vector jump_vec;
+		bool jumping;
 };
 
 }
